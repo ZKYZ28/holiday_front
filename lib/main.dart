@@ -1,70 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:holiday_mobile/presentation/screens/activity_page.dart';
+
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
+  State<MyApp> createState() => _MyAppState();
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class _MyAppState extends State<MyApp> {
+  int _currentIndex = 0;
 
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
+  setCurrentIndex(int index) {
     setState(() {
-      _counter++;
+      _currentIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text("Holiday"),
+          backgroundColor: Color(0xFF1E3A8A),
+        ),
+        body: [
+          Activity(),
+        ][_currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) => setCurrentIndex(index),
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.black,
+          backgroundColor: Color(0xFF1E3A8A),
+          iconSize: 22,
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.holiday_village),
+                label: 'Vacances'
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            BottomNavigationBarItem(
+                icon: Icon(Icons.message),
+                label: 'Chat'
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.logout),
+                label: 'Se déconnecter'
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }
+
+
+
+
+
