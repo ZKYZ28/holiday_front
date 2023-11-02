@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:holiday_mobile/presentation/widgets/icon_with_text.dart';
 
 class Activity extends StatefulWidget {
   const Activity({super.key});
@@ -10,129 +11,168 @@ class Activity extends StatefulWidget {
 class _ActivityState extends State<Activity> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        margin: EdgeInsets.all(10),
-        child: Container(
-          margin: EdgeInsets.all(10),
+    return  Center(
+        child: IntrinsicHeight(
+        child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          margin: const EdgeInsets.all(20),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Spacer(), // Pour mettre les éléments à droite
-                  IconButton(
-                    onPressed: () {
-
-                    },
-                    icon: const Icon(
-                      Icons.edit,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text("Confirmation"),
-                            content: const Text("Etes-vous sûr de vouloir supprimer cette vacance ?"),
-                            actions: [
-                              ButtonBar(
-                                alignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop(); // Fermer la popup
-                                    },
-                                    child: const Text("Annuler"),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      // TODO: ACTION DE SUPPRESSION
-                                      Navigator.of(context).pop(); // Fermer la popup
-                                    },
-                                    child: const Text("Supprimer"),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                  ),
-                ],
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Image.asset(
+                  "assets/images/bgHoliday.jpg",
+                  fit: BoxFit.cover,
+                ),
               ),
 
-              Row(
-                children: [
-                  Flexible(
-                    flex: 2, // La partie image occupe 2 parts sur 5 (40%)
-                    child: Image.asset("assets/images/bgHoliday.jpg"),
+              /**
+               * Container(
+                  height: 200,
+                  child: Image.asset(
+                  "assets/images/bgHoliday.jpg",
+                  fit: BoxFit.cover, // Ajuste l'image pour remplir la largeur sans déformation
                   ),
-                  Flexible(
-                    flex: 3, // La colonne occupe 3 parts sur 5 (60%)
-                    child: Container(
-                      margin: EdgeInsets.only(left: 16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                            child: const Text(
-                              'Monaco 2023',
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: Color(0xFF1E3A8A),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          rowHolidayCard(Icons.calendar_month, '30/03/2022-27/09/2023'),
-                          rowHolidayCard(Icons.people_sharp, '4'),
-                          rowHolidayCard(Icons.location_on, 'Monaco'),
-                        ],
+                  )
+               */
+
+              Container(
+                margin: EdgeInsets.fromLTRB(15, 20, 0, 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: const Text(
+                        'Monaco 2023',
+                        style: TextStyle(
+                          fontSize: 22,
+                          color: Color(0xFF1E3A8A),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  )
-                ],
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+
+                          },
+                          icon: const Icon(
+                            Icons.logout,
+                            color: Colors.blue,
+                          ),
+                        ),
+
+                        IconButton(
+                          onPressed: () {
+
+                          },
+                          icon: const Icon(
+                            Icons.edit,
+                            color: Colors.blue,
+                          ),
+                        ),
+
+                        IconButton(
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text("Confirmation"),
+                                  content: const Text("Etes-vous sûr de vouloir supprimer cette vacance ?"),
+                                  actions: [
+                                    ButtonBar(
+                                      alignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(); // Fermer la popup
+                                          },
+                                          child: const Text("Annuler"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+
+                                            Navigator.of(context).pop(); // Fermer la popup
+                                          },
+                                          child: const Text("Supprimer"),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
 
               Container(
-                margin: EdgeInsets.fromLTRB(0, 10, 0, 10), // Marge pour le Text
+                margin: const EdgeInsets.fromLTRB(15, 20, 0, 10),// Marge pour le Text
                 child: const Text(
                   "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tincidunt arcu diam.",
                 ),
               ),
+
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    iconWithText(Icons.calendar_month, '30/03/2022'),
+                    iconWithText(Icons.people_sharp, '4'),
+                    iconWithText(Icons.location_on, 'Monaco'),
+                  ],
+                ),
+              ),
+
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {
+
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1E3A8A),
+                      ),
+                      icon: const Icon(Icons.group),
+                      label: const Text("Participants"),
+                    ),
+
+                    ElevatedButton.icon(
+                      onPressed: () {
+
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1E3A8A),
+                      ),
+                      icon: const Icon(Icons.location_on),
+                      label: const Text("S'y rendre"),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),
-      ),
+        )
     );
   }
-}
-
-
-Container rowHolidayCard(IconData icon, String text) {
-  return Container(
-    margin: EdgeInsets.only(bottom: 8.0),
-    child: Row(
-      children: [
-        Icon(icon),
-        SizedBox(width: 8.0),
-        Text(
-          text,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    ),
-  );
 }

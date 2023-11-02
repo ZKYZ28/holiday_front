@@ -1,6 +1,7 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:holiday_mobile/presentation/widgets/image_picker.dart';
+import 'package:holiday_mobile/presentation/widgets/location_form.dart';
 import 'dart:io';
 
 
@@ -31,13 +32,13 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin: EdgeInsets.all(20),
+        margin: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
-                margin: EdgeInsets.only(bottom: 30),
+                margin: const EdgeInsets.only(bottom: 30),
                 child: const Text(
                   'Encoder une activité',
                   style: TextStyle(
@@ -49,62 +50,19 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
               ),
 
               Container(
-                margin: EdgeInsets.only(bottom: 10),
+                margin: const EdgeInsets.only(bottom: 10),
                 child: Form(
                   child: Column(
                     children: [
 
-                      Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        child: _image == null
-                            ? const Text('Aucune image sélectionnée')
-                            : Column(
-                          children: [
-                            SizedBox(
-                              width: 200, // Largeur souhaitée
-                              height: 200, // Hauteur souhaitée
-                              child: Image.file(_image!),
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _image = null;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
+                      ImagePickerForm(
+                        onImagePicked: (pickedImage) {
+                          print(pickedImage);
+                        },
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(bottom: 15),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            final imagePicker = ImagePicker();
-                            final pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
-
-                            if (pickedFile != null) {
-                              setState(() {
-                                _image = File(pickedFile.path);
-                              });
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: Color(0xFF1E3A8A),
-                          ),
-                          child: const Text(
-                              'Sélectionner une image'
-
-                          ),
-                        ),
-                      ),
-
-                      Container(
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 10),
                         child: TextFormField(
                           decoration: const InputDecoration(
                             labelText: 'Nom *',
@@ -124,7 +82,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                         children: [
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(right: 10, bottom: 10),
+                              margin: const EdgeInsets.only(right: 10, bottom: 10),
                               child: DateTimeFormField(
                                 decoration: const InputDecoration(
                                   hintStyle: TextStyle(color: Colors.black45),
@@ -144,7 +102,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                           ),
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(left: 10, bottom: 10),
+                              margin: const EdgeInsets.only(left: 10, bottom: 10),
                               child: DateTimeFormField(
                                 decoration: const InputDecoration(
                                   hintStyle: TextStyle(color: Colors.black45),
@@ -166,10 +124,10 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        child: TextField(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: const TextField(
                           maxLines: 4, // Réglez le nombre de lignes souhaité
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             labelText: 'Description *',
                             hintText: 'Saisissez votre description...',
                             border: OutlineInputBorder(),
@@ -178,126 +136,16 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                       ),
 
 
-                      Container(
-                        margin: EdgeInsets.only(top: 15, bottom: 10),
-                        child: const Text(
-                          'Lieu',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Color(0xFF1E3A8A),
-                              fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      ),
+                      LocationForm(),
 
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            labelText: 'Pays *',
-                            hintText: '',
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Le champ ne peut pas être vide";
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 10, right: 10),
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  labelText: 'Numéro de boite *',
-                                  hintText: '',
-                                  border: OutlineInputBorder(),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Le champ ne peut pas être vide";
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 10, left: 10),
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  labelText: 'Rue *',
-                                  hintText: '',
-                                  border: OutlineInputBorder(),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Le champ ne peut pas être vide";
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 10, right: 10),
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  labelText: 'Code postal *',
-                                  hintText: '',
-                                  border: OutlineInputBorder(),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Le champ ne peut pas être vide";
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 10, left: 10),
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  labelText: 'Ville *',
-                                  hintText: '',
-                                  border: OutlineInputBorder(),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Le champ ne peut pas être vide";
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-
-                      Container(
-                        margin: EdgeInsets.only(top: 20),
+                        margin: const EdgeInsets.only(top: 20),
                         child: ElevatedButton(
                           onPressed: () {
 
                           },
                           style: ElevatedButton.styleFrom(
-                            primary: Color(0xFF1E3A8A),
+                            backgroundColor: const Color(0xFF1E3A8A),
                           ),
                           child: const Text("Encoder"),
                         ),
