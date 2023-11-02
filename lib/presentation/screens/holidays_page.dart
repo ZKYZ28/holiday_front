@@ -93,7 +93,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Spacer(), // Pour mettre les éléments à droite
+                          const Spacer(), // Pour mettre les éléments à droite
                           IconButton(
                             onPressed: () {
 

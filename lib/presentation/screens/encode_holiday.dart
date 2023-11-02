@@ -31,10 +31,10 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin: EdgeInsets.all(20),
+        margin: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                 margin: EdgeInsets.only(bottom: 30),
@@ -85,7 +85,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                         child: ElevatedButton(
                           onPressed: () async {
                             final imagePicker = ImagePicker();
-                            final pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
+                            final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
 
                             if (pickedFile != null) {
                               setState(() {
@@ -94,7 +94,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            primary: Color(0xFF1E3A8A),
+                            backgroundColor: Color(0xFF1E3A8A),
                           ),
                           child: const Text(
                               'Sélectionner une image'

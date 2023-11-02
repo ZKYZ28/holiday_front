@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/presentation/screens/activity_page.dart';
+import 'package:holiday_mobile/presentation/screens/encode_activity.dart';
+
+import 'presentation/screens/myholiday_screen.dart';
 
 
 void main() {
@@ -31,7 +34,7 @@ class _MyAppState extends State<MyApp> {
           backgroundColor: Color(0xFF1E3A8A),
         ),
         body: [
-          Activity(),
+          MyHolidayPage(),
         ][_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,

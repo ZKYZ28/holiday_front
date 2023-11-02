@@ -17,13 +17,13 @@ class _EncodeActivityState extends State<EncodeActivity> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin: EdgeInsets.all(20),
+        margin: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
-                margin: EdgeInsets.only(bottom: 30),
+                margin: const EdgeInsets.only(bottom: 30),
                 child: const Text(
                   'Encoder une activité',
                   style: TextStyle(
@@ -35,13 +35,13 @@ class _EncodeActivityState extends State<EncodeActivity> {
               ),
 
               Container(
-                margin: EdgeInsets.only(bottom: 10),
+                margin: const EdgeInsets.only(bottom: 10),
                 child: Form(
                   child: Column(
                     children: [
 
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 10),
                         child: _image == null
                             ? const Text('Aucune image sélectionnée')
                             : Column(
@@ -67,11 +67,11 @@ class _EncodeActivityState extends State<EncodeActivity> {
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(bottom: 15),
+                        margin: const EdgeInsets.only(bottom: 15),
                         child: ElevatedButton(
                           onPressed: () async {
                             final imagePicker = ImagePicker();
-                            final pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
+                            final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
 
                             if (pickedFile != null) {
                               setState(() {
@@ -80,7 +80,7 @@ class _EncodeActivityState extends State<EncodeActivity> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            primary: Color(0xFF1E3A8A),
+                            backgroundColor: const Color(0xFF1E3A8A),
                           ),
                           child: const Text(
                               'Sélectionner une image'
@@ -93,7 +93,7 @@ class _EncodeActivityState extends State<EncodeActivity> {
                         children: [
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(bottom: 10, right: 10),
+                              margin: const EdgeInsets.only(bottom: 10, right: 10),
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                   labelText: 'Nom *',
@@ -111,7 +111,7 @@ class _EncodeActivityState extends State<EncodeActivity> {
                           ),
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(bottom: 10, left: 10),
+                              margin: const EdgeInsets.only(bottom: 10, left: 10),
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                   labelText: 'Prix *',
@@ -134,7 +134,7 @@ class _EncodeActivityState extends State<EncodeActivity> {
                         children: [
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(right: 10, bottom: 10),
+                              margin: const EdgeInsets.only(right: 10, bottom: 10),
                               child: DateTimeFormField(
                                 decoration: const InputDecoration(
                                   hintStyle: TextStyle(color: Colors.black45),
@@ -154,7 +154,7 @@ class _EncodeActivityState extends State<EncodeActivity> {
                           ),
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(left: 10, bottom: 10),
+                              margin: const EdgeInsets.only(left: 10, bottom: 10),
                               child: DateTimeFormField(
                                 decoration: const InputDecoration(
                                   hintStyle: TextStyle(color: Colors.black45),
@@ -176,10 +176,10 @@ class _EncodeActivityState extends State<EncodeActivity> {
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        child: TextField(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: const TextField(
                           maxLines: 4, // Réglez le nombre de lignes souhaité
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             labelText: 'Description *',
                             hintText: 'Saisissez votre description...',
                             border: OutlineInputBorder(),
@@ -188,7 +188,7 @@ class _EncodeActivityState extends State<EncodeActivity> {
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(top: 15, bottom: 10),
+                        margin: const EdgeInsets.only(top: 15, bottom: 10),
                         child: const Text(
                           'Lieu',
                           style: TextStyle(
@@ -200,7 +200,7 @@ class _EncodeActivityState extends State<EncodeActivity> {
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 10),
                         child: TextFormField(
                           decoration: const InputDecoration(
                             labelText: 'Pays *',
@@ -220,7 +220,7 @@ class _EncodeActivityState extends State<EncodeActivity> {
                         children: [
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(bottom: 10, right: 10),
+                              margin: const EdgeInsets.only(bottom: 10, right: 10),
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                   labelText: 'Numéro de boite *',
@@ -238,7 +238,7 @@ class _EncodeActivityState extends State<EncodeActivity> {
                           ),
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(bottom: 10, left: 10),
+                              margin: const EdgeInsets.only(bottom: 10, left: 10),
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                   labelText: 'Rue *',
@@ -261,7 +261,7 @@ class _EncodeActivityState extends State<EncodeActivity> {
                         children: [
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(bottom: 10, right: 10),
+                              margin: const EdgeInsets.only(bottom: 10, right: 10),
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                   labelText: 'Code postal *',
@@ -279,7 +279,7 @@ class _EncodeActivityState extends State<EncodeActivity> {
                           ),
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(bottom: 10, left: 10),
+                              margin: const EdgeInsets.only(bottom: 10, left: 10),
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                   labelText: 'Ville *',
@@ -300,13 +300,13 @@ class _EncodeActivityState extends State<EncodeActivity> {
 
 
                       Container(
-                        margin: EdgeInsets.only(top: 20),
+                        margin: const EdgeInsets.only(top: 20),
                         child: ElevatedButton(
                           onPressed: () {
 
                           },
                           style: ElevatedButton.styleFrom(
-                            primary: Color(0xFF1E3A8A),
+                            primary: const Color(0xFF1E3A8A),
                           ),
                           child: const Text("Encoder"),
                         ),
