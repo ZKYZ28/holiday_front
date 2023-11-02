@@ -12,14 +12,14 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin: EdgeInsets.fromLTRB(20, 10, 20, 5),
+        margin: const EdgeInsets.fromLTRB(20, 10, 20, 5),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
 
               Container(
-                margin: EdgeInsets.only(bottom: 30),
+                margin: const EdgeInsets.only(bottom: 30),
                 child: const Text(
                   'Inscription',
                   style: TextStyle(
@@ -31,12 +31,12 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
 
               Container(
-                margin: EdgeInsets.only(bottom: 10),
+                margin: const EdgeInsets.only(bottom: 10),
                 child: Form(
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 10),
                         child: TextFormField(
                           decoration: const InputDecoration(
                             labelText: 'Email *',
@@ -53,7 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 10),
                         child: TextFormField(
                           decoration: const InputDecoration(
                             labelText: 'Nom *',
@@ -70,7 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 10),
                         child: TextFormField(
                           decoration: const InputDecoration(
                             labelText: 'Prénom *',
@@ -87,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 10),
                         child: TextFormField(
                           decoration: const InputDecoration(
                             labelText: 'Mot de passe *',
@@ -104,7 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 10),
                         child: TextFormField(
                           decoration: const InputDecoration(
                             labelText: 'Confirmation mot de passe *',
@@ -121,13 +121,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(top: 10),
+                        margin: const EdgeInsets.only(top: 10),
                         child: ElevatedButton(
                           onPressed: () {
 
                           },
                           style: ElevatedButton.styleFrom(
-                            primary: Color(0xFF1E3A8A),
+                            backgroundColor: const Color(0xFF1E3A8A),
                           ),
                           child: const Text("S'enregister"),
                         ),
@@ -139,12 +139,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
 
               Container(
-                padding: EdgeInsets.all(10), // Espacement interne du Container
+                padding: const EdgeInsets.all(10), // Espacement interne du Container
                 child: Column(
                   children: [
 
                     Container(
-                      margin: EdgeInsets.only(bottom: 15),
+                      margin: const EdgeInsets.only(bottom: 15),
                       child: const Divider(
                         thickness: 1,
                         color: Color(0xFF1E3A8A),
@@ -160,13 +160,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
 
                     Container(
-                      margin: EdgeInsets.only(top: 15),
+                      margin: const EdgeInsets.only(top: 15),
                       child: ElevatedButton(
                         onPressed: () {
                           // Actions pour le bouton S'inscrire
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Color(0xFF1E3A8A),
+                          backgroundColor: const Color(0xFF1E3A8A),
                         ),
                         child: const Text("S'inscrire"),
                       ),

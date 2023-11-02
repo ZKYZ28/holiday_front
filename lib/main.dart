@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:holiday_mobile/presentation/screens/activity_page.dart';
-import 'package:holiday_mobile/presentation/screens/encode_activity.dart';
-
-import 'presentation/screens/myholiday_screen.dart';
+import 'package:holiday_mobile/presentation/screens/list_holidays_chat.dart';
+import 'package:holiday_mobile/presentation/widgets/bottom_navbar.dart';
 
 
 void main() {
@@ -29,36 +27,20 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+
         appBar: AppBar(
           title: const Text("Holiday"),
-          backgroundColor: Color(0xFF1E3A8A),
+          backgroundColor: const Color(0xFF1E3A8A),
         ),
+
         body: [
-          MyHolidayPage(),
+          ListHolidaysChat(),
         ][_currentIndex],
-        bottomNavigationBar: BottomNavigationBar(
+
+        bottomNavigationBar: BottomNavBar(
           currentIndex: _currentIndex,
-          onTap: (index) => setCurrentIndex(index),
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.black,
-          backgroundColor: Color(0xFF1E3A8A),
-          iconSize: 22,
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.holiday_village),
-                label: 'Vacances'
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.message),
-                label: 'Chat'
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.logout),
-                label: 'Se déconnecter'
-            ),
-          ],
-        ),
+          onTap: setCurrentIndex,
+        )
       ),
     );
   }

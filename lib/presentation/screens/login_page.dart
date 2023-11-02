@@ -13,14 +13,14 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin: EdgeInsets.all(50),
+        margin: const EdgeInsets.all(50),
         child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
 
                 Container(
-                  margin: EdgeInsets.only(bottom: 30),
+                  margin: const EdgeInsets.only(bottom: 30),
                   child: const Text(
                     'Connexion',
                     style: TextStyle(
@@ -32,12 +32,12 @@ class _LoginPageState extends State<LoginPage> {
                 ),
 
                 Container(
-                  margin: EdgeInsets.only(bottom: 10),
+                  margin: const EdgeInsets.only(bottom: 10),
                   child: Form(
                     child: Column(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(bottom: 20),
+                          margin: const EdgeInsets.only(bottom: 20),
                           child: TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Email *',
@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
 
                         Container(
-                          margin: EdgeInsets.only(bottom: 10),
+                          margin: const EdgeInsets.only(bottom: 10),
                           child: TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Mot de passe *',
@@ -71,13 +71,13 @@ class _LoginPageState extends State<LoginPage> {
                         ),
 
                         Container(
-                          margin: EdgeInsets.only(top: 20),
+                          margin: const EdgeInsets.only(top: 20),
                           child: ElevatedButton(
                             onPressed: () {
 
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Color(0xFF1E3A8A),
+                              backgroundColor: const Color(0xFF1E3A8A),
                             ),
                             child: const Text("Se connecter"),
                           ),
@@ -89,12 +89,12 @@ class _LoginPageState extends State<LoginPage> {
 
 
                 Container(
-                  padding: EdgeInsets.all(10), // Espacement interne du Container
+                  padding: const EdgeInsets.all(10), // Espacement interne du Container
                   child: Column(
                     children: [
 
                       Container(
-                        margin: EdgeInsets.only(bottom: 15),
+                        margin: const EdgeInsets.only(bottom: 15),
                         child: const Divider(
                           thickness: 1,
                           color: Color(0xFF1E3A8A),
@@ -110,13 +110,13 @@ class _LoginPageState extends State<LoginPage> {
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(top: 15),
+                        margin: const EdgeInsets.only(top: 15),
                         child: ElevatedButton(
                           onPressed: () {
 
                           },
                           style: ElevatedButton.styleFrom(
-                            primary: Color(0xFF1E3A8A),
+                            backgroundColor: const Color(0xFF1E3A8A),
                           ),
                           child: const Text("S'inscrire"),
                         ),
