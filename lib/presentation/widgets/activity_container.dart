@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/presentation/screens/activity_page.dart';
 
+import 'activity_card.dart';
+
 class ActivityData {
   final String title;
   final double price;
@@ -22,13 +24,11 @@ class ActivityData {
 class ActivityContainer extends StatelessWidget {
   final List<ActivityData> activities;
   final double activityHeight;
-  final double listViewHeight;
 
   const ActivityContainer(
       {super.key,
         required this.activities,
         required this.activityHeight,
-        required this.listViewHeight,
       });
 
   @override
@@ -107,18 +107,16 @@ class ActivityContainer extends StatelessWidget {
 
             // Liste des activités
             Container(
-              constraints: BoxConstraints(maxHeight: 480),
+              constraints: BoxConstraints(maxHeight: 315),
               child: ListView.builder(
                   itemCount: activities.length,
                   itemBuilder: (context, index) {
                     final activity = activities[index];
-                    return Activity(
+                    return ActivityCard(
                         title: activity.title,
-                        description: activity.description,
                         date: activity.date,
                         price: activity.price,
-                        numberParticipants: activity.numberParticipants,
-                        urlImage: 'assets/images/bgHoliday.jpg');
+                        imageUrl : 'assets/images/bgHoliday.jpg');
                   }),
             )
 

@@ -5,8 +5,7 @@ class ActivityCard extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String date;
-  final String price;
-  final String description;
+  final double price;
 
 
   const ActivityCard({
@@ -15,56 +14,63 @@ class ActivityCard extends StatelessWidget {
     required this.title,
     required this.date,
     required this.price,
-    required this.description,
   }) : super(key: key);
 
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    return Card(
+      color: Colors.grey[100],
+      child :ListTile(
       leading: Image(
         width: 75,
         height: 100,
         fit: BoxFit.cover,
         image: AssetImage('assets/images/bgHoliday.jpg'),
       ),
-      title: Text(title),
+      title:
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 22,
+              color: Color(0xFF1E3A8A),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(date),
-          Text(price),
-          SizedBox(
-            width: 250,
-            child: Text(description),
-          )
+        Text(
+        date,
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.black,
+        ),
+      ),
+          Text('${price} €'),
         ],
       ),
-      trailing: Wrap(
-        direction: Axis.vertical,
-        spacing: 12, // espace entre chaque bouton/icon
-        children: <Widget>[
-          TextButton(
-            child: Text('Participant(s)'),
-            onPressed: () {
-
-            },
+      trailing: Container(
+        width: 35,
+        height: 35,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle, // cerle en fond
+          color: Color(0xFF1E3A8A),
+        ),
+        child: IconButton(
+          onPressed: () {
+            print('Add appuyé');
+          },
+          icon: Icon(
+            Icons.remove_red_eye,
+            size: 20,
+            color: Colors.white,
           ),
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-
-            },
-          ),
-        ],
+        ),
       ),
+    ),
     );
   }
 }

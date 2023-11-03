@@ -72,6 +72,12 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
         date: '28-03-2022',
         price: 12.25,
         numberParticipants: 5),
+    ActivityData(
+        title: 'Camion',
+        description: 'Lorepppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
+        date: '28-03-2022',
+        price: 12.25,
+        numberParticipants: 5),
   ];
 
   @override
@@ -84,8 +90,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
     final emailColumnWidth = screenWidth * 0.45;
     final buttonColumnWidth = screenWidth * 0.20;
     final tableParticipantHeight = screenHeight * 0.30;
-    final cardActivityHeight = screenHeight * 0.67;
-    final cardActivityListView = screenHeight * 0.55;
+    final cardActivityHeight = screenHeight * 0.45;
 
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -209,7 +214,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
             //       ],
             //     )),
 
-            ActivityContainer(activities: activityData, activityHeight:cardActivityHeight, listViewHeight: cardActivityListView)
+            ActivityContainer(activities: activityData, activityHeight:cardActivityHeight)
           ],
         ),
       ),
