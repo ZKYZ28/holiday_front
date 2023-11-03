@@ -38,7 +38,7 @@ class BottomNavBar extends StatelessWidget {
         if (index == 0) {
           appRouter.push(const HolidaysRoute());
         } else if (index == 1) {
-          appRouter.push(const ListHolidaysChatRoute());
+          appRouter.push(const ListHolidaysChat());
         } else if (index == 2) {
           // Gérer la déconnexion
           print("CLIQUE LOGOUT");

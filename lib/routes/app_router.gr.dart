@@ -43,7 +43,7 @@ abstract class $AppRouter extends _i9.RootStackRouter {
         child: const _i3.EncodeActivity(),
       );
     },
-    EncodeHolidayRoute.name: (routeData) {
+    EncodeHoliday.name: (routeData) {
       return _i9.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const _i4.EncodeHoliday(),
@@ -55,7 +55,7 @@ abstract class $AppRouter extends _i9.RootStackRouter {
         child: const _i5.HolidaysPage(),
       );
     },
-    ListHolidaysChatRoute.name: (routeData) {
+    ListHolidaysChat.name: (routeData) {
       return _i9.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const _i6.ListHolidaysChat(),
@@ -120,10 +120,10 @@ class EncodeActivity extends _i9.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i4.EncodeHoliday]
-class EncodeHolidayRoute extends _i9.PageRouteInfo<void> {
-  const EncodeHolidayRoute({List<_i9.PageRouteInfo>? children})
+class EncodeHoliday extends _i9.PageRouteInfo<void> {
+  const EncodeHoliday({List<_i9.PageRouteInfo>? children})
       : super(
-          EncodeHolidayRoute.name,
+          EncodeHoliday.name,
           initialChildren: children,
         );
 
@@ -148,10 +148,10 @@ class HolidaysRoute extends _i9.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i6.ListHolidaysChat]
-class ListHolidaysChatRoute extends _i9.PageRouteInfo<void> {
-  const ListHolidaysChatRoute({List<_i9.PageRouteInfo>? children})
+class ListHolidaysChat extends _i9.PageRouteInfo<void> {
+  const ListHolidaysChat({List<_i9.PageRouteInfo>? children})
       : super(
-          ListHolidaysChatRoute.name,
+          ListHolidaysChat.name,
           initialChildren: children,
         );
 

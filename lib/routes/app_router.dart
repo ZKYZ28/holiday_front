@@ -8,8 +8,8 @@ class AppRouter extends $AppRouter{
   @override
   List<AutoRoute> get routes => [
     AutoRoute(page: HolidaysRoute.page, initial: true),
-    AutoRoute(page: EncodeHolidayRoute.page),
-    AutoRoute(page: ListHolidaysChatRoute.page),
+    AutoRoute(page: EncodeHoliday.page),
+    AutoRoute(page: ListHolidaysChat.page),
     AutoRoute(page: ChatRoute.page),
   ];
 }

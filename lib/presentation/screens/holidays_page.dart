@@ -41,7 +41,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
             icon: const Icon(Icons.add),
             label: const Text('Encoder'),
             onPressed: () {
-              context.router.push(const EncodeHolidayRoute());
+              context.router.push(const EncodeHoliday());
             },
           ),
         ],
