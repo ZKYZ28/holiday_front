@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'register.g.dart';
+
+@JsonSerializable()
 class Register {
   final String email;
   final String lastName;
@@ -12,4 +17,7 @@ class Register {
     required this.password,
     required this.confirmPassword,
   });
+
+  factory Register.fromJson(Map<String, dynamic> json) => _$RegisterFromJson(json);
+  Map<String, dynamic> toJson() => _$RegisterToJson(this);
 }

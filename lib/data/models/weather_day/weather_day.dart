@@ -1,7 +1,10 @@
-import 'package:holiday_mobile/data/models/weather_condition.dart';
-import 'package:holiday_mobile/data/models/weather_hour.dart';
+import 'package:holiday_mobile/data/models/weather_condition/weather_condition.dart';
+import 'package:holiday_mobile/data/models/weather_hour/weather_hour.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'weather_day.g.dart';
 
+@JsonSerializable()
 class WeatherDay {
   final String date;
   final double maxTemp;
@@ -22,4 +25,7 @@ class WeatherDay {
     required this.condition,
     required this.weatherByHour,
   });
+
+  factory WeatherDay.fromJson(Map<String, dynamic> json) => _$WeatherDayFromJson(json);
+  Map<String, dynamic> toJson() => _$WeatherDayToJson(this);
 }

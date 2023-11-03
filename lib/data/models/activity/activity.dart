@@ -1,7 +1,11 @@
 import 'package:holiday_mobile/data/models/location/location.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'activity.g.dart';
+
+@JsonSerializable()
 class Activity {
-  final String id;
+  final String? id;
   final String name;
   final String description;
   final double price;
@@ -12,7 +16,7 @@ class Activity {
   final String holidayId;
 
   Activity({
-    required this.id,
+    this.id,
     required this.name,
     required this.description,
     required this.price,
@@ -22,4 +26,7 @@ class Activity {
     required this.activityPath,
     required this.holidayId,
   });
+
+  factory Activity.fromJson(Map<String, dynamic> json) => _$ActivityFromJson(json);
+  Map<String, dynamic> toJson() => _$ActivityToJson(this);
 }
