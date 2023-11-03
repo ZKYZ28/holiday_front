@@ -15,7 +15,7 @@ class _ImagePickerFormState extends State<ImagePickerForm> {
   File? _image;
 
   Future<void> _pickImage() async {
-    final pickedImage = await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       setState(() {
         _image = File(pickedImage.path);
