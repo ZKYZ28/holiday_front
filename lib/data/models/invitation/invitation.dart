@@ -1,6 +1,7 @@
-import 'package:holiday_mobile/data/models/Participant.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../participant/participant.dart';
 
 part 'invitation.g.dart';
 
