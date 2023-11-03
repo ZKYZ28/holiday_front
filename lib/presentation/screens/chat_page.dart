@@ -40,7 +40,8 @@ class _ChatWidgetState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Scaffold(
+      body : Column(
       children: [
         Expanded(
           child: ListView.builder(
@@ -72,6 +73,7 @@ class _ChatWidgetState extends State<ChatPage> {
           ),
         ),
       ],
+      ),
     );
   }
 }

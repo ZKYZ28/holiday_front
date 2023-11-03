@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/presentation/widgets/holiday_tile.dart';
 
+import '../../main.dart';
+
 class ListHolidaysChat extends StatefulWidget {
   const ListHolidaysChat({super.key});
 
@@ -33,6 +35,8 @@ class _ListHolidaysChatState extends State<ListHolidaysChat> {
               HolidayTile(
                 onTap: () {
                   print("clique");
+                  //Navigator.of(context).pushNamed('/chat');
+                  navigatorKey.currentState?.pushNamed('/chat');
                 },
               ),
 
