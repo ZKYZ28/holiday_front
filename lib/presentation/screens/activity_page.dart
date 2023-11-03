@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/presentation/widgets/icon_with_text.dart';
 
+@RoutePage()
 class Activity extends StatefulWidget {
   const Activity({super.key});
 
@@ -9,10 +11,18 @@ class Activity extends StatefulWidget {
 }
 
 class _ActivityState extends State<Activity> {
+
+
   @override
   Widget build(BuildContext context) {
-    return  Center(
-        child: IntrinsicHeight(
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Nom de l\'activité ici'),
+      ),
+
+      body: Center(
+          child: IntrinsicHeight(
         child: Card(
           elevation: 4,
           shape: RoundedRectangleBorder(
@@ -30,17 +40,17 @@ class _ActivityState extends State<Activity> {
               ),
 
               /**
-               * Container(
-                  height: 200,
-                  child: Image.asset(
-                  "assets/images/bgHoliday.jpg",
-                  fit: BoxFit.cover, // Ajuste l'image pour remplir la largeur sans déformation
-                  ),
-                  )
-               */
+                   * Container(
+                      height: 200,
+                      child: Image.asset(
+                      "assets/images/bgHoliday.jpg",
+                      fit: BoxFit.cover, // Ajuste l'image pour remplir la largeur sans déformation
+                      ),
+                      )
+                   */
 
               Container(
-                margin: EdgeInsets.fromLTRB(15, 20, 0, 10),
+                margin: const EdgeInsets.fromLTRB(15, 20, 0, 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -57,25 +67,19 @@ class _ActivityState extends State<Activity> {
                     Row(
                       children: [
                         IconButton(
-                          onPressed: () {
-
-                          },
+                          onPressed: () {},
                           icon: const Icon(
                             Icons.logout,
                             color: Colors.blue,
                           ),
                         ),
-
                         IconButton(
-                          onPressed: () {
-
-                          },
+                          onPressed: () {},
                           icon: const Icon(
                             Icons.edit,
                             color: Colors.blue,
                           ),
                         ),
-
                         IconButton(
                           icon: const Icon(
                             Icons.delete,
@@ -87,21 +91,23 @@ class _ActivityState extends State<Activity> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: const Text("Confirmation"),
-                                  content: const Text("Etes-vous sûr de vouloir supprimer cette vacance ?"),
+                                  content: const Text(
+                                      "Etes-vous sûr de vouloir supprimer cette vacance ?"),
                                   actions: [
                                     ButtonBar(
                                       alignment: MainAxisAlignment.spaceAround,
                                       children: [
                                         TextButton(
                                           onPressed: () {
-                                            Navigator.of(context).pop(); // Fermer la popup
+                                            Navigator.of(context)
+                                                .pop(); // Fermer la popup
                                           },
                                           child: const Text("Annuler"),
                                         ),
                                         TextButton(
                                           onPressed: () {
-
-                                            Navigator.of(context).pop(); // Fermer la popup
+                                            Navigator.of(context)
+                                                .pop(); // Fermer la popup
                                           },
                                           child: const Text("Supprimer"),
                                         ),
@@ -118,14 +124,13 @@ class _ActivityState extends State<Activity> {
                   ],
                 ),
               ),
-
               Container(
-                margin: const EdgeInsets.fromLTRB(15, 20, 0, 10),// Marge pour le Text
+                margin: const EdgeInsets.fromLTRB(15, 20, 0, 10),
+                // Marge pour le Text
                 child: const Text(
                   "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tincidunt arcu diam.",
                 ),
               ),
-
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                 child: Row(
@@ -138,7 +143,6 @@ class _ActivityState extends State<Activity> {
                   ],
                 ),
               ),
-
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                 child: Row(
@@ -146,20 +150,15 @@ class _ActivityState extends State<Activity> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ElevatedButton.icon(
-                      onPressed: () {
-
-                      },
+                      onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1E3A8A),
                       ),
                       icon: const Icon(Icons.group),
                       label: const Text("Participants"),
                     ),
-
                     ElevatedButton.icon(
-                      onPressed: () {
-
-                      },
+                      onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1E3A8A),
                       ),
@@ -172,7 +171,7 @@ class _ActivityState extends State<Activity> {
             ],
           ),
         ),
-        )
+      )),
     );
   }
 }

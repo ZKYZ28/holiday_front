@@ -1,6 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/presentation/widgets/holiday_tile.dart';
+import 'package:auto_route/annotations.dart';
+import 'package:holiday_mobile/routes/app_router.gr.dart';
 
+@RoutePage()
 class ListHolidaysChat extends StatefulWidget {
   const ListHolidaysChat({super.key});
 
@@ -11,47 +15,20 @@ class ListHolidaysChat extends StatefulWidget {
 class _ListHolidaysChatState extends State<ListHolidaysChat> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Mes groupes de vacances'),
+      ),
 
-        Container(
-          margin: const EdgeInsets.all(15),
-          child: const Text(
-            'Mes groupes de vacances',
-            style:  TextStyle(
-              fontSize: 22, // Taille de la police
-              fontWeight: FontWeight.bold, // Poids de la police
-              letterSpacing: 1.5, // Espacement entre les caractères
-            ),
+      body: ListView(
+        children: <Widget>[
+          HolidayTile(
+            onTap: () {
+              context.router.push(const ChatRoute());
+            },
           ),
-        ),
-
-        Expanded(
-          child: ListView(
-            children: <Widget>[
-              HolidayTile(
-                onTap: () {
-                  print("clique");
-                },
-              ),
-
-              HolidayTile(
-                onTap: () {
-                  print("clique");
-                },
-              ),
-
-              HolidayTile(
-                onTap: () {
-                  print("clique");
-                },
-              )
-
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

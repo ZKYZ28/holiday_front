@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/annotations.dart';
 
+@RoutePage()
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 

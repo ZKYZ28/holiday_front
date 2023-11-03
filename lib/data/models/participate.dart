@@ -1,5 +1,5 @@
 import 'package:holiday_mobile/data/models/Participant.dart';
-import 'package:holiday_mobile/data/models/activity.dart';
+import 'package:holiday_mobile/data/models/activity/activity.dart';
 
 class Participate {
   final String id;

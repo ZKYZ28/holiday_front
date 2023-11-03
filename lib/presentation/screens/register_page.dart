@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/annotations.dart';
 
+@RoutePage()
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 

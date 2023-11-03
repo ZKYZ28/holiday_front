@@ -1,19 +1,23 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:holiday_mobile/routes/app_router.gr.dart';
+
+import '../../routes/app_router.dart';
 
 class BottomNavBar extends StatelessWidget {
-  final int currentIndex;
-  final Function(int) onTap;
+  final AppRouter appRouter;
 
-  BottomNavBar({required this.currentIndex, required this.onTap});
+  const BottomNavBar({
+    required this.appRouter,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: onTap,
       selectedItemColor: Colors.white,
       unselectedItemColor: Colors.black,
-      backgroundColor: Color(0xFF1E3A8A),
+      backgroundColor: const Color(0xFF1E3A8A),
       iconSize: 22,
       type: BottomNavigationBarType.fixed,
       items: const [
@@ -30,6 +34,16 @@ class BottomNavBar extends StatelessWidget {
           label: 'Se déconnecter',
         ),
       ],
+      onTap: (int index) {
+        if (index == 0) {
+          appRouter.push(const HolidaysRoute());
+        } else if (index == 1) {
+          appRouter.push(const ListHolidaysChatRoute());
+        } else if (index == 2) {
+          // Gérer la déconnexion
+          print("CLIQUE LOGOUT");
+        }
+      },
     );
   }
 }

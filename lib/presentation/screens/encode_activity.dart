@@ -2,9 +2,10 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/presentation/widgets/image_picker.dart';
 import 'package:holiday_mobile/presentation/widgets/location_form.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:auto_route/annotations.dart';
 import 'dart:io';
 
+@RoutePage()
 class EncodeActivity extends StatefulWidget {
   const EncodeActivity({super.key});
 

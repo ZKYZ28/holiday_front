@@ -73,7 +73,7 @@ class HolidayCard extends StatelessWidget {
               children: [
                 Flexible(
                   flex: 2, // La partie image occupe 2 parts sur 5 (40%)
-                  child: Image.asset("bgHoliday"),
+                  child: Image.asset("assets/images/bgHoliday.jpg"),
                 ),
                 Flexible(
                   flex: 3, // La colonne occupe 3 parts sur 5 (60%)
