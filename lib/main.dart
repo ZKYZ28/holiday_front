@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/presentation/router/app_router.dart';
+import 'package:holiday_mobile/presentation/screens/EncodateParticipant.dart';
 import 'package:holiday_mobile/presentation/screens/activity_page.dart';
 import 'package:holiday_mobile/presentation/screens/holidays_page.dart';
 import 'package:holiday_mobile/presentation/screens/list_holidays_chat.dart';
@@ -33,6 +34,7 @@ class _MyAppState extends State<MyApp> {
       _currentIndex = index;
     });
   }
+  final List<String> _suggestions = ['Afeganistan', 'Albania', 'Algeria', 'Australia', 'Brazil', 'German', 'Madagascar', 'Mozambique', 'Portugal', 'Zambia'];
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,8 @@ class _MyAppState extends State<MyApp> {
           //   onGenerateRoute: widget.appRouter.onGenerateRoute,
           //   initialRoute: '/',
           // )
-          MyHolidayPage()
+         // EncodeParticipant()
+          MyHolidayPage(),
         ][_currentIndex],
 
         bottomNavigationBar: BottomNavBar(

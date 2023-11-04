@@ -46,6 +46,8 @@ class _ParticipantCardState extends State<ParticipantCard> {
         child: Column(
           children: [
             // Header
+            // TODO : propre
+            if (widget.title != '' && widget.icon != null)
             Container(
               margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: Row(

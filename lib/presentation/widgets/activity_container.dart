@@ -106,9 +106,9 @@ class ActivityContainer extends StatelessWidget {
             ),
 
             // Liste des activités
-            Container(
-              constraints: BoxConstraints(maxHeight: 315),
-              child: ListView.builder(
+
+              Expanded(
+                child : ListView.builder(
                   itemCount: activities.length,
                   itemBuilder: (context, index) {
                     final activity = activities[index];
@@ -119,6 +119,7 @@ class ActivityContainer extends StatelessWidget {
                         imageUrl : 'assets/images/bgHoliday.jpg');
                   }),
             )
+
 
           ],
         ),

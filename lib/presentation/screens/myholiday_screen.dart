@@ -31,7 +31,6 @@ class MyHolidayPage extends StatefulWidget {
 }
 
 class _MyHolidayPageState extends State<MyHolidayPage> {
-
   final List<WeatherInfo> weatherData = [
     WeatherInfo(
         dayOfWeek: 'Lundi',
@@ -56,25 +55,43 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
   final List<ActivityData> activityData = [
     ActivityData(
         title: 'Drift',
-        description: 'Lorepppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
+        description:
+            'Lorepppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
         date: '28-03-2022',
         price: 12.25,
         numberParticipants: 5),
     ActivityData(
         title: 'Mouloud',
-        description: 'Lorepppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
+        description:
+            'Lorepppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
         date: '28-03-2022',
         price: 18.25,
         numberParticipants: 5),
     ActivityData(
         title: 'Camion',
-        description: 'Lorepppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
+        description:
+            'Lorepppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
         date: '28-03-2022',
         price: 12.25,
         numberParticipants: 5),
     ActivityData(
         title: 'Camion',
-        description: 'Lorepppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
+        description:
+            'Lorepppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
+        date: '28-03-2022',
+        price: 12.25,
+        numberParticipants: 5),
+    ActivityData(
+        title: 'Camion',
+        description:
+            'Lorepppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
+        date: '28-03-2022',
+        price: 12.25,
+        numberParticipants: 5),
+    ActivityData(
+        title: 'Camion',
+        description:
+            'Lorepppppppppppppppppppppppppppppppppppppppppppppppppppppppp',
         date: '28-03-2022',
         price: 12.25,
         numberParticipants: 5),
@@ -92,132 +109,193 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
     final tableParticipantHeight = screenHeight * 0.30;
     final cardActivityHeight = screenHeight * 0.45;
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 150,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Mes vacances',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.visible,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      '28/03/2022',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              ElevatedButton.icon(
+                style: ButtonStyle(
+                  padding: MaterialStateProperty.all(
+                      EdgeInsets.only(left: 10, right: 10)),
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.pressed)) {
+                        return Color(0xFF1E3A8A);
+                      }
+                      return Color(0xFF1E3A8A);
+                    },
+                  ),
+                ),
+                icon: const Icon(Icons.chat),
+                label: const Text('Chatter'),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => ChatPage()));
+                },
+              ),
+            ],
+          ),
+          backgroundColor: const Color(0xFF1E3A8A),
+        ),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Column(
               children: [
-                SizedBox(
-                  width: 150,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Mes vacances',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          overflow: TextOverflow.visible,
-                          color: Color(0xFF1E3A8A),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: ElevatedButton.icon(
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10)),
+                            backgroundColor: MaterialStateProperty.all(Color(0xFF1E3A8A)),
+                          ),
+                          icon: const Icon(Icons.cloud),
+                          label: const Text('Visualiser'),
+                          onPressed: () {
+
+                          },
                         ),
                       ),
-                      Text(
-                        '28/03/2022',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1E3A8A),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                ElevatedButton.icon(
-                  style: ButtonStyle(
-                    padding: MaterialStateProperty.all(
-                        EdgeInsets.only(left: 10, right: 10)),
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return Color(0xFF1E3A8A);
-                        }
-                        return Color(0xFF1E3A8A);
-                      },
                     ),
-                  ),
-                  icon: const Icon(Icons.chat),
-                  label: const Text('Chatter'),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => ChatPage()));
-                  },
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: ElevatedButton.icon(
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10)),
+                            backgroundColor: MaterialStateProperty.all(Color(0xFF1E3A8A)),
+                          ),
+                          icon: const Icon(Icons.publish),
+                          label: const Text('Publier'),
+                          onPressed: () {
+
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: ElevatedButton.icon(
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10)),
+                            backgroundColor: MaterialStateProperty.all(Colors.red),
+                          ),
+                          icon: const Icon(Icons.exit_to_app),
+                          label: const Text('Quitter'),
+                          onPressed: () {
+
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+
+                // Tableau des participants
+                ParticipantCard(
+                  nameColumnWidth: nameColumnWidth,
+                  emailColumnWidth: emailColumnWidth,
+                  buttonColumnWidth: buttonColumnWidth,
+                  tableParticipantsHeight: tableParticipantHeight,
+                  title: 'Participant(s)',
+                  icon: Icons.add,
+                ),
+                // Météo
+                // Card(
+                //     elevation: 5,
+                //     child: Column(
+                //       children: [
+                //         // Header
+                //         Container(
+                //           margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                //           child: Row(
+                //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //             children: [
+                //               Text(
+                //                 'Lieu : Monaco',
+                //                 style: TextStyle(
+                //                     fontWeight: FontWeight.bold,
+                //                     fontSize: 20,
+                //                     color: Color(0xFF1E3A8A)),
+                //               ),
+                //               ElevatedButton.icon(
+                //                 style: ButtonStyle(
+                //                   padding: MaterialStateProperty.all(
+                //                       EdgeInsets.only(left: 10, right: 10)),
+                //                   backgroundColor:
+                //                       MaterialStateProperty.resolveWith<Color>(
+                //                     (Set<MaterialState> states) {
+                //                       if (states.contains(MaterialState.pressed)) {
+                //                         return Color(0xFF1E3A8A);
+                //                       }
+                //                       return Color(0xFF1E3A8A);
+                //                     },
+                //                   ),
+                //                 ),
+                //                 icon: const Icon(Icons.cloud),
+                //                 label: const Text('Visualiser'),
+                //                 onPressed: () {
+                //                   Navigator.push(
+                //                       context,
+                //                       PageRouteBuilder(
+                //                           pageBuilder: (_, __, ___) => ChatPage()));
+                //                 },
+                //               )
+                //             ],
+                //           ),
+                //         ),
+                //         // Permet de faire une ligne séparatrice
+                //         Divider(
+                //           color: Colors.grey,
+                //           thickness: 1, // Épaisseur de la ligne
+                //         ),
+                //
+                //         // Toute la partie météo en -dessous du header
+                //         WeatherCard(weatherData: weatherData),
+                //       ],
+                //     )),
+
+                ActivityContainer(
+                    activities: activityData,
+                    activityHeight: cardActivityHeight)
               ],
             ),
-            // Tableau des participants
-            ParticipantCard(
-              nameColumnWidth: nameColumnWidth,
-              emailColumnWidth: emailColumnWidth,
-              buttonColumnWidth: buttonColumnWidth,
-              tableParticipantsHeight: tableParticipantHeight,
-              title: 'Participant(s)',
-              icon: Icons.add,
-            ),
-            // Météo
-            // Card(
-            //     elevation: 5,
-            //     child: Column(
-            //       children: [
-            //         // Header
-            //         Container(
-            //           margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            //           child: Row(
-            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //             children: [
-            //               Text(
-            //                 'Lieu : Monaco',
-            //                 style: TextStyle(
-            //                     fontWeight: FontWeight.bold,
-            //                     fontSize: 20,
-            //                     color: Color(0xFF1E3A8A)),
-            //               ),
-            //               ElevatedButton.icon(
-            //                 style: ButtonStyle(
-            //                   padding: MaterialStateProperty.all(
-            //                       EdgeInsets.only(left: 10, right: 10)),
-            //                   backgroundColor:
-            //                       MaterialStateProperty.resolveWith<Color>(
-            //                     (Set<MaterialState> states) {
-            //                       if (states.contains(MaterialState.pressed)) {
-            //                         return Color(0xFF1E3A8A);
-            //                       }
-            //                       return Color(0xFF1E3A8A);
-            //                     },
-            //                   ),
-            //                 ),
-            //                 icon: const Icon(Icons.cloud),
-            //                 label: const Text('Visualiser'),
-            //                 onPressed: () {
-            //                   Navigator.push(
-            //                       context,
-            //                       PageRouteBuilder(
-            //                           pageBuilder: (_, __, ___) => ChatPage()));
-            //                 },
-            //               )
-            //             ],
-            //           ),
-            //         ),
-            //         // Permet de faire une ligne séparatrice
-            //         Divider(
-            //           color: Colors.grey,
-            //           thickness: 1, // Épaisseur de la ligne
-            //         ),
-            //
-            //         // Toute la partie météo en -dessous du header
-            //         WeatherCard(weatherData: weatherData),
-            //       ],
-            //     )),
-
-            ActivityContainer(activities: activityData, activityHeight:cardActivityHeight)
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }
