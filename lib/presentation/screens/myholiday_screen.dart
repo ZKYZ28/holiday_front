@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:holiday_mobile/presentation/screens/chat_page.dart';
@@ -23,6 +24,7 @@ class WeatherInfo {
   });
 }
 
+@RoutePage()
 class MyHolidayPage extends StatefulWidget {
   const MyHolidayPage({super.key});
 
@@ -115,14 +117,14 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 150,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Mes vacances',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         overflow: TextOverflow.visible,
@@ -131,7 +133,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                     ),
                     Text(
                       '28/03/2022',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -143,13 +145,13 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
               ElevatedButton.icon(
                 style: ButtonStyle(
                   padding: MaterialStateProperty.all(
-                      EdgeInsets.only(left: 10, right: 10)),
+                      const EdgeInsets.only(left: 10, right: 10)),
                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
                       if (states.contains(MaterialState.pressed)) {
-                        return Color(0xFF1E3A8A);
+                        return const Color(0xFF1E3A8A);
                       }
-                      return Color(0xFF1E3A8A);
+                      return const Color(0xFF1E3A8A);
                     },
                   ),
                 ),
@@ -180,8 +182,8 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                         padding: const EdgeInsets.only(right: 4.0),
                         child: ElevatedButton.icon(
                           style: ButtonStyle(
-                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10)),
-                            backgroundColor: MaterialStateProperty.all(Color(0xFF1E3A8A)),
+                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 10)),
+                            backgroundColor: MaterialStateProperty.all(const Color(0xFF1E3A8A)),
                           ),
                           icon: const Icon(Icons.cloud),
                           label: const Text('Visualiser'),
@@ -196,8 +198,8 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: ElevatedButton.icon(
                           style: ButtonStyle(
-                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10)),
-                            backgroundColor: MaterialStateProperty.all(Color(0xFF1E3A8A)),
+                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 10)),
+                            backgroundColor: MaterialStateProperty.all(const Color(0xFF1E3A8A)),
                           ),
                           icon: const Icon(Icons.publish),
                           label: const Text('Publier'),
@@ -212,7 +214,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                         padding: const EdgeInsets.only(left: 4.0),
                         child: ElevatedButton.icon(
                           style: ButtonStyle(
-                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10)),
+                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 10)),
                             backgroundColor: MaterialStateProperty.all(Colors.red),
                           ),
                           icon: const Icon(Icons.exit_to_app),

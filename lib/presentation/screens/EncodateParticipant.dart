@@ -1,4 +1,4 @@
-import 'package:easy_search_bar/easy_search_bar.dart';
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/presentation/screens/myholiday_screen.dart';
@@ -10,7 +10,7 @@ class Participant {
 
   Participant({required this.id, required this.nom, required this.email});
 }
-
+@RoutePage()
 class EncodeParticipant extends StatefulWidget {
   const EncodeParticipant({super.key});
 

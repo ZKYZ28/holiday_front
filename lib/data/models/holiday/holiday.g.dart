@@ -13,8 +13,9 @@ Holiday _$HolidayFromJson(Map<String, dynamic> json) => Holiday(
       startDate: json['startDate'] as String,
       endDate: json['endDate'] as String,
       location: Location.fromJson(json['location'] as Map<String, dynamic>),
-      participant:
-          Participant.fromJson(json['participant'] as Map<String, dynamic>),
+      participant: json['participant'] == null
+          ? null
+          : Participant.fromJson(json['participant'] as Map<String, dynamic>),
       isPublish: json['isPublish'] as bool,
       activities: (json['activities'] as List<dynamic>)
           .map((e) => Activity.fromJson(e as Map<String, dynamic>))

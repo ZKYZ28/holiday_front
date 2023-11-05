@@ -12,8 +12,8 @@ class HolidayInitial extends HolidayState {}
 class HolidayLoading extends HolidayState {}
 
 class HolidayLoaded extends HolidayState {
-  final Holiday holiday;
-  const HolidayLoaded(this.holiday);
+  final List<Holiday> holidays;
+  const HolidayLoaded(this.holidays);
 }
 
 class HolidayError extends HolidayState {

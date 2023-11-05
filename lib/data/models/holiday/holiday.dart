@@ -14,7 +14,7 @@ class Holiday {
   final String startDate;
   final String endDate;
   final Location location;
-  final Participant participant;
+  final Participant? participant;
   final bool isPublish;
   final List<Activity> activities;
   final String holidayPath;
@@ -26,7 +26,7 @@ class Holiday {
     required this.startDate,
     required this.endDate,
     required this.location,
-    required this.participant,
+    this.participant,
     required this.isPublish,
     required this.activities,
     required this.holidayPath,

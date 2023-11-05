@@ -4,7 +4,7 @@ import 'package:holiday_mobile/data/providers/holiday_api_provider.dart';
 class HolidayApiRepository{
   final _holidayProvider = HolidayApiProvider();
 
-  Future<Holiday> fetchHolidayPublished() {
+  Future<List<Holiday>> fetchHolidayPublished() {
     return _holidayProvider.fetchHolidayPublished();
   }
 

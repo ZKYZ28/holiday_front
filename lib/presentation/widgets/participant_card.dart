@@ -1,4 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:holiday_mobile/routes/app_router.gr.dart';
 
 class ParticipantCard extends StatefulWidget {
   final double nameColumnWidth;
@@ -49,13 +51,13 @@ class _ParticipantCardState extends State<ParticipantCard> {
             // TODO : propre
             if (widget.title != '' && widget.icon != null)
             Container(
-              margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     widget.title,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                         color: Color(0xFF1E3A8A)),
@@ -65,14 +67,15 @@ class _ParticipantCardState extends State<ParticipantCard> {
                       alignment: Alignment.center,
                       width: 35,
                       height: 35,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle, // cerle en fond
                         color: Color(0xFF1E3A8A),
                       ),
                       child: IconButton(
-                        onPressed: () => _addParticipant(
-                            "Edwinaaaaaaaa", "e.devlegelaer@student.hemo.be"),
-                        icon: Icon(
+                        // onPressed: () => _addParticipant(
+                        //     "Edwinaaaaaaaa", "e.devlegelaer@student.hemo.be"),
+                        onPressed: () => context.router.push(EncodeParticipant()),
+                        icon: const Icon(
                           Icons.add,
                           size: 20,
                           color: Colors.white,
@@ -93,21 +96,21 @@ class _ParticipantCardState extends State<ParticipantCard> {
                       label: SizedBox(
                         width: widget.nameColumnWidth,
                         // 20% de la largeur de l'écran
-                        child: Text('Nom'),
+                        child: const Text('Nom'),
                       ),
                     ),
                     DataColumn(
                       label: SizedBox(
                         width: widget.emailColumnWidth,
                         // 50% de la largeur de l'écran
-                        child: Text('Email'),
+                        child: const Text('Email'),
                       ),
                     ),
                     DataColumn(
                       label: SizedBox(
                         width: widget.buttonColumnWidth,
                         // 20% de la largeur de l'écran
-                        child: Text(''),
+                        child: const Text(''),
                       ),
                     ),
                   ],

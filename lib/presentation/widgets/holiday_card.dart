@@ -1,11 +1,14 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/presentation/widgets/icon_with_text.dart';
+import 'package:holiday_mobile/routes/app_router.gr.dart';
 
 class HolidayCard extends StatelessWidget {
   final String name;
   final String description;
+  final String pathUrl;
 
-  HolidayCard({required this.name, required this.description});
+  HolidayCard({required this.name, required this.description, required this.pathUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,7 @@ class HolidayCard extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     // Action d'édition
+                    context.router.push(const MyHolidayRoute());
                   },
                   icon: const Icon(
                     Icons.edit,
@@ -74,6 +78,7 @@ class HolidayCard extends StatelessWidget {
                 Flexible(
                   flex: 2, // La partie image occupe 2 parts sur 5 (40%)
                   child: Image.asset("assets/images/bgHoliday.jpg"),
+                 // child: Image.network('https://localhost:7048/${pathUrl}'),
                 ),
                 Flexible(
                   flex: 3, // La colonne occupe 3 parts sur 5 (60%)

@@ -7,12 +7,15 @@ class HolidayApiProvider{
     final Dio _dio = createDioInstance();
 
 
-    Future<Holiday> fetchHolidayPublished() async {
+    Future<List<Holiday>> fetchHolidayPublished() async {
       try {
         Response response = await _dio.get('v1/Holiday/allPublished');
         print(response.data);
 
-        return Holiday.fromJson(response.data);
+        // conversion list
+        List<Holiday> holidays = (response.data as List<dynamic>).map((index) => Holiday.fromJson(index as Map<String, dynamic>)).toList();
+
+        return holidays;
 
       } on DioException catch (e){
         print("Exception 1 occurred: $e ");
