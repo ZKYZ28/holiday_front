@@ -77,8 +77,8 @@ class HolidayCard extends StatelessWidget {
               children: [
                 Flexible(
                   flex: 2, // La partie image occupe 2 parts sur 5 (40%)
-                  child: Image.asset("assets/images/bgHoliday.jpg"),
-                 // child: Image.network('https://localhost:7048/${pathUrl}'),
+                 // child: Image.asset("assets/images/bgHoliday.jpg"),
+                 child: Image.network('https://10.0.2.2:7048/${pathUrl}'),
                 ),
                 Flexible(
                   flex: 3, // La colonne occupe 3 parts sur 5 (60%)
