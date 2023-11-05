@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
+import 'package:holiday_mobile/presentation/widgets/common/error_message.dart';
 import 'package:holiday_mobile/presentation/widgets/holiday_card.dart';
 import 'package:auto_route/annotations.dart';
 
@@ -24,26 +25,25 @@ class _HolidaysPageState extends State<HolidaysPage> {
 
   @override
   void initState() {
-    _holidayBloc.add(GetHolidayPublished());
+    _holidayBloc.add(const GetHolidayByParticipant(participantId: '7c37a95d-b3ce-4862-a339-f75b23c1ff8b'));
     super.initState();
   }
 
+  // Switch du toggle
   bool isToggled = false;
 
-  final holidaysList = [
-    {
-      "name": "Monaco 2023",
-      "description": "On va bien s'amuser",
-    },
-    {
-      "name": "Monaco 2024",
-      "description": "On va encore bien s'amuser",
-    },
-    {
-      "name": "Monaco 2025",
-      "description": "On va encore encore bien s'amuser",
-    }
-  ];
+  void toggleSwitch(bool value) {
+    setState(() {
+      isToggled = value;
+
+      // Appeler la méthode du bloc en fonction de la valeur de isToggled
+      if (isToggled) {
+        _holidayBloc.add(GetHolidayPublished());
+      } else {
+        _holidayBloc.add(const GetHolidayByParticipant(participantId: '7c37a95d-b3ce-4862-a339-f75b23c1ff8b'));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
 
   Widget _buildListHoliday() {
     return Container(
-      margin: EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8.0),
       child: BlocProvider(
         create: (_) => _holidayBloc,
         child: BlocListener<HolidayBloc, HolidayState>(
@@ -85,13 +85,13 @@ class _HolidaysPageState extends State<HolidaysPage> {
           child: BlocBuilder<HolidayBloc, HolidayState>(
             builder: (context, state) {
               if (state is HolidayInitial) {
-                return LoadingProgressor();
+                return const LoadingProgressor();
               } else if (state is HolidayLoading) {
-                return LoadingProgressor();
+                return const LoadingProgressor();
               } else if (state is HolidayLoaded) {
                 return _buildHolidayCard(context, state.holidays);
               } else if (state is HolidayError) {
-                return Container(child: Text('${state.message}'));
+                return ErrorMessage(message: state.message);
               } else {
                 return Container();
               }
@@ -110,11 +110,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
           children: [
             Switch(
               value: isToggled,
-              onChanged: (value) {
-                setState(() {
-                  isToggled = value;
-                });
-              },
+              onChanged: toggleSwitch,
               activeColor: const Color(0xFF1E3A8A),
             ),
             const Text('Vacances publiées par les utilisateurs'),

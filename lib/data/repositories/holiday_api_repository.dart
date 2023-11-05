@@ -8,4 +8,9 @@ class HolidayApiRepository{
     return _holidayProvider.fetchHolidayPublished();
   }
 
+  Future<List<Holiday>> fetchHolidayByParticipant(String participantId) {
+    return _holidayProvider.fetchHolidayByParticipant(participantId);
+  }
+
+
 }
