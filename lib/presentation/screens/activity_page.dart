@@ -92,7 +92,7 @@ class _ActivityState extends State<Activity> {
                                 return AlertDialog(
                                   title: const Text("Confirmation"),
                                   content: const Text(
-                                      "Etes-vous sûr de vouloir supprimer cette vacance ?"),
+                                      "Etes-vous sûr de vouloir supprimer cette activité ?"),
                                   actions: [
                                     ButtonBar(
                                       alignment: MainAxisAlignment.spaceAround,
@@ -138,8 +138,9 @@ class _ActivityState extends State<Activity> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     iconWithText(Icons.calendar_month, '30/03/2022'),
-                    iconWithText(Icons.people_sharp, '4'),
+                    iconWithText(Icons.euro, '10.00'),
                     iconWithText(Icons.location_on, 'Monaco'),
+                    iconWithText(Icons.people_sharp, '4'),
                   ],
                 ),
               ),
