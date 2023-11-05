@@ -11,7 +11,6 @@ Participant _$ParticipantFromJson(Map<String, dynamic> json) => Participant(
       lastName: json['lastName'] as String,
       firstName: json['firstName'] as String,
       email: json['email'] as String,
-      srcImage: json['srcImage'] as String,
     );
 
 Map<String, dynamic> _$ParticipantToJson(Participant instance) =>
@@ -20,5 +19,4 @@ Map<String, dynamic> _$ParticipantToJson(Participant instance) =>
       'lastName': instance.lastName,
       'firstName': instance.firstName,
       'email': instance.email,
-      'srcImage': instance.srcImage,
     };

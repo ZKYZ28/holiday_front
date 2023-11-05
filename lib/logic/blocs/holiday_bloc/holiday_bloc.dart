@@ -10,6 +10,8 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
   final HolidayApiRepository holidayRepository = HolidayApiRepository();
 
   HolidayBloc() : super(HolidayInitial()) {
+
+
     on<GetHolidayByParticipant>((event, emit) async {
       try {
         emit(HolidayLoading());
