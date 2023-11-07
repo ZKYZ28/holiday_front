@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:holiday_mobile/presentation/widgets/message_chat.dart';
+import 'package:holiday_mobile/presentation/widgets/chat/message_chat.dart';
 import 'package:auto_route/annotations.dart';
 
 @RoutePage()

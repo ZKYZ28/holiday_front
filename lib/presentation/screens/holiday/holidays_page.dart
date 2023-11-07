@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/presentation/widgets/common/error_message.dart';
-import 'package:holiday_mobile/presentation/widgets/holiday_card.dart';
+import 'package:holiday_mobile/presentation/widgets/holiday/holiday_card.dart';
 import 'package:auto_route/annotations.dart';
 
-import '../../data/models/holiday/holiday.dart';
-import '../../routes/app_router.gr.dart';
-import '../widgets/common/progress_loading_widget.dart';
+import '../../../data/models/holiday/holiday.dart';
+import '../../../routes/app_router.gr.dart';
+import '../../widgets/common/progress_loading_widget.dart';
 
 @RoutePage()
 class HolidaysPage extends StatefulWidget {

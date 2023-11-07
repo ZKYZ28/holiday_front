@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:holiday_mobile/presentation/widgets/icon_with_text.dart';
+import 'package:holiday_mobile/presentation/widgets/common/icon_with_text.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
 
 class HolidayCard extends StatelessWidget {

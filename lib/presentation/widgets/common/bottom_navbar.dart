@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
 
-import '../../routes/app_router.dart';
+import '../../../routes/app_router.dart';
 
 class BottomNavBar extends StatelessWidget {
   final AppRouter appRouter;

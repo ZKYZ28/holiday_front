@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:holiday_mobile/presentation/widgets/bottom_navbar.dart';
+import 'package:holiday_mobile/presentation/widgets/common/bottom_navbar.dart';
 import 'package:holiday_mobile/routes/app_router.dart';
 
 

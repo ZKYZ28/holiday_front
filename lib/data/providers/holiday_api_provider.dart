@@ -4,7 +4,8 @@ import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:holiday_mobile/data/providers/dio_instance.dart';
 
 class HolidayApiProvider{
-    final Dio _dio = createDioInstance();
+
+    final Dio _dio = DioService().dio;
 
 
     Future<List<Holiday>> fetchHolidayByParticipant(String participantId) async {

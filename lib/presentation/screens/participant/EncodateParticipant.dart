@@ -1,7 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:holiday_mobile/presentation/screens/myholiday_screen.dart';
+import 'package:holiday_mobile/presentation/screens/holiday/myholiday_screen.dart';
 
 class Participant {
   final int id;

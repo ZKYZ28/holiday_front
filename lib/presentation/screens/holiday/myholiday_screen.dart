@@ -1,12 +1,12 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:holiday_mobile/presentation/screens/chat_page.dart';
-import 'package:holiday_mobile/presentation/widgets/activity_card.dart';
-import 'package:holiday_mobile/presentation/widgets/participant_card.dart';
+import 'package:holiday_mobile/presentation/screens/chat/chat_page.dart';
+import 'package:holiday_mobile/presentation/widgets/activity/activity_card.dart';
+import 'package:holiday_mobile/presentation/widgets/participant/participant_card.dart';
 
-import '../widgets/activity_container.dart';
-import '../widgets/weather_card.dart';
+import '../../widgets/activity/activity_container.dart';
+import '../../widgets/weather/weather_card.dart';
 
 class WeatherInfo {
   final String dayOfWeek;

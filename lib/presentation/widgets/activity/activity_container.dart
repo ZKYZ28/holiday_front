@@ -2,7 +2,7 @@ import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:holiday_mobile/presentation/screens/activity_page.dart';
+import 'package:holiday_mobile/presentation/screens/activity/activity_page.dart';
 
 import 'activity_card.dart';
 

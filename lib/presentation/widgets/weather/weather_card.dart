@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/myholiday_screen.dart';
+import '../../screens/holiday/myholiday_screen.dart';
 
 class WeatherCard extends StatefulWidget {
   const WeatherCard({
