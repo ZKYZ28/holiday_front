@@ -30,10 +30,10 @@ class _HolidaysPageState extends State<HolidaysPage> {
     //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
     _holidayBloc.add(const GetHolidayByParticipant(
       //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-        participantId: '22de2e91-94f8-475b-930b-87e8d9f80704'));
+        participantId: '9e0b1891-15d0-4b81-8f50-a5f63d1b94c9'));
     _invitationBloc.add(const GetAllInvitationsByParticipant(
       //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-        participantId: 'f70fefe8-61b2-43f6-8203-c30e9a17d2b3'));
+        participantId: 'ca0d0174-bc3f-4af4-8aa9-8f65106a5daa'));
     super.initState();
   }
 
@@ -51,7 +51,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
       } else {
         //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
         _holidayBloc.add(const GetHolidayByParticipant(
-            participantId: '22de2e91-94f8-475b-930b-87e8d9f80704'));
+            participantId: '9e0b1891-15d0-4b81-8f50-a5f63d1b94c9'));
       }
     });
   }
@@ -69,7 +69,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
           ElevatedButton(
             onPressed: () {
               //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-              context.router.push(InvitationsRoute(participantId: "f70fefe8-61b2-43f6-8203-c30e9a17d2b3"));
+              context.router.push(InvitationsRoute(participantId: "ca0d0174-bc3f-4af4-8aa9-8f65106a5daa"));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF1E3A8A),
@@ -81,7 +81,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
                   value: _invitationBloc,
                   child: BlocBuilder<InvitationBloc, InvitationState>(
                     builder: (context, state) {
-                      if (state is InvitationInitial || state is InvitationLoading) {
+                      if (state.status == InvitationStateStatus.initial || state.status == InvitationStateStatus.loading) {
                         return const CircleAvatar(
                           backgroundColor: Colors.red,
                           radius: 15.0,
@@ -90,7 +90,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
                             style: TextStyle(color: Colors.white),
                           ),
                         );
-                      } else if (state is InvitationLoaded) {
+                      } else if (state.status == InvitationStateStatus.loaded) {
                         inivtationsList = state.invitationsList ?? [];
 
                         return CircleAvatar(
@@ -152,11 +152,11 @@ class _HolidaysPageState extends State<HolidaysPage> {
             ),
             BlocListener<InvitationBloc, InvitationState>(
               listener: (context, state) {
-                if (state is InvitationError) {
+                if (state.status == InvitationStateStatus.error) {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentMaterialBanner()
                     ..showMaterialBanner(
-                        CustomMessage(message: state.message!).build(context));
+                        CustomMessage(message: state.errorMessage!).build(context));
                 }
               },
             ),

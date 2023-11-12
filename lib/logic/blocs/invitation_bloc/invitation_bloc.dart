@@ -11,7 +11,7 @@ part 'invitation_state.dart';
 class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
   final InvitationApiRepository invitationApiRepository = InvitationApiRepository();
 
-  InvitationBloc() : super(InvitationInitial()) {
+  InvitationBloc() : super(InvitationState()) {
 
     on<CreateInvitations>((event, emit) async {
       try {
@@ -21,21 +21,21 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
         await invitationApiRepository.createInvitations(participants, holidayId);
 
       } on ApiException catch (e) {
-        emit(InvitationError(e.toString()));
+        emit(state.copyWith(errorMessage : e.toString()));
       }
     });
 
     on<GetAllInvitationsByParticipant>((event, emit) async {
       try {
-        emit(InvitationLoading());
+        emit(state.copyWith(status: InvitationStateStatus.loading));
 
         final participantId = event.participantId;
         final invitationsList = await invitationApiRepository.getAllInvitationsByParticipant(participantId);
 
-        emit(InvitationLoaded(invitationsList));
+        emit(state.copyWith(status: InvitationStateStatus.loaded, invitationsList: invitationsList));
 
       } on ApiException catch (e) {
-        emit(InvitationError(e.toString()));
+        emit(state.copyWith(errorMessage: e.toString()));
       }
     });
 
@@ -46,7 +46,7 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
         await invitationApiRepository.acceptInvitation(invitation);
 
       } on ApiException catch (e) {
-        emit(InvitationError(e.toString()));
+        emit(state.copyWith(errorMessage: e.toString()));
       }
     });
 
@@ -57,7 +57,7 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
         await invitationApiRepository.refuseInvitation(invitation);
 
       } on ApiException catch (e) {
-        emit(InvitationError(e.toString()));
+        emit(state.copyWith(errorMessage: e.toString()));
       }
     });
 

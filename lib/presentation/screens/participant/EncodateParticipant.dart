@@ -100,10 +100,10 @@ class _EncodeParticipantState extends State<EncodeParticipant> {
             ),
             BlocListener<InvitationBloc, InvitationState>(
               listener: (context, state) {
-                if (state is InvitationError) {
+                if (state.status == InvitationStateStatus.error) {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentMaterialBanner()
-                    ..showMaterialBanner(CustomMessage(message: state.message!).build(context));
+                    ..showMaterialBanner(CustomMessage(message: state.errorMessage!).build(context));
                 }
               },
             ),

@@ -29,7 +29,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
   void initState() {
     _invitationBloc.add(const GetAllInvitationsByParticipant(
       //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-        participantId: 'f70fefe8-61b2-43f6-8203-c30e9a17d2b3'));
+        participantId: 'ca0d0174-bc3f-4af4-8aa9-8f65106a5daa'));
     super.initState();
   }
 
@@ -52,19 +52,19 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
         create: (_) => _invitationBloc,
         child: BlocListener<InvitationBloc, InvitationState>(
           listener: (context, state) {
-            if (state is InvitationError) {
+            if (state.status == InvitationStateStatus.error) {
               ScaffoldMessenger.of(context)
                 ..hideCurrentMaterialBanner()
-                ..showMaterialBanner(CustomMessage(message: state.message!).build(context));
+                ..showMaterialBanner(CustomMessage(message: state.errorMessage!).build(context));
             }
           },
           child: BlocBuilder<InvitationBloc, InvitationState>(
             builder: (context, state) {
-              if (state is InvitationInitial || state is InvitationLoading) {
+              if (state.status == InvitationStateStatus.initial || state.status == InvitationStateStatus.loading) {
                 return const LoadingProgressor();
-              } else if (state is InvitationLoaded) {
+              } else if (state.status == InvitationStateStatus.loaded) {
                 final invitations = state.invitationsList ?? [];
-                return _buildInvitations(context, invitations!, _invitationBloc);
+                return _buildInvitations(context, invitations, _invitationBloc);
               } else {
                 return Container();
               }

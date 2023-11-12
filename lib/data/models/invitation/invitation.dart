@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -6,7 +7,7 @@ import '../participant/participant.dart';
 part 'invitation.g.dart';
 
 @JsonSerializable()
-class Invitation {
+class Invitation extends Equatable {
   final String? id;
   final String holidayId;
   final Holiday? holiday;
@@ -45,4 +46,7 @@ class Invitation {
     }
     return jsonList;
   }
+
+  @override
+  List<Object?> get props => [id, holidayId, participantId];
 }
