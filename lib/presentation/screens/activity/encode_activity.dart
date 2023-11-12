@@ -1,7 +1,7 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
-import 'package:holiday_mobile/presentation/widgets/image_picker.dart';
-import 'package:holiday_mobile/presentation/widgets/location_form.dart';
+import 'package:holiday_mobile/presentation/widgets/common/image_picker.dart';
+import 'package:holiday_mobile/presentation/widgets/location/location_form.dart';
 import 'package:auto_route/annotations.dart';
 import 'dart:io';
 
