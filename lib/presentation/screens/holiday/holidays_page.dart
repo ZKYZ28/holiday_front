@@ -5,11 +5,11 @@ import 'package:holiday_mobile/data/models/invitation/invitation.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/invitation_bloc/invitation_bloc.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
-import 'package:holiday_mobile/presentation/widgets/holiday_card.dart';
 
-import '../../data/models/holiday/holiday.dart';
-import '../../routes/app_router.gr.dart';
-import '../widgets/common/progress_loading_widget.dart';
+import '../../../data/models/holiday/holiday.dart';
+import '../../../routes/app_router.gr.dart';
+import '../../widgets/common/progress_loading_widget.dart';
+import '../../widgets/holiday/holiday_card.dart';
 
 @RoutePage()
 class HolidaysPage extends StatefulWidget {

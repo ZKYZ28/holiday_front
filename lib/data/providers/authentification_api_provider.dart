@@ -59,7 +59,7 @@ class AuthAPiProvider {
      // return jwt;
 
     } on DioException catch (e){
-      throw ApiException.fromJson(e.response?.data);
+      throw ApiException('Une erreur s\'est produite lors de l\'authentification', e);
 
     } catch (e, stacktrace) {
       throw ApiException("Une erreur s'est produite lors de l'authentification", e);

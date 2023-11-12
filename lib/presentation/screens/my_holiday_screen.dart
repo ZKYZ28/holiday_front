@@ -4,12 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/participant_bloc/participant_bloc.dart';
-import 'package:holiday_mobile/presentation/screens/chat_page.dart';
+import 'package:holiday_mobile/presentation/widgets/activity/activity_container.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
 import 'package:holiday_mobile/presentation/widgets/common/progress_loading_widget.dart';
-import 'package:holiday_mobile/presentation/widgets/participant_card.dart';
+import 'package:holiday_mobile/presentation/widgets/participant/participant_card.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
-import '../widgets/activity_container.dart';
+
+import 'chat/chat_page.dart';
 
 
 @RoutePage()
@@ -85,8 +86,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
               icon: const Icon(Icons.chat),
               label: const Text('Chatter'),
               onPressed: () {
-                Navigator.push(context,
-                    PageRouteBuilder(pageBuilder: (_, __, ___) => ChatPage()));
+                context.router.push(const ChatRoute());
               },
             ),
           ],

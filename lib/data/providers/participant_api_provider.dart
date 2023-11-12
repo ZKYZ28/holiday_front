@@ -5,7 +5,7 @@ import 'package:holiday_mobile/data/models/participant/participant.dart';
 import 'package:holiday_mobile/data/providers/dio_instance.dart';
 
 class ParticipantApiProvider{
-  final Dio _dio = createDioInstance();
+  final Dio _dio = DioService().dio;
 
 
   Future<void> leaveHoliday(String participantId, Holiday holiday) async {

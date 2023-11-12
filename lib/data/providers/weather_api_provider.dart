@@ -4,7 +4,7 @@ import 'package:holiday_mobile/data/models/weather/weather.dart';
 import 'package:holiday_mobile/data/providers/dio_instance.dart';
 
 class WeatherApiProvider{
-  final Dio _dio = createDioInstance();
+  final Dio _dio = DioService().dio;
 
 
   Future<Weather> fetchWeatherByHoliday(String holidayId) async {

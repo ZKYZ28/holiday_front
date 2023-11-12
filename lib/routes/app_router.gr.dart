@@ -10,22 +10,27 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i13;
 import 'package:flutter/material.dart' as _i14;
-import 'package:holiday_mobile/presentation/screens/activity_page.dart' as _i1;
-import 'package:holiday_mobile/presentation/screens/chat_page.dart' as _i2;
-import 'package:holiday_mobile/presentation/screens/EncodateParticipant.dart'
-    as _i5;
-import 'package:holiday_mobile/presentation/screens/encode_activity.dart'
+import 'package:holiday_mobile/presentation/screens/activity/activity_page.dart'
+    as _i1;
+import 'package:holiday_mobile/presentation/screens/activity/encode_activity.dart'
     as _i3;
-import 'package:holiday_mobile/presentation/screens/encode_holiday.dart' as _i4;
-import 'package:holiday_mobile/presentation/screens/holidays_page.dart' as _i6;
+import 'package:holiday_mobile/presentation/screens/authentification/login_page.dart'
+    as _i9;
+import 'package:holiday_mobile/presentation/screens/authentification/register_page.dart'
+    as _i11;
+import 'package:holiday_mobile/presentation/screens/chat/chat_page.dart' as _i2;
+import 'package:holiday_mobile/presentation/screens/chat/list_holidays_chat.dart'
+    as _i8;
+import 'package:holiday_mobile/presentation/screens/holiday/encode_holiday.dart'
+    as _i4;
+import 'package:holiday_mobile/presentation/screens/holiday/holidays_page.dart'
+    as _i6;
 import 'package:holiday_mobile/presentation/screens/invitations_screen.dart'
     as _i7;
-import 'package:holiday_mobile/presentation/screens/list_holidays_chat.dart'
-    as _i8;
-import 'package:holiday_mobile/presentation/screens/login_page.dart' as _i9;
 import 'package:holiday_mobile/presentation/screens/my_holiday_screen.dart'
     as _i10;
-import 'package:holiday_mobile/presentation/screens/register_page.dart' as _i11;
+import 'package:holiday_mobile/presentation/screens/participant/EncodateParticipant.dart'
+    as _i5;
 import 'package:holiday_mobile/presentation/screens/weather_screen.dart'
     as _i12;
 
