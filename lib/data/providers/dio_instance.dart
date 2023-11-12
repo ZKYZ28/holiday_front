@@ -8,7 +8,7 @@ class DioService {
   // Un constructeur factory permet de créer une nouvelle instance d'une classe
   // ou retourner une instance existante -> parfait pour notre singleton
   factory DioService({String? baseUrl}) {
-    return _instance ?? DioService._internal(baseUrl : baseUrl);
+    return _instance ??= DioService._internal(baseUrl: baseUrl);
   }
 
   Dio get dio => _dio;
@@ -21,6 +21,14 @@ class DioService {
       receiveTimeout: const Duration(seconds: 5)
       // TODO : ajouter les interceptor ici pour le JWT
     ));
+  }
+
+  void setAuthorizationBearer(String? jwt) {
+    if (jwt != null) {
+      _dio.options.headers['Authorization'] = "Bearer $jwt";
+    } else {
+      _dio.options.headers.remove('Authorization');
+    }
   }
 
 }

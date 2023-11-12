@@ -1,5 +1,6 @@
 part of 'login_bloc.dart';
 
+
 class LoginState extends Equatable {
 
   final FormzSubmissionStatus status;

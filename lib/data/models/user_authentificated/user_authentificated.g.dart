@@ -12,6 +12,7 @@ UserAuthentificated _$UserAuthentificatedFromJson(Map<String, dynamic> json) =>
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       email: json['email'] as String,
+      exp: json['exp'] as num,
     );
 
 Map<String, dynamic> _$UserAuthentificatedToJson(
@@ -21,6 +22,7 @@ Map<String, dynamic> _$UserAuthentificatedToJson(
       'firstName': instance.firstName,
       'lastName': instance.lastName,
       'email': instance.email,
+      'exp': instance.exp,
     };
 
 GoogleAuth _$GoogleAuthFromJson(Map<String, dynamic> json) => GoogleAuth(

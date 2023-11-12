@@ -30,7 +30,7 @@ class BottomNavBar extends StatelessWidget {
           label: 'Chat',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.logout),
+          icon: Icon(Icons.account_circle_outlined),
           label: 'Se déconnecter',
         ),
       ],
