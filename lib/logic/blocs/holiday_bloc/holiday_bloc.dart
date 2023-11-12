@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:holiday_mobile/data/repositories/holiday_api_repository.dart';
 
@@ -17,11 +18,11 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
         emit(HolidayLoading());
 
         final participantId = event.participantId;
-        final mList = await holidayRepository.fetchHolidayByParticipant(participantId);
-        emit(HolidayLoaded(mList));
-      } catch (e) {
-        print("Erreur lors de communication avec l'API BY PARTICIPANT");
-        emit(const HolidayError("Erreur lors de communication avec l'API"));
+        final holidaysByParticipant = await holidayRepository.fetchHolidayByParticipant(participantId);
+
+        emit(HolidayLoaded.list(holidaysByParticipant));
+      } on ApiException catch (e) {
+        emit(HolidayError(e.toString()));
       }
     });
 
@@ -29,12 +30,46 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
       try {
         emit(HolidayLoading());
 
-        final mList = await holidayRepository.fetchHolidayPublished();
-        emit(HolidayLoaded(mList));
-      } catch (e) {
-        print("Erreur lors de la communication avec l'API PUBLISHED");
-        emit(const HolidayError("Erreur lors de la communication avec l'API"));
+        final holidaysPublished = await holidayRepository.fetchHolidayPublished();
+
+        emit(HolidayLoaded.list(holidaysPublished));
+      } on ApiException catch (e) {
+        emit(HolidayError(e.toString()));
       }
     });
+
+    on<GetHoliday>((event, emit) async {
+      try {
+        emit(HolidayLoading());
+
+        final holidayId = event.holidayId;
+        final holiday = await holidayRepository.fetchHoliday(holidayId);
+
+        emit(HolidayLoaded.item(holiday));
+      } on ApiException catch (e) {
+        emit(HolidayError(e.toString()));
+      }
+    });
+
+    on<PublishHoliday>((event, emit) async {
+      try {
+        final holiday = event.holiday;
+        await holidayRepository.publishHoliday(holiday);
+
+      } on ApiException catch (e) {
+        emit(HolidayError(e.toString()));
+      }
+    });
+
+    on<DeleteHoliday>((event, emit) async {
+      try {
+        final holiday = event.holiday;
+        await holidayRepository.deleteHoliday(holiday);
+
+      } on ApiException catch (e) {
+        emit(HolidayError(e.toString()));
+      }
+    });
+
   }
 }

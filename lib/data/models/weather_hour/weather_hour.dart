@@ -5,7 +5,7 @@ part 'weather_hour.g.dart';
 @JsonSerializable()
 class WeatherHour {
   final String dateAndTime;
-  final int temp;
+  final num temp;
   final String pathImage;
 
   WeatherHour({

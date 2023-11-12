@@ -8,7 +8,7 @@ part of 'weather_hour.dart';
 
 WeatherHour _$WeatherHourFromJson(Map<String, dynamic> json) => WeatherHour(
       dateAndTime: json['dateAndTime'] as String,
-      temp: json['temp'] as int,
+      temp: json['temp'] as num,
       pathImage: json['pathImage'] as String,
     );
 

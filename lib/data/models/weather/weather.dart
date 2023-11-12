@@ -5,11 +5,11 @@ part 'weather.g.dart';
 
 @JsonSerializable()
 class Weather {
-  final WeatherDay currentDay;
+  final WeatherDay? currentDay;
   final List<WeatherDay> weatherDays;
 
   Weather({
-    required this.currentDay,
+    this.currentDay,
     required this.weatherDays,
   });
 

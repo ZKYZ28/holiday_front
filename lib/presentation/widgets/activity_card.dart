@@ -1,19 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:holiday_mobile/data/models/activity/activity.dart';
 
 class ActivityCard extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String date;
-  final double price;
+  final Activity activity;
 
 
   const ActivityCard({
     Key? key,
-    required this.imageUrl,
-    required this.title,
-    required this.date,
-    required this.price,
+    required this.activity,
   }) : super(key: key);
 
 
@@ -22,16 +16,11 @@ class ActivityCard extends StatelessWidget {
     return Card(
       color: Colors.grey[100],
       child :ListTile(
-      leading: Image(
-        width: 75,
-        height: 100,
-        fit: BoxFit.cover,
-        image: AssetImage('assets/images/bgHoliday.jpg'),
-      ),
+      leading: Image.network('https://10.0.2.2:7048/${activity.activityPath}'),
       title:
           Text(
-            title,
-            style: TextStyle(
+            activity.name,
+            style: const TextStyle(
               fontSize: 22,
               color: Color(0xFF1E3A8A),
               fontWeight: FontWeight.bold,
@@ -43,19 +32,19 @@ class ActivityCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
         Text(
-        date,
-        style: TextStyle(
+        activity.startDate,
+        style: const TextStyle(
           fontSize: 14,
           color: Colors.black,
         ),
       ),
-          Text('${price} €'),
+          Text('${activity.price} €'),
         ],
       ),
       trailing: Container(
         width: 35,
         height: 35,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           shape: BoxShape.circle, // cerle en fond
           color: Color(0xFF1E3A8A),
         ),
@@ -63,7 +52,7 @@ class ActivityCard extends StatelessWidget {
           onPressed: () {
             print('Add appuyé');
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.remove_red_eye,
             size: 20,
             color: Colors.white,

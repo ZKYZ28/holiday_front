@@ -7,8 +7,9 @@ part of 'weather.dart';
 // **************************************************************************
 
 Weather _$WeatherFromJson(Map<String, dynamic> json) => Weather(
-      currentDay:
-          WeatherDay.fromJson(json['currentDay'] as Map<String, dynamic>),
+      currentDay: json['currentDay'] == null
+          ? null
+          : WeatherDay.fromJson(json['currentDay'] as Map<String, dynamic>),
       weatherDays: (json['weatherDays'] as List<dynamic>)
           .map((e) => WeatherDay.fromJson(e as Map<String, dynamic>))
           .toList(),

@@ -23,4 +23,26 @@ class Invitation {
 
   factory Invitation.fromJson(Map<String, dynamic> json) => _$InvitationFromJson(json);
   Map<String, dynamic> toJson() => _$InvitationToJson(this);
+
+  static List<Invitation> createInvitations (List<Participant> participants, String holidayId){
+    List<Invitation> invitations = [];
+
+    for (var participant in participants) {
+      var invitation = Invitation(
+        holidayId: holidayId,
+        participantId: participant.id!,
+      );
+      invitations.add(invitation);
+    }
+
+    return invitations;
+  }
+
+  static List<Map<String, dynamic>> invitationsToJsonList(List<Invitation> invitations) {
+    List<Map<String, dynamic>> jsonList = [];
+    for (var invitation in invitations) {
+      jsonList.add(invitation.toJson());
+    }
+    return jsonList;
+  }
 }

@@ -8,12 +8,14 @@ class Participant {
   final String lastName;
   final String firstName;
   final String email;
+  final String passwordHash;
 
   Participant({
     this.id,
     required this.lastName,
     required this.firstName,
     required this.email,
+    required this.passwordHash
   });
 
   factory Participant.fromJson(Map<String, dynamic> json) => _$ParticipantFromJson(json);

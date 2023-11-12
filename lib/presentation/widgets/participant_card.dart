@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:holiday_mobile/data/models/participant/participant.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
 
 class ParticipantCard extends StatefulWidget {
@@ -9,6 +10,8 @@ class ParticipantCard extends StatefulWidget {
   final double tableParticipantsHeight;
   final String title;
   final IconData? icon;
+  final List<Participant> participants;
+  final String holidayId;
 
   const ParticipantCard({
     super.key,
@@ -18,6 +21,8 @@ class ParticipantCard extends StatefulWidget {
     required this.tableParticipantsHeight,
     required this.title,
     this.icon,
+    required this.participants,
+    required this.holidayId
   });
 
   @override
@@ -25,19 +30,7 @@ class ParticipantCard extends StatefulWidget {
 }
 
 class _ParticipantCardState extends State<ParticipantCard> {
-  List<Map<String, String>> participants = [];
 
-  void _addParticipant(String name, String email) {
-    setState(() {
-      participants.add({'name': name, 'email': email});
-    });
-  }
-
-  void _removeParticipant(int index) {
-    setState(() {
-      participants.removeAt(index);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,9 +65,7 @@ class _ParticipantCardState extends State<ParticipantCard> {
                         color: Color(0xFF1E3A8A),
                       ),
                       child: IconButton(
-                        // onPressed: () => _addParticipant(
-                        //     "Edwinaaaaaaaa", "e.devlegelaer@student.hemo.be"),
-                        onPressed: () => context.router.push(EncodeParticipant()),
+                        onPressed: () => { context.router.push(EncodeParticipant(holidayId: widget.holidayId))},
                         icon: const Icon(
                           Icons.add,
                           size: 20,
@@ -85,6 +76,7 @@ class _ParticipantCardState extends State<ParticipantCard> {
                 ],
               ),
             ),
+
             // Tableau des participants
             Expanded(
               child: SingleChildScrollView(
@@ -106,22 +98,15 @@ class _ParticipantCardState extends State<ParticipantCard> {
                         child: const Text('Email'),
                       ),
                     ),
-                    DataColumn(
-                      label: SizedBox(
-                        width: widget.buttonColumnWidth,
-                        // 20% de la largeur de l'écran
-                        child: const Text(''),
-                      ),
-                    ),
                   ],
                   rows: List<DataRow>.generate(
-                    participants.length,
+                    widget.participants.length,
                     (index) => DataRow(cells: [
                       DataCell(
                         SizedBox(
                           width: widget.nameColumnWidth,
                           child: Text(
-                            participants[index]['name'] ?? '',
+                            "${widget.participants[index].firstName}  ${widget.participants[index].lastName}"  ?? '',
                           ),
                         ),
                       ),
@@ -129,17 +114,7 @@ class _ParticipantCardState extends State<ParticipantCard> {
                         SizedBox(
                           width: widget.emailColumnWidth,
                           child: Text(
-                            participants[index]['email'] ?? '',
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        SizedBox(
-                          width: widget.buttonColumnWidth,
-                          child: IconButton(
-                            icon: const Icon(Icons.delete),
-                            color: Colors.red,
-                            onPressed: () => _removeParticipant(index),
+                            widget.participants[index].email ?? '',
                           ),
                         ),
                       ),

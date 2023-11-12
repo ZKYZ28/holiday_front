@@ -13,5 +13,7 @@ class AppRouter extends $AppRouter{
     AutoRoute(page: ChatRoute.page),
     AutoRoute(page: EncodeParticipant.page),
     AutoRoute(page: MyHolidayRoute.page),
+    AutoRoute(page: WeatherRoute.page),
+    AutoRoute(page: InvitationsRoute.page),
   ];
 }

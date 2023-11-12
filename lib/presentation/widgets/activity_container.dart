@@ -1,28 +1,11 @@
 import 'dart:core';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:holiday_mobile/presentation/screens/activity_page.dart';
-
+import 'package:holiday_mobile/data/models/activity/activity.dart';
 import 'activity_card.dart';
 
-class ActivityData {
-  final String title;
-  final double price;
-  final String description;
-  final int numberParticipants;
-  final String date;
-
-  ActivityData({
-  required this.title,
-  required this.description,
-  required this.date,
-  required this.price,
-  required this.numberParticipants});
-}
 
 class ActivityContainer extends StatelessWidget {
-  final List<ActivityData> activities;
+  final List<Activity> activities;
   final double activityHeight;
 
   const ActivityContainer(
@@ -41,11 +24,11 @@ class ActivityContainer extends StatelessWidget {
           children: [
             // Header
             Container(
-              margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Activité(s) prévue(s)',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -58,7 +41,7 @@ class ActivityContainer extends StatelessWidget {
                       Container(
                         width: 35,
                         height: 35,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle, // cerle en fond
                           color: Color(0xFF1E3A8A),
                         ),
@@ -66,20 +49,20 @@ class ActivityContainer extends StatelessWidget {
                           onPressed: () {
                             print('Add appuyé');
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.calendar_month,
                             size: 20,
                             color: Colors.white,
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Container(
                         width: 35,
                         height: 35,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle, // cerle en fond
                           color: Color(0xFF1E3A8A),
                         ),
@@ -87,7 +70,7 @@ class ActivityContainer extends StatelessWidget {
                           onPressed: () {
                             print('Add appuyé');
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.add,
                             size: 20,
                             color: Colors.white,
@@ -100,26 +83,20 @@ class ActivityContainer extends StatelessWidget {
               ),
             ),
             // Permet de faire une ligne séparatrice
-            Divider(
+            const Divider(
               color: Colors.grey,
               thickness: 1, // Épaisseur de la ligne
             ),
 
             // Liste des activités
-
               Expanded(
                 child : ListView.builder(
                   itemCount: activities.length,
                   itemBuilder: (context, index) {
                     final activity = activities[index];
-                    return ActivityCard(
-                        title: activity.title,
-                        date: activity.date,
-                        price: activity.price,
-                        imageUrl : 'assets/images/bgHoliday.jpg');
+                    return ActivityCard(activity: activity);
                   }),
             )
-
 
           ],
         ),

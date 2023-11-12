@@ -1,10 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:holiday_mobile/data/models/invitation/invitation.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
-import 'package:holiday_mobile/presentation/widgets/common/error_message.dart';
+import 'package:holiday_mobile/logic/blocs/invitation_bloc/invitation_bloc.dart';
+import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
 import 'package:holiday_mobile/presentation/widgets/holiday_card.dart';
-import 'package:auto_route/annotations.dart';
 
 import '../../data/models/holiday/holiday.dart';
 import '../../routes/app_router.gr.dart';
@@ -12,7 +13,7 @@ import '../widgets/common/progress_loading_widget.dart';
 
 @RoutePage()
 class HolidaysPage extends StatefulWidget {
-  const HolidaysPage({Key? key}) : super(key: key);
+  const HolidaysPage({super.key});
 
   //Création de l'état
   @override
@@ -22,15 +23,23 @@ class HolidaysPage extends StatefulWidget {
 class _HolidaysPageState extends State<HolidaysPage> {
   //Création du bloc
   final HolidayBloc _holidayBloc = HolidayBloc();
+  final InvitationBloc _invitationBloc = InvitationBloc();
 
   @override
   void initState() {
-    _holidayBloc.add(const GetHolidayByParticipant(participantId: 'c59e12dd-3dbd-47ed-945a-ae8a8bf6dadb'));
+    //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
+    _holidayBloc.add(const GetHolidayByParticipant(
+      //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
+        participantId: '22de2e91-94f8-475b-930b-87e8d9f80704'));
+    _invitationBloc.add(const GetAllInvitationsByParticipant(
+      //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
+        participantId: 'f70fefe8-61b2-43f6-8203-c30e9a17d2b3'));
     super.initState();
   }
 
   // Switch du toggle
   bool isToggled = false;
+  List<Invitation> inivtationsList = [];
 
   void toggleSwitch(bool value) {
     setState(() {
@@ -40,7 +49,9 @@ class _HolidaysPageState extends State<HolidaysPage> {
       if (isToggled) {
         _holidayBloc.add(GetHolidayPublished());
       } else {
-        _holidayBloc.add(const GetHolidayByParticipant(participantId: 'c59e12dd-3dbd-47ed-945a-ae8a8bf6dadb'));
+        //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
+        _holidayBloc.add(const GetHolidayByParticipant(
+            participantId: '22de2e91-94f8-475b-930b-87e8d9f80704'));
       }
     });
   }
@@ -49,20 +60,72 @@ class _HolidaysPageState extends State<HolidaysPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF1E3A8A),
         title: Text(isToggled
             ? 'Vacances publiées par les utilisateurs'
             : 'Mes vacances'),
         actions: [
+          // INVITATIONS
+          ElevatedButton(
+            onPressed: () {
+              //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
+              context.router.push(InvitationsRoute(participantId: "f70fefe8-61b2-43f6-8203-c30e9a17d2b3"));
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1E3A8A),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                BlocProvider<InvitationBloc>.value(
+                  value: _invitationBloc,
+                  child: BlocBuilder<InvitationBloc, InvitationState>(
+                    builder: (context, state) {
+                      if (state is InvitationInitial || state is InvitationLoading) {
+                        return const CircleAvatar(
+                          backgroundColor: Colors.red,
+                          radius: 15.0,
+                          child: Text(
+                            "0",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        );
+                      } else if (state is InvitationLoaded) {
+                        inivtationsList = state.invitationsList ?? [];
+
+                        return CircleAvatar(
+                          backgroundColor: Colors.red,
+                          radius: 15.0,
+                          child: Text(
+                            inivtationsList.length.toString(),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8.0),
+                const Text('Invitations'),
+              ],
+            ),
+          ),
+
+          //ENCODER UNE VACANCES
           ElevatedButton.icon(
             icon: const Icon(Icons.add),
             label: const Text('Encoder'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1E3A8A),
+            ),
             onPressed: () {
               context.router.push(const EncodeHoliday());
             },
           ),
         ],
       ),
-
       body: _buildListHoliday(),
     );
   }
@@ -70,28 +133,41 @@ class _HolidaysPageState extends State<HolidaysPage> {
   Widget _buildListHoliday() {
     return Container(
       margin: const EdgeInsets.all(8.0),
-      child: BlocProvider(
-        create: (_) => _holidayBloc,
-        child: BlocListener<HolidayBloc, HolidayState>(
-          listener: (context, state) {
-            if (state is HolidayError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message!),
-                ),
-              );
-            }
-          },
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<HolidayBloc>(create: (_) => _holidayBloc),
+          BlocProvider<InvitationBloc>(create: (_) => _invitationBloc),
+        ],
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<HolidayBloc, HolidayState>(
+              listener: (context, state) {
+                if (state is HolidayError) {
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentMaterialBanner()
+                    ..showMaterialBanner(
+                        CustomMessage(message: state.message!).build(context));
+                }
+              },
+            ),
+            BlocListener<InvitationBloc, InvitationState>(
+              listener: (context, state) {
+                if (state is InvitationError) {
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentMaterialBanner()
+                    ..showMaterialBanner(
+                        CustomMessage(message: state.message!).build(context));
+                }
+              },
+            ),
+          ],
           child: BlocBuilder<HolidayBloc, HolidayState>(
             builder: (context, state) {
-              if (state is HolidayInitial) {
-                return const LoadingProgressor();
-              } else if (state is HolidayLoading) {
+              if (state is HolidayInitial || state is HolidayLoading) {
                 return const LoadingProgressor();
               } else if (state is HolidayLoaded) {
-                return _buildHolidayCard(context, state.holidays);
-              } else if (state is HolidayError) {
-                return ErrorMessage(message: state.message);
+                final holidays = state.holidaysList ?? [];
+                return _buildHolidayCard(context, holidays);
               } else {
                 return Container();
               }
@@ -113,7 +189,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
               onChanged: toggleSwitch,
               activeColor: const Color(0xFF1E3A8A),
             ),
-            const Text('Vacances publiées par les utilisateurs'),
+            const Text('Vacances publiées/personnels'),
           ],
         ),
         Expanded(
@@ -121,15 +197,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
             itemCount: holidays.length,
             itemBuilder: (context, index) {
               final holiday = holidays[index];
-              final name = holiday.name;
-              final description = holiday.description;
-              final pathUrl = holiday.holidayPath;
-
-              return HolidayCard(
-                name: name,
-                description: description,
-                pathUrl : pathUrl
-              );
+              return HolidayCard(holiday: holiday, holidayBloc: _holidayBloc);
             },
           ),
         ),

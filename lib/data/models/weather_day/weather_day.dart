@@ -7,11 +7,11 @@ part 'weather_day.g.dart';
 @JsonSerializable()
 class WeatherDay {
   final String date;
-  final double maxTemp;
-  final double minTemp;
-  final double currentTemp;
-  final double riskOfRain;
-  final double riskOfSnow;
+  final num maxTemp;
+  final num minTemp;
+  final num currentTemp;
+  final num riskOfRain;
+  final num riskOfSnow;
   final WeatherCondition condition;
   final List<WeatherHour> weatherByHour;
 

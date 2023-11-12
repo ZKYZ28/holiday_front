@@ -19,6 +19,8 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
+  DateTime? startDate;
+  DateTime? endDate;
 
   @override
   void dispose() {
@@ -32,7 +34,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Encoder une vacance'),
+        title: const Text('Encoder une vacance'),
       ),
 
       body: Center(
@@ -46,7 +48,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                 children: [
                   ImagePickerForm(
                     onImagePicked: (pickedImage) {
-                      print(pickedImage);
+                      _image = pickedImage;
                     },
                   ),
                   Container(
@@ -80,13 +82,23 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                               labelText: 'Date de début',
                             ),
                             mode: DateTimeFieldPickerMode.dateAndTime,
-                            autovalidateMode: AutovalidateMode.always,
-                            validator: (e) =>
-                            (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
-                            onDateSelected: (DateTime value) {
-                              // Code de gestion de la date de début
+                            autovalidateMode: AutovalidateMode.disabled,
+                            validator: (e) {
+                              if (e == null) {
+                                return 'Sélectionnez une date';
+                              }
+
+                              final now = DateTime.now();
+                              if (e.isBefore(now)) {
+                                return 'La date ne peut pas être antérieure à aujourd\'hui';
+                              }
+
+                              return null;
                             },
-                          ),
+                            onDateSelected: (value){
+                              startDate = value;
+                            }
+                          )
                         ),
                       ),
                       Expanded(
@@ -101,12 +113,23 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                               labelText: 'Date de fin',
                             ),
                             mode: DateTimeFieldPickerMode.dateAndTime,
-                            autovalidateMode: AutovalidateMode.always,
-                            validator: (e) =>
-                            (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
-                            onDateSelected: (DateTime value) {
-                              // Code de gestion de la date de fin
+                            autovalidateMode: AutovalidateMode.disabled,
+                            validator: (e) {
+                              if (e == null) {
+                                return 'Sélectionnez une date';
+                              }
+
+                              final now = DateTime.now();
+                              if (e.isBefore(now)) {
+                                return 'La date ne peut pas être antérieure à aujourd\'hui';
+                              }
+
+                              return null;
                             },
+
+                            onDateSelected: (value){
+                              endDate = value;
+                            }
                           ),
                         ),
                       ),
@@ -114,21 +137,31 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 10),
-                    child: const TextField(
-                      maxLines: 4, // Réglez le nombre de lignes souhaité
-                      decoration: InputDecoration(
+                    child:  TextFormField(
+                      controller: descriptionController,
+                      maxLines: 4,
+                      decoration: const InputDecoration(
                         labelText: 'Description *',
                         hintText: 'Saisissez votre description...',
                         border: OutlineInputBorder(),
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Le champ ne peut pas être vide";
+                        }
+                        return null;
+                      },
                     ),
                   ),
-                  LocationForm(),
+                  const LocationForm(),
                   Container(
                     margin: const EdgeInsets.only(top: 20),
                     child: ElevatedButton(
                       onPressed: () {
-                        // Handle the button click event here
+
+                        if (_formKey.currentState?.validate() == true) {
+
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1E3A8A),

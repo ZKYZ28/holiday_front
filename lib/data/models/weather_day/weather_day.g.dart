@@ -8,11 +8,11 @@ part of 'weather_day.dart';
 
 WeatherDay _$WeatherDayFromJson(Map<String, dynamic> json) => WeatherDay(
       date: json['date'] as String,
-      maxTemp: (json['maxTemp'] as num).toDouble(),
-      minTemp: (json['minTemp'] as num).toDouble(),
-      currentTemp: (json['currentTemp'] as num).toDouble(),
-      riskOfRain: (json['riskOfRain'] as num).toDouble(),
-      riskOfSnow: (json['riskOfSnow'] as num).toDouble(),
+      maxTemp: json['maxTemp'] as num,
+      minTemp: json['minTemp'] as num,
+      currentTemp: json['currentTemp'] as num,
+      riskOfRain: json['riskOfRain'] as num,
+      riskOfSnow: json['riskOfSnow'] as num,
       condition:
           WeatherCondition.fromJson(json['condition'] as Map<String, dynamic>),
       weatherByHour: (json['weatherByHour'] as List<dynamic>)
