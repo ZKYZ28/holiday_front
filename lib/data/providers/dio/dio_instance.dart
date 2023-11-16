@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:holiday_mobile/data/providers/dio/TokenInterceptor.dart';
 
 class DioService {
   // On appelle le constructeur privé
@@ -21,6 +22,9 @@ class DioService {
       receiveTimeout: const Duration(seconds: 5)
       // TODO : ajouter les interceptor ici pour le JWT
     ));
+    // if(notAuthorizedCallback != null) {
+    //   dio.interceptors.add(TokenInterceptor(notAuthorizedCallback: notAuthorizedCallback));
+    // }
   }
 
   void setAuthorizationBearer(String? jwt) {
@@ -29,6 +33,10 @@ class DioService {
     } else {
       _dio.options.headers.remove('Authorization');
     }
+  }
+
+   void setCallBackMethod(void Function() notAuthorizedCallback) {
+    _dio.interceptors.add(TokenInterceptor(notAuthorizedCallback: notAuthorizedCallback));
   }
 
 }
