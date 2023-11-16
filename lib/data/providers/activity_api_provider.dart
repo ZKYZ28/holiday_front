@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/models/activity/activity.dart';
-import 'package:holiday_mobile/data/providers/dio_instance.dart';
+
+import 'dio/dio_instance.dart';
 
 class ActivityApiProvider{
 

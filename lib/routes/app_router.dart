@@ -10,7 +10,6 @@ class AppRouter extends $AppRouter{
     AutoRoute(page: LoginRoute.page),
     AutoRoute(page: HolidaysRoute.page, initial: true),
     AutoRoute(page: EncodeHoliday.page),
-    AutoRoute(page: ListHolidaysChat.page),
     AutoRoute(page: ChatRoute.page),
     AutoRoute(page: EncodeParticipantHolidayRoute.page),
     AutoRoute(page: EncodeParticipantActivityRoute.page),
@@ -20,5 +19,6 @@ class AppRouter extends $AppRouter{
     AutoRoute(page: ActivityRoute.page),
     AutoRoute(page: MapRoute.page),
     AutoRoute(page: ProfileRoute.page),
+    AutoRoute(page: ChatRoute.page),
   ];
 }

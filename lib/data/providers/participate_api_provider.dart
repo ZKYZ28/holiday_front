@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/models/participate/participate.dart';
-import 'package:holiday_mobile/data/providers/dio_instance.dart';
 import 'package:holiday_mobile/data/models/participant/participant.dart';
+
+import 'dio/dio_instance.dart';
 
 class ParticipateApiProvider{
   final Dio _dio = DioService().dio;

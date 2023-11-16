@@ -86,7 +86,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
               icon: const Icon(Icons.chat),
               label: const Text('Chatter'),
               onPressed: () {
-                context.router.push(const ChatRoute());
+                context.router.push(ChatRoute(holidayId: widget.holidayId));
               },
             ),
           ],
