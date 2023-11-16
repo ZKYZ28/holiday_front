@@ -27,3 +27,14 @@ class LoginPasswordChanged extends LoginEvent {
 class LoginSubmit extends LoginEvent {
   const LoginSubmit();
 }
+
+class GoogleLoginSubmit extends LoginEvent {
+  const GoogleLoginSubmit();
+}
+
+class GoogleLoginSubmitted extends LoginEvent {
+  final String idToken;
+  const GoogleLoginSubmitted({required this.idToken});
+  @override
+  List<Object> get props => [idToken];
+}

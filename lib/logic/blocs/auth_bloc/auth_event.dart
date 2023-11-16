@@ -16,3 +16,7 @@ class AuthentificationStatusChanged extends AuthEvent {
   @override
   List<Object> get props => [status];
 }
+
+class AuthentificationLogoutRequest extends AuthEvent {
+  const AuthentificationLogoutRequest();
+}

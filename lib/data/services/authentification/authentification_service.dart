@@ -1,6 +1,8 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/secure_storage/secure_storage.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 import '../../models/user_authentificated/user_authentificated.dart';
 
@@ -22,9 +24,21 @@ class AuthService {
     };
   }
 
+  int decodeJwtExp(String jwtFromApi) {
+    try {
+      final jwt = JWT.decode(jwtFromApi);
+      return jwt.payload['exp'];
+      //  print('Payload ${jwt.payload}');
+    } on JWTUndefinedException catch (e) {
+      throw ApiException("Impossible de décoder le JWT", null);
+    };
+  }
+
   bool isTokenExpired(int exp) {
-    DateTime expirationDateJwt = DateTime.fromMicrosecondsSinceEpoch(exp * 1000);
-    return DateTime.now().isAfter(expirationDateJwt);
+    var parisTimeZone = tz.getLocation('Europe/Paris');
+    DateTime expirationDateJwt = tz.TZDateTime.fromMillisecondsSinceEpoch(parisTimeZone, exp * 1000);
+
+    return tz.TZDateTime.now(parisTimeZone).isAfter(expirationDateJwt);
   }
 
   SecureStorage get secureStorage => _secureStorage;

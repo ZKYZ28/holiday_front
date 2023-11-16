@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/models/weather/weather.dart';
-import 'package:holiday_mobile/data/providers/dio_instance.dart';
+import 'package:holiday_mobile/data/providers/dio/dio_instance.dart';
 
 class WeatherApiProvider{
   final Dio _dio = DioService().dio;

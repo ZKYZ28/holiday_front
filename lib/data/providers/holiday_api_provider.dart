@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
-import 'package:holiday_mobile/data/providers/dio_instance.dart';
+import 'package:holiday_mobile/data/providers/dio/dio_instance.dart';
 
 class HolidayApiProvider{
 

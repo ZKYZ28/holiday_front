@@ -16,12 +16,13 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   // TODO : repositoryProvider (injection main) ????????
-  final AuthRepository authRepository = AuthRepository();
+  final AuthRepository authRepository;
 
-  LoginBloc() : super(const LoginState()) {
+  LoginBloc(this.authRepository) : super(const LoginState()) {
    on<LoginEmailChanged>(_onEmailChanged);
    on<LoginPasswordChanged>(_onPasswordChanged);
    on<LoginSubmit>(_onSubmitLogin);
+   on<GoogleLoginSubmitted>(_onGoogleSubmit);
   }
 
 
@@ -74,4 +75,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
+
+  _onGoogleSubmit(GoogleLoginSubmitted event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+    try {
+        if(event.idToken != 'INVALID_KEY') {
+          await authRepository.logInGoogle(event.idToken);
+          emit(state.copyWith(status: FormzSubmissionStatus.success));
+        }
+        print("SKIP TOKEN BIEN ENVOE");
+    } catch (e) {
+      emit(state.copyWith(status: FormzSubmissionStatus.failure));
+    }
+  }
 }
