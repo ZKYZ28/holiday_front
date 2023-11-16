@@ -19,5 +19,6 @@ class AppRouter extends $AppRouter{
     AutoRoute(page: InvitationsRoute.page),
     AutoRoute(page: ActivityRoute.page),
     AutoRoute(page: MapRoute.page),
+    AutoRoute(page: ProfileRoute.page),
   ];
 }

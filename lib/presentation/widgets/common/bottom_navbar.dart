@@ -40,7 +40,8 @@ class BottomNavBar extends StatelessWidget {
         } else if (index == 1) {
           appRouter.push(const ListHolidaysChat());
         } else if (index == 2) {
-
+          appRouter.push(const ProfileRoute());
+          // appRouter.push(const MapRoute());
         }
       },
     );

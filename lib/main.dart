@@ -3,12 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/providers/authentification_api_provider.dart';
-import 'package:holiday_mobile/data/providers/dio_instance.dart';
+import 'package:holiday_mobile/data/providers/dio/dio_instance.dart';
 import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
 import 'package:holiday_mobile/logic/blocs/auth_bloc/auth_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/presentation/widgets/common/bottom_navbar.dart';
 import 'package:holiday_mobile/routes/app_router.dart';
+import 'package:holiday_mobile/routes/app_router.gr.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 
 class MyHttpOverrides extends HttpOverrides {
@@ -22,51 +25,66 @@ class MyHttpOverrides extends HttpOverrides {
 
 
 void main() {
+  tz.initializeTimeZones();
+  tz.getLocation('Europe/Paris');
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+   MyApp({Key? key}) : super(key: key);
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
+  final AppRouter _appRouter = AppRouter();
 
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    AppRouter appRouter = AppRouter();
+    AuthAPiProvider authRepository = AuthAPiProvider();
+    void notAuthorizedReceived() {
+      authRepository.logOut();
+    }
+   //DioService(notAuthorizedCallback: notAuthorizedReceived);
+    DioService().setCallBackMethod(notAuthorizedReceived);
     return MultiRepositoryProvider(
         providers: [
-          RepositoryProvider<AuthAPiProvider>(
-              create: (context) => AuthAPiProvider())
+          RepositoryProvider<AuthAPiProvider>.value(value: authRepository)
         ],
         child: MultiBlocProvider(
           providers: [
             BlocProvider<AuthBloc>(
-                create: (context) => AuthBloc(repository: AuthRepository())),
+                create: (context) => AuthBloc(repository: AuthRepository(RepositoryProvider.of<AuthAPiProvider>(context)))),
             BlocProvider<HolidayBloc>(
                 create: (context) => HolidayBloc()),
           ],
-          child: BlocListener<AuthBloc, AuthState>(
+          child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
-              // TODO: implement listener
-              // TODO ECOUTER LES CHANGEMENTS D'ETAT TOUT AU DESSUS DE L'APPLICATION PUIS QUAND AUTHENTIFICATIOn.disconnected survient -->
-              //  pouf fortnite top 1 login
+              if (state.status == AuthStatus.authentificated) {
+                _appRouter.replaceAll([const HolidaysRoute()]);
+              }
+              if (state.status == AuthStatus.disconnected) {
+                _appRouter.replaceAll([const LoginRoute()]);
+              }
             },
-            child: MaterialApp(
-              home: Scaffold(
-                body: MaterialApp.router(
-                  routerConfig: appRouter.config(),
+            builder: (context, state) {
+              return MaterialApp(
+                home: Scaffold(
+                  body: MaterialApp.router(
+                    routerConfig: _appRouter.config(),
+                  ),
+                  bottomNavigationBar: state.status == AuthStatus.authentificated
+                      ? BottomNavBar(appRouter: _appRouter)
+                      : null,
                 ),
-                bottomNavigationBar: BottomNavBar(appRouter: appRouter),
-              ),
-            ),
+              );
+            },
           ),
         )
     );
   }
 }
+
+
+
+
+
 
