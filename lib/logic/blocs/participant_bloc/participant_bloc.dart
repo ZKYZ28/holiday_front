@@ -11,29 +11,44 @@ part 'participant_state.dart';
 class ParticipantBloc extends Bloc<ParticipantEvent, ParticipantState> {
   final ParticipantApiRepository participantApiRepository = ParticipantApiRepository();
 
-  ParticipantBloc() : super(ParticipantInitial()) {
+  ParticipantBloc() : super(const ParticipantState()) {
 
-    on<LeaveHoliday>((event, emit) async {
+    on<LeaveHoliday>((event, Emitter<ParticipantState> emit) async {
       try {
         final String participantId = event.participantId;
         final holiday = event.holiday;
+
         await participantApiRepository.leaveHoliday(participantId, holiday);
 
+        emit(state.copyWith(status: ParticipantStateStatus.left));
       } on ApiException catch (e) {
-        emit(ParticipantError(e.toString()));
+        emit(state.copyWith(status: ParticipantStateStatus.error, errorMessage: e.toString()));
       }
     });
 
-    on<GetAllParticipantNotYetInHoliday>((event, emit) async {
+    on<GetAllParticipantNotYetInHoliday>((event, Emitter<ParticipantState> emit) async {
       try {
-        emit(ParticipantLoading());
+        emit(state.copyWith(status: ParticipantStateStatus.loading));
 
         final String holidayId = event.holidayId;
         final participants = await participantApiRepository.getAllParticipantNotYetInHoliday(holidayId);
 
-        emit(ParticipantLoaded(participants));
+        emit(state.copyWith(status: ParticipantStateStatus.loaded, participantsList: participants));
       } on ApiException catch (e) {
-        emit(ParticipantError(e.toString()));
+        emit(state.copyWith(status: ParticipantStateStatus.error, errorMessage: e.toString()));
+      }
+    });
+
+    on<GetAllParticipantNotYetInActivity>((event, Emitter<ParticipantState> emit) async {
+      try {
+        emit(state.copyWith(status: ParticipantStateStatus.loading));
+
+        final String activityId = event.activityId;
+        final participants = await participantApiRepository.getAllParticipantNotYetInActivity(activityId);
+
+        emit(state.copyWith(status: ParticipantStateStatus.loaded, participantsList: participants));
+      } on ApiException catch (e) {
+        emit(state.copyWith(status: ParticipantStateStatus.error, errorMessage: e.toString()));
       }
     });
 

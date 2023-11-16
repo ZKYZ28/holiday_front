@@ -2,10 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:holiday_mobile/data/providers/authentification_api_provider.dart';
-import 'package:holiday_mobile/data/providers/dio_instance.dart';
 import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
-import 'package:meta/meta.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';

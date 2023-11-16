@@ -1,27 +1,35 @@
 part of 'holiday_bloc.dart';
 
-abstract class HolidayState extends Equatable {
-  const HolidayState();
+enum HolidayStateStatus {initial, loading, loaded, error, published, waitingActivityAction}
+
+class HolidayState extends Equatable {
+  final HolidayStateStatus status;
+  final List<Holiday> holidaysList;
+  final Holiday? holidayItem;
+  final String? errorMessage;
+
+  const HolidayState({
+    this.status = HolidayStateStatus.initial,
+    this.holidaysList = const [],
+    this.holidayItem,
+    this.errorMessage = "",
+  });
+
+  HolidayState copyWith({
+    HolidayStateStatus? status,
+    List<Holiday>? holidaysList,
+    Holiday? holidayItem,
+    String? errorMessage
+  }) {
+    return HolidayState(
+        status : status ?? this.status,
+        holidaysList: holidaysList ?? this.holidaysList,
+        holidayItem: holidayItem ?? holidayItem,
+        errorMessage : errorMessage ?? this.errorMessage
+    );
+  }
 
   @override
-  List<Object?> get props => [];
-}
+  List<Object?> get props => [status, holidaysList, holidayItem, errorMessage];
 
-class HolidayInitial extends HolidayState {}
-
-class HolidayLoading extends HolidayState {}
-
-class HolidayLoaded extends HolidayState {
-  final List<Holiday>? holidaysList;
-  final Holiday? holidayItem;
-
-  const HolidayLoaded({this.holidaysList, this.holidayItem});
-
-  const HolidayLoaded.list(List<Holiday> holidays) : holidaysList = holidays, holidayItem = null;
-  const HolidayLoaded.item(Holiday holiday) : holidayItem = holiday, holidaysList = null;
-}
-
-class HolidayError extends HolidayState {
-  final String? message;
-  const HolidayError(this.message);
 }

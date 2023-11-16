@@ -25,3 +25,12 @@ class GetAllParticipantNotYetInHoliday extends ParticipantEvent {
   @override
   List<Object> get props => [holidayId];
 }
+
+class GetAllParticipantNotYetInActivity extends ParticipantEvent {
+  final String activityId;
+
+  const GetAllParticipantNotYetInActivity({required this.activityId});
+
+  @override
+  List<Object> get props => [activityId];
+}

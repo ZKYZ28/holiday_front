@@ -7,11 +7,11 @@ import 'package:holiday_mobile/logic/blocs/participant_bloc/participant_bloc.dar
 import 'package:holiday_mobile/presentation/widgets/activity/activity_container.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
 import 'package:holiday_mobile/presentation/widgets/common/progress_loading_widget.dart';
+import 'package:holiday_mobile/presentation/widgets/holiday/holiday_published_button.dart';
 import 'package:holiday_mobile/presentation/widgets/participant/participant_card.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
 
-import 'chat/chat_page.dart';
-
+import '../chat/chat_page.dart';
 
 @RoutePage()
 class MyHolidayPage extends StatefulWidget {
@@ -26,14 +26,14 @@ class MyHolidayPage extends StatefulWidget {
 
 class _MyHolidayPageState extends State<MyHolidayPage> {
   //Création du bloc
-  final HolidayBloc _holidayBloc = HolidayBloc();
+  late Holiday _holiday;
 
   //Création du bloc
   final ParticipantBloc _participantBloc = ParticipantBloc();
 
   @override
   void initState() {
-    _holidayBloc.add(GetHoliday(holidayId: widget.holidayId));
+    context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
     super.initState();
   }
 
@@ -51,7 +51,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Mes vacances',
+                    'TITRE VACANCES',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -60,7 +60,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                     ),
                   ),
                   Text(
-                    '28/03/2022',
+                    'DATE DEBUT VACANCES',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -100,27 +100,56 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
   Widget _buildMyHoliday() {
     return Container(
       margin: const EdgeInsets.all(8.0),
-      child: BlocProvider(
-        create: (_) => _holidayBloc,
-        child: BlocListener<HolidayBloc, HolidayState>(
-          listener: (context, state) {
-            if (state is HolidayError) {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentMaterialBanner()
-                ..showMaterialBanner(CustomMessage(message: state.message!).build(context));
-            }
-          },
-          child: BlocBuilder<HolidayBloc, HolidayState>(
-            builder: (context, state) {
-              if (state is HolidayInitial || state is HolidayLoading) {
-                return const LoadingProgressor();
-              } else if (state is HolidayLoaded) {
-                final holiday = state.holidayItem;
-                return _buildHoliday(context, holiday!);
-              } else {
-                return Container();
-              }
-            },
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<HolidayBloc>(create: (_) =>   context.read<HolidayBloc>()),
+          BlocProvider<ParticipantBloc>(create: (_) => _participantBloc),
+        ],
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<HolidayBloc, HolidayState>(
+              listener: (context, state) {
+                if (state.status == HolidayStateStatus.error) {
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentMaterialBanner()
+                    ..showMaterialBanner(
+                        CustomMessage(message: state.errorMessage!)
+                            .build(context));
+                }
+              },
+            ),
+            BlocListener<ParticipantBloc, ParticipantState>(
+              listener: (context, state) {
+                if (state.status == ParticipantStateStatus.error) {
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentMaterialBanner()
+                    ..showMaterialBanner(
+                        CustomMessage(message: state.errorMessage!)
+                            .build(context));
+                } else if (state.status == ParticipantStateStatus.left){
+                  context.router.pop(context);
+                }
+              },
+            ),
+          ],
+          child: BlocProvider(
+            create: (_) =>   context.read<HolidayBloc>(),
+            child: BlocBuilder<HolidayBloc, HolidayState>(
+              builder: (context, state) {
+                if (state.status == HolidayStateStatus.initial ||
+                    state.status == HolidayStateStatus.loading) {
+                  return const LoadingProgressor();
+                } else if (state.status == HolidayStateStatus.loaded ||
+                    state.status == HolidayStateStatus.published) {
+                  if (state.status == HolidayStateStatus.loaded) {
+                    _holiday = state.holidayItem!;
+                  }
+                  return _buildHoliday(context, _holiday!);
+                } else {
+                  return Container();
+                }
+              },
+            ),
           ),
         ),
       ),
@@ -160,51 +189,47 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                       icon: const Icon(Icons.cloud),
                       label: const Text('Météo'),
                       onPressed: () {
-                        context.router.push(WeatherRoute(holidayId: holiday.id!));
+                        context.router
+                            .push(WeatherRoute(holidayId: holiday.id!));
                       },
                     ),
                   ),
                 ),
-
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
 
-                    //SI VACANCES PUBLIEE
-                    child: holiday.isPublish
-                        ? Container(
-                      height: 36.0,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF6c757d),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Publiée',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ),
-                    )
+                      //SI VACANCES PUBLIEE
+                      child: holiday.isPublish
+                          ? const PublishedButton()
 
-                    //SI VACANCES NON PUBLIEE
-                        : ElevatedButton.icon(
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all(
-                            const EdgeInsets.symmetric(horizontal: 10)),
-                        backgroundColor: MaterialStateProperty.all(const Color(0xFF1E3A8A)),
-                      ),
-                      icon: const Icon(Icons.publish),
-                      label: const Text('Publier'),
-                      onPressed: () {
-                        _holidayBloc.add(PublishHoliday(holiday: holiday));
-                      },
-                    ),
-                  ),
+                          //SI VACANCES NON PUBLIEE
+                          : BlocBuilder<HolidayBloc, HolidayState>(
+                              builder: (context, state) {
+                                if (state.status ==
+                                    HolidayStateStatus.published) {
+                                  return const PublishedButton();
+                                } else {
+                                  return ElevatedButton.icon(
+                                    style: ButtonStyle(
+                                      padding: MaterialStateProperty.all(
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 10)),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              const Color(0xFF1E3A8A)),
+                                    ),
+                                    icon: const Icon(Icons.publish),
+                                    label: const Text('Publier'),
+                                    onPressed: () {
+                                      context.read<HolidayBloc>().add(
+                                          PublishHoliday(holiday: holiday));
+                                    },
+                                  );
+                                }
+                              },
+                            )),
                 ),
-                
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 4.0),
@@ -218,7 +243,9 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                       label: const Text('Quitter'),
                       onPressed: () {
                         //TODO CHANGE PARTICIPANT ID QUAND ON SERA CONNECTE
-                        _participantBloc.add(LeaveHoliday(participantId: "22de2e91-94f8-475b-930b-87e8d9f80704", holiday: holiday));
+                        _participantBloc.add(LeaveHoliday(
+                            participantId: "c01eb36d-d676-4878-bc3c-b9710e4a37ba",
+                            holiday: holiday));
                       },
                     ),
                   ),
@@ -235,12 +262,14 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
               title: 'Participant(s)',
               icon: Icons.add,
               participants: holiday.participants,
-              holidayId: widget.holidayId,
+              elementId: widget.holidayId,
             ),
 
             ActivityContainer(
-                activities: holiday.activities, activityHeight: cardActivityHeight)
-          ],
+                activities: holiday.activities,
+                activityHeight: cardActivityHeight,
+                holidayId: widget.holidayId
+            )],
         ),
       ),
     );

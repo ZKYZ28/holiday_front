@@ -7,7 +7,6 @@ import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
 import 'package:holiday_mobile/presentation/widgets/common/progress_loading_widget.dart';
 import 'package:holiday_mobile/presentation/widgets/weather/weather_hour_tem.dart';
 import 'package:intl/intl.dart';
-import 'my_holiday_screen.dart';
 
 @RoutePage()
 class WeatherScreen extends StatefulWidget {

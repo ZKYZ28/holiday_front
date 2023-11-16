@@ -1,13 +1,15 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/data/models/invitation/invitation.dart';
 import 'package:holiday_mobile/logic/blocs/invitation_bloc/invitation_bloc.dart';
 import 'package:intl/intl.dart';
 
-class InivtationCard extends StatelessWidget {
+class InvitationCard extends StatelessWidget {
   final Invitation invitation;
   final InvitationBloc invitationBloc;
+  final VoidCallback onClick;
 
-  const InivtationCard({super.key, required this.invitation, required this.invitationBloc});
+  const InvitationCard({super.key, required this.invitation, required this.invitationBloc, required this.onClick});
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +48,7 @@ class InivtationCard extends StatelessWidget {
                 icon: const Icon(Icons.check, color: Colors.green),
                 onPressed: () {
                   invitationBloc.add(AcceptInvitation(invitation: invitation));
+                  onClick();
                 },
               ),
 
@@ -53,6 +56,7 @@ class InivtationCard extends StatelessWidget {
                 icon: const Icon(Icons.close, color: Colors.red),
                 onPressed: () {
                   invitationBloc.add(RefuseInvitation(invitation: invitation));
+                  onClick();
                 },
               ),
             ],

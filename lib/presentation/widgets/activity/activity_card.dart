@@ -1,16 +1,20 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/activity/activity.dart';
-import 'package:holiday_mobile/routes/app_router.gr.dart' as routeur;
+import 'package:holiday_mobile/routes/app_router.gr.dart';
+
+import '../../../logic/blocs/holiday_bloc/holiday_bloc.dart';
 
 class ActivityCard extends StatelessWidget {
   final Activity activity;
-
+  final String holidayId;
 
   const ActivityCard({
-    Key? key,
+    super.key,
     required this.activity,
-  }) : super(key: key);
+    required this.holidayId
+  });
 
 
   @override
@@ -47,13 +51,13 @@ class ActivityCard extends StatelessWidget {
         width: 35,
         height: 35,
         decoration: const BoxDecoration(
-          shape: BoxShape.circle, // cerle en fond
+          shape: BoxShape.circle,
           color: Color(0xFF1E3A8A),
         ),
         child: IconButton(
           onPressed: () {
-            print('Add appuyé');
-          //  context.router.push(const MapRoute());
+            context.read<HolidayBloc>().add(WaitingActivityAction());
+            context.router.push(ActivityRoute(activityId: activity.id!, holidayId: holidayId));
           },
           icon: const Icon(
             Icons.remove_red_eye,

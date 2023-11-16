@@ -40,9 +40,7 @@ class BottomNavBar extends StatelessWidget {
         } else if (index == 1) {
           appRouter.push(const ListHolidaysChat());
         } else if (index == 2) {
-          // Gérer la déconnexion
-          print("CLIQUE LOGOUT");
-          appRouter.push(const MapRoute());
+
         }
       },
     );

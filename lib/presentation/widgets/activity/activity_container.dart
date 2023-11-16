@@ -7,11 +7,13 @@ import 'activity_card.dart';
 class ActivityContainer extends StatelessWidget {
   final List<Activity> activities;
   final double activityHeight;
+  final String holidayId;
 
   const ActivityContainer(
       {super.key,
         required this.activities,
         required this.activityHeight,
+        required this.holidayId,
       });
 
   @override
@@ -47,7 +49,7 @@ class ActivityContainer extends StatelessWidget {
                         ),
                         child: IconButton(
                           onPressed: () {
-                            print('Add appuyé');
+
                           },
                           icon: const Icon(
                             Icons.calendar_month,
@@ -94,7 +96,7 @@ class ActivityContainer extends StatelessWidget {
                   itemCount: activities.length,
                   itemBuilder: (context, index) {
                     final activity = activities[index];
-                    return ActivityCard(activity: activity);
+                    return ActivityCard(activity: activity, holidayId: holidayId);
                   }),
             )
 

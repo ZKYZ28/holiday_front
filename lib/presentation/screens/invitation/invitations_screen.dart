@@ -12,9 +12,9 @@ class InvitationsScreen extends StatefulWidget {
   final String participantId;
 
   const InvitationsScreen({
-    Key? key,
+    super.key,
     @PathParam() required this.participantId,
-  }) : super(key: key);
+  });
 
   @override
   _InvitationsScreenState createState() => _InvitationsScreenState();
@@ -23,14 +23,20 @@ class InvitationsScreen extends StatefulWidget {
 class _InvitationsScreenState extends State<InvitationsScreen> {
   //Création du bloc
   final InvitationBloc _invitationBloc = InvitationBloc();
-
+  List<Invitation> invitations = [];
 
   @override
   void initState() {
-    _invitationBloc.add(const GetAllInvitationsByParticipant(
+    _invitationBloc.add(GetAllInvitationsByParticipant(
       //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-        participantId: 'ca0d0174-bc3f-4af4-8aa9-8f65106a5daa'));
+        participantId: widget.participantId));
     super.initState();
+  }
+
+  void _removeInvitation(Invitation invitation) {
+    setState(() {
+      invitations.remove(invitation);
+    });
   }
 
   @override
@@ -63,7 +69,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
               if (state.status == InvitationStateStatus.initial || state.status == InvitationStateStatus.loading) {
                 return const LoadingProgressor();
               } else if (state.status == InvitationStateStatus.loaded) {
-                final invitations = state.invitationsList ?? [];
+                invitations = state.invitationsList ?? [];
                 return _buildInvitations(context, invitations, _invitationBloc);
               } else {
                 return Container();
@@ -80,7 +86,11 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
       itemCount: invitations.length,
       itemBuilder: (context, index) {
         final invitation = invitations[index];
-        return InivtationCard(invitation: invitation, invitationBloc: invitationBloc);
+        return InvitationCard(
+          invitation: invitation,
+          invitationBloc: invitationBloc,
+          onClick: () => _removeInvitation(invitation),
+        );
       },
     );
   }
