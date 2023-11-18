@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/data/models/participant/participant.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
+import 'package:holiday_mobile/data/models/participate/participate.dart';
 
 class ParticipantCard extends StatefulWidget {
   final double nameColumnWidth;
@@ -10,8 +11,10 @@ class ParticipantCard extends StatefulWidget {
   final double tableParticipantsHeight;
   final String title;
   final IconData? icon;
-  final List<Participant> participants;
-  final String holidayId;
+  final List<Participant>? participants;
+  final List<Participate>? participates;
+  final String elementId;
+  final void Function(Participate)? onDeleteParticipate;
 
   const ParticipantCard({
     super.key,
@@ -21,8 +24,10 @@ class ParticipantCard extends StatefulWidget {
     required this.tableParticipantsHeight,
     required this.title,
     this.icon,
-    required this.participants,
-    required this.holidayId
+    this.participants,
+    this.participates,
+    required this.elementId,
+    this.onDeleteParticipate
   });
 
   @override
@@ -55,7 +60,7 @@ class _ParticipantCardState extends State<ParticipantCard> {
                         fontSize: 20,
                         color: Color(0xFF1E3A8A)),
                   ),
-                  if (widget.icon != null)
+                  if (widget.icon != null && widget.participants != null)
                     Container(
                       alignment: Alignment.center,
                       width: 35,
@@ -65,7 +70,7 @@ class _ParticipantCardState extends State<ParticipantCard> {
                         color: Color(0xFF1E3A8A),
                       ),
                       child: IconButton(
-                        onPressed: () => { context.router.push(EncodeParticipant(holidayId: widget.holidayId))},
+                        onPressed: () => { context.router.push(EncodeParticipantHolidayRoute(holidayId: widget.elementId))},
                         icon: const Icon(
                           Icons.add,
                           size: 20,
@@ -87,39 +92,25 @@ class _ParticipantCardState extends State<ParticipantCard> {
                     DataColumn(
                       label: SizedBox(
                         width: widget.nameColumnWidth,
-                        // 20% de la largeur de l'écran
                         child: const Text('Nom'),
                       ),
                     ),
                     DataColumn(
                       label: SizedBox(
                         width: widget.emailColumnWidth,
-                        // 50% de la largeur de l'écran
                         child: const Text('Email'),
                       ),
                     ),
+                    if (widget.participates != null)
+                      const DataColumn(
+                        label: SizedBox(
+                          child: Text(''),
+                        ),
+                      ),
                   ],
-                  rows: List<DataRow>.generate(
-                    widget.participants.length,
-                    (index) => DataRow(cells: [
-                      DataCell(
-                        SizedBox(
-                          width: widget.nameColumnWidth,
-                          child: Text(
-                            "${widget.participants[index].firstName}  ${widget.participants[index].lastName}"  ?? '',
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        SizedBox(
-                          width: widget.emailColumnWidth,
-                          child: Text(
-                            widget.participants[index].email ?? '',
-                          ),
-                        ),
-                      ),
-                    ]),
-                  ),
+                  rows: widget.participants != null
+                      ? buildParticipantsList(widget.participants!)
+                      : buildParticipatesList(widget.participates!),
                 ),
               ),
             ),
@@ -128,4 +119,68 @@ class _ParticipantCardState extends State<ParticipantCard> {
       ),
     );
   }
+
+  List<DataRow> buildParticipantsList(List<Participant> participants) {
+    return List<DataRow>.generate(
+      widget.participants!.length,
+          (index) => DataRow(cells: [
+        DataCell(
+          SizedBox(
+            width: widget.nameColumnWidth,
+            child: Text(
+              "${widget.participants?[index].firstName}  ${widget.participants?[index].lastName}"  ?? '',
+            ),
+          ),
+        ),
+        DataCell(
+          SizedBox(
+            width: widget.emailColumnWidth,
+            child: Text(
+              widget.participants?[index].email ?? '',
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  List<DataRow> buildParticipatesList(List<Participate> participates) {
+    return List<DataRow>.generate(
+      widget.participates!.length,
+          (index) => DataRow(cells: [
+        DataCell(
+          SizedBox(
+            width: widget.nameColumnWidth,
+            child: Text(
+              "${widget.participates?[index].participant?.firstName}  ${widget.participates?[index].participant?.lastName}"  ?? '',
+            ),
+          ),
+        ),
+        DataCell(
+          SizedBox(
+            width: widget.emailColumnWidth,
+            child: Text(
+              widget.participates?[index].participant?.email ?? '',
+            ),
+          ),
+        ),
+        DataCell(
+          SizedBox(
+            child: IconButton(
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+              onPressed: () {
+                widget.onDeleteParticipate?.call(widget.participates![index]);
+              },
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
+
 }
+
+

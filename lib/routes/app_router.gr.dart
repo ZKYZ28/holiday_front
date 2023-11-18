@@ -10,8 +10,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i15;
 import 'package:flutter/material.dart' as _i16;
-import 'package:holiday_mobile/data/models/map_screen.dart' as _i10;
-import 'package:holiday_mobile/presentation/screens/activity/activity_page.dart'
+import 'package:holiday_mobile/presentation/screens/activity/activity_screen.dart'
     as _i1;
 import 'package:holiday_mobile/presentation/screens/activity/encode_activity.dart'
     as _i3;
@@ -20,21 +19,23 @@ import 'package:holiday_mobile/presentation/screens/authentification/login_page.
 import 'package:holiday_mobile/presentation/screens/authentification/register_page.dart'
     as _i13;
 import 'package:holiday_mobile/presentation/screens/chat/chat_page.dart' as _i2;
-import 'package:holiday_mobile/presentation/screens/chat/list_holidays_chat.dart'
-    as _i8;
 import 'package:holiday_mobile/presentation/screens/holiday/encode_holiday.dart'
     as _i4;
 import 'package:holiday_mobile/presentation/screens/holiday/holidays_page.dart'
-    as _i6;
-import 'package:holiday_mobile/presentation/screens/invitations_screen.dart'
     as _i7;
-import 'package:holiday_mobile/presentation/screens/my_holiday_screen.dart'
+import 'package:holiday_mobile/presentation/screens/holiday/my_holiday_screen.dart'
     as _i11;
-import 'package:holiday_mobile/presentation/screens/participant/EncodateParticipant.dart'
+import 'package:holiday_mobile/presentation/screens/invitation/invitations_screen.dart'
+    as _i8;
+import 'package:holiday_mobile/presentation/screens/maps/maps_screen.dart'
+    as _i10;
+import 'package:holiday_mobile/presentation/screens/participant/encode_participant_activity_screen.dart'
     as _i5;
+import 'package:holiday_mobile/presentation/screens/participant/encode_participant_holiday_screen.dart'
+    as _i6;
 import 'package:holiday_mobile/presentation/screens/profile/profile_screen.dart'
     as _i12;
-import 'package:holiday_mobile/presentation/screens/weather_screen.dart'
+import 'package:holiday_mobile/presentation/screens/weather/weather_screen.dart'
     as _i14;
 
 abstract class $AppRouter extends _i15.RootStackRouter {
@@ -42,16 +43,33 @@ abstract class $AppRouter extends _i15.RootStackRouter {
 
   @override
   final Map<String, _i15.PageFactory> pagesMap = {
-    Activity.name: (routeData) {
+    ActivityRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<ActivityRouteArgs>(
+          orElse: () => ActivityRouteArgs(
+                activityId: pathParams.getString('activityId'),
+                holidayId: pathParams.getString('holidayId'),
+              ));
       return _i15.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i1.Activity(),
+        child: _i1.ActivityScreen(
+          key: args.key,
+          activityId: args.activityId,
+          holidayId: args.holidayId,
+        ),
       );
     },
     ChatRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<ChatRouteArgs>(
+          orElse: () =>
+              ChatRouteArgs(holidayId: pathParams.getString('holidayId')));
       return _i15.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i2.ChatPage(),
+        child: _i2.ChatScreen(
+          key: args.key,
+          holidayId: args.holidayId,
+        ),
       );
     },
     EncodeActivity.name: (routeData) {
@@ -66,14 +84,27 @@ abstract class $AppRouter extends _i15.RootStackRouter {
         child: const _i4.EncodeHoliday(),
       );
     },
-    EncodeParticipant.name: (routeData) {
+    EncodeParticipantActivityRoute.name: (routeData) {
       final pathParams = routeData.inheritedPathParams;
-      final args = routeData.argsAs<EncodeParticipantArgs>(
-          orElse: () => EncodeParticipantArgs(
+      final args = routeData.argsAs<EncodeParticipantActivityRouteArgs>(
+          orElse: () => EncodeParticipantActivityRouteArgs(
+              activityId: pathParams.getString('activityId')));
+      return _i15.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: _i5.EncodeParticipantActivityScreen(
+          key: args.key,
+          activityId: args.activityId,
+        ),
+      );
+    },
+    EncodeParticipantHolidayRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<EncodeParticipantHolidayRouteArgs>(
+          orElse: () => EncodeParticipantHolidayRouteArgs(
               holidayId: pathParams.getString('holidayId')));
       return _i15.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i5.EncodeParticipant(
+        child: _i6.EncodeParticipantHolidayScreen(
           key: args.key,
           holidayId: args.holidayId,
         ),
@@ -82,7 +113,7 @@ abstract class $AppRouter extends _i15.RootStackRouter {
     HolidaysRoute.name: (routeData) {
       return _i15.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i6.HolidaysPage(),
+        child: const _i7.HolidaysPage(),
       );
     },
     InvitationsRoute.name: (routeData) {
@@ -92,16 +123,10 @@ abstract class $AppRouter extends _i15.RootStackRouter {
               participantId: pathParams.getString('participantId')));
       return _i15.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i7.InvitationsScreen(
+        child: _i8.InvitationsScreen(
           key: args.key,
           participantId: args.participantId,
         ),
-      );
-    },
-    ListHolidaysChat.name: (routeData) {
-      return _i15.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i8.ListHolidaysChat(),
       );
     },
     LoginRoute.name: (routeData) {
@@ -111,9 +136,21 @@ abstract class $AppRouter extends _i15.RootStackRouter {
       );
     },
     MapRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<MapRouteArgs>(
+          orElse: () => MapRouteArgs(
+                destinationLatitude:
+                    pathParams.getDouble('destinationLatitude'),
+                destinationLongitude:
+                    pathParams.getDouble('destinationLongitude'),
+              ));
       return _i15.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i10.MapScreen(),
+        child: _i10.MapScreen(
+          key: args.key,
+          destinationLatitude: args.destinationLatitude,
+          destinationLongitude: args.destinationLongitude,
+        ),
       );
     },
     MyHolidayRoute.name: (routeData) {
@@ -158,31 +195,89 @@ abstract class $AppRouter extends _i15.RootStackRouter {
 }
 
 /// generated route for
-/// [_i1.Activity]
-class Activity extends _i15.PageRouteInfo<void> {
-  const Activity({List<_i15.PageRouteInfo>? children})
-      : super(
-          Activity.name,
+/// [_i1.ActivityScreen]
+class ActivityRoute extends _i15.PageRouteInfo<ActivityRouteArgs> {
+  ActivityRoute({
+    _i16.Key? key,
+    required String activityId,
+    required String holidayId,
+    List<_i15.PageRouteInfo>? children,
+  }) : super(
+          ActivityRoute.name,
+          args: ActivityRouteArgs(
+            key: key,
+            activityId: activityId,
+            holidayId: holidayId,
+          ),
+          rawPathParams: {
+            'activityId': activityId,
+            'holidayId': holidayId,
+          },
           initialChildren: children,
         );
 
-  static const String name = 'Activity';
+  static const String name = 'ActivityRoute';
 
-  static const _i15.PageInfo<void> page = _i15.PageInfo<void>(name);
+  static const _i15.PageInfo<ActivityRouteArgs> page =
+      _i15.PageInfo<ActivityRouteArgs>(name);
+}
+
+class ActivityRouteArgs {
+  const ActivityRouteArgs({
+    this.key,
+    required this.activityId,
+    required this.holidayId,
+  });
+
+  final _i16.Key? key;
+
+  final String activityId;
+
+  final String holidayId;
+
+  @override
+  String toString() {
+    return 'ActivityRouteArgs{key: $key, activityId: $activityId, holidayId: $holidayId}';
+  }
 }
 
 /// generated route for
-/// [_i2.ChatPage]
-class ChatRoute extends _i15.PageRouteInfo<void> {
-  const ChatRoute({List<_i15.PageRouteInfo>? children})
-      : super(
+/// [_i2.ChatScreen]
+class ChatRoute extends _i15.PageRouteInfo<ChatRouteArgs> {
+  ChatRoute({
+    _i16.Key? key,
+    required String holidayId,
+    List<_i15.PageRouteInfo>? children,
+  }) : super(
           ChatRoute.name,
+          args: ChatRouteArgs(
+            key: key,
+            holidayId: holidayId,
+          ),
+          rawPathParams: {'holidayId': holidayId},
           initialChildren: children,
         );
 
   static const String name = 'ChatRoute';
 
-  static const _i15.PageInfo<void> page = _i15.PageInfo<void>(name);
+  static const _i15.PageInfo<ChatRouteArgs> page =
+      _i15.PageInfo<ChatRouteArgs>(name);
+}
+
+class ChatRouteArgs {
+  const ChatRouteArgs({
+    this.key,
+    required this.holidayId,
+  });
+
+  final _i16.Key? key;
+
+  final String holidayId;
+
+  @override
+  String toString() {
+    return 'ChatRouteArgs{key: $key, holidayId: $holidayId}';
+  }
 }
 
 /// generated route for
@@ -214,15 +309,56 @@ class EncodeHoliday extends _i15.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i5.EncodeParticipant]
-class EncodeParticipant extends _i15.PageRouteInfo<EncodeParticipantArgs> {
-  EncodeParticipant({
+/// [_i5.EncodeParticipantActivityScreen]
+class EncodeParticipantActivityRoute
+    extends _i15.PageRouteInfo<EncodeParticipantActivityRouteArgs> {
+  EncodeParticipantActivityRoute({
+    _i16.Key? key,
+    required String activityId,
+    List<_i15.PageRouteInfo>? children,
+  }) : super(
+          EncodeParticipantActivityRoute.name,
+          args: EncodeParticipantActivityRouteArgs(
+            key: key,
+            activityId: activityId,
+          ),
+          rawPathParams: {'activityId': activityId},
+          initialChildren: children,
+        );
+
+  static const String name = 'EncodeParticipantActivityRoute';
+
+  static const _i15.PageInfo<EncodeParticipantActivityRouteArgs> page =
+      _i15.PageInfo<EncodeParticipantActivityRouteArgs>(name);
+}
+
+class EncodeParticipantActivityRouteArgs {
+  const EncodeParticipantActivityRouteArgs({
+    this.key,
+    required this.activityId,
+  });
+
+  final _i16.Key? key;
+
+  final String activityId;
+
+  @override
+  String toString() {
+    return 'EncodeParticipantActivityRouteArgs{key: $key, activityId: $activityId}';
+  }
+}
+
+/// generated route for
+/// [_i6.EncodeParticipantHolidayScreen]
+class EncodeParticipantHolidayRoute
+    extends _i15.PageRouteInfo<EncodeParticipantHolidayRouteArgs> {
+  EncodeParticipantHolidayRoute({
     _i16.Key? key,
     required String holidayId,
     List<_i15.PageRouteInfo>? children,
   }) : super(
-          EncodeParticipant.name,
-          args: EncodeParticipantArgs(
+          EncodeParticipantHolidayRoute.name,
+          args: EncodeParticipantHolidayRouteArgs(
             key: key,
             holidayId: holidayId,
           ),
@@ -230,14 +366,14 @@ class EncodeParticipant extends _i15.PageRouteInfo<EncodeParticipantArgs> {
           initialChildren: children,
         );
 
-  static const String name = 'EncodeParticipant';
+  static const String name = 'EncodeParticipantHolidayRoute';
 
-  static const _i15.PageInfo<EncodeParticipantArgs> page =
-      _i15.PageInfo<EncodeParticipantArgs>(name);
+  static const _i15.PageInfo<EncodeParticipantHolidayRouteArgs> page =
+      _i15.PageInfo<EncodeParticipantHolidayRouteArgs>(name);
 }
 
-class EncodeParticipantArgs {
-  const EncodeParticipantArgs({
+class EncodeParticipantHolidayRouteArgs {
+  const EncodeParticipantHolidayRouteArgs({
     this.key,
     required this.holidayId,
   });
@@ -248,12 +384,12 @@ class EncodeParticipantArgs {
 
   @override
   String toString() {
-    return 'EncodeParticipantArgs{key: $key, holidayId: $holidayId}';
+    return 'EncodeParticipantHolidayRouteArgs{key: $key, holidayId: $holidayId}';
   }
 }
 
 /// generated route for
-/// [_i6.HolidaysPage]
+/// [_i7.HolidaysPage]
 class HolidaysRoute extends _i15.PageRouteInfo<void> {
   const HolidaysRoute({List<_i15.PageRouteInfo>? children})
       : super(
@@ -267,7 +403,7 @@ class HolidaysRoute extends _i15.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i7.InvitationsScreen]
+/// [_i8.InvitationsScreen]
 class InvitationsRoute extends _i15.PageRouteInfo<InvitationsRouteArgs> {
   InvitationsRoute({
     _i16.Key? key,
@@ -306,20 +442,6 @@ class InvitationsRouteArgs {
 }
 
 /// generated route for
-/// [_i8.ListHolidaysChat]
-class ListHolidaysChat extends _i15.PageRouteInfo<void> {
-  const ListHolidaysChat({List<_i15.PageRouteInfo>? children})
-      : super(
-          ListHolidaysChat.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ListHolidaysChat';
-
-  static const _i15.PageInfo<void> page = _i15.PageInfo<void>(name);
-}
-
-/// generated route for
 /// [_i9.LoginPage]
 class LoginRoute extends _i15.PageRouteInfo<void> {
   const LoginRoute({List<_i15.PageRouteInfo>? children})
@@ -335,16 +457,49 @@ class LoginRoute extends _i15.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i10.MapScreen]
-class MapRoute extends _i15.PageRouteInfo<void> {
-  const MapRoute({List<_i15.PageRouteInfo>? children})
-      : super(
+class MapRoute extends _i15.PageRouteInfo<MapRouteArgs> {
+  MapRoute({
+    _i16.Key? key,
+    required double destinationLatitude,
+    required double destinationLongitude,
+    List<_i15.PageRouteInfo>? children,
+  }) : super(
           MapRoute.name,
+          args: MapRouteArgs(
+            key: key,
+            destinationLatitude: destinationLatitude,
+            destinationLongitude: destinationLongitude,
+          ),
+          rawPathParams: {
+            'destinationLatitude': destinationLatitude,
+            'destinationLongitude': destinationLongitude,
+          },
           initialChildren: children,
         );
 
   static const String name = 'MapRoute';
 
-  static const _i15.PageInfo<void> page = _i15.PageInfo<void>(name);
+  static const _i15.PageInfo<MapRouteArgs> page =
+      _i15.PageInfo<MapRouteArgs>(name);
+}
+
+class MapRouteArgs {
+  const MapRouteArgs({
+    this.key,
+    required this.destinationLatitude,
+    required this.destinationLongitude,
+  });
+
+  final _i16.Key? key;
+
+  final double destinationLatitude;
+
+  final double destinationLongitude;
+
+  @override
+  String toString() {
+    return 'MapRouteArgs{key: $key, destinationLatitude: $destinationLatitude, destinationLongitude: $destinationLongitude}';
+  }
 }
 
 /// generated route for

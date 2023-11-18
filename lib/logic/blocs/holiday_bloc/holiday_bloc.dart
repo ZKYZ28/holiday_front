@@ -10,65 +10,71 @@ part 'holiday_state.dart';
 class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
   final HolidayApiRepository holidayRepository = HolidayApiRepository();
 
-  HolidayBloc() : super(HolidayInitial()) {
+  HolidayBloc() : super(const HolidayState()) {
 
 
-    on<GetHolidayByParticipant>((event, emit) async {
+    on<GetHolidayByParticipant>((GetHolidayByParticipant event, Emitter<HolidayState> emit) async {
       try {
-        emit(HolidayLoading());
+        emit(state.copyWith(status: HolidayStateStatus.loading));
 
         final participantId = event.participantId;
         final holidaysByParticipant = await holidayRepository.fetchHolidayByParticipant(participantId);
 
-        emit(HolidayLoaded.list(holidaysByParticipant));
+        emit(state.copyWith(status: HolidayStateStatus.loaded, holidaysList: holidaysByParticipant));
       } on ApiException catch (e) {
-        emit(HolidayError(e.toString()));
+        emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : e.toString()));
       }
     });
 
-    on<GetHolidayPublished>((event, emit) async {
+    on<GetHolidayPublished>((GetHolidayPublished event, Emitter<HolidayState> emit) async {
       try {
-        emit(HolidayLoading());
+        emit(state.copyWith(status: HolidayStateStatus.loading));
 
         final holidaysPublished = await holidayRepository.fetchHolidayPublished();
 
-        emit(HolidayLoaded.list(holidaysPublished));
+        emit(state.copyWith(status: HolidayStateStatus.loaded, holidaysList: holidaysPublished));
       } on ApiException catch (e) {
-        emit(HolidayError(e.toString()));
+        emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : e.toString()));
       }
     });
 
-    on<GetHoliday>((event, emit) async {
+    on<GetHoliday>((GetHoliday event, Emitter<HolidayState> emit) async {
       try {
-        emit(HolidayLoading());
+        emit(state.copyWith(status: HolidayStateStatus.loading));
 
         final holidayId = event.holidayId;
         final holiday = await holidayRepository.fetchHoliday(holidayId);
 
-        emit(HolidayLoaded.item(holiday));
+        emit(state.copyWith(status: HolidayStateStatus.loaded, holidayItem: holiday));
       } on ApiException catch (e) {
-        emit(HolidayError(e.toString()));
+        emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : e.toString()));
       }
     });
 
-    on<PublishHoliday>((event, emit) async {
+    on<PublishHoliday>((PublishHoliday event, Emitter<HolidayState> emit) async {
       try {
         final holiday = event.holiday;
+
         await holidayRepository.publishHoliday(holiday);
 
+        emit(state.copyWith(status: HolidayStateStatus.published));
       } on ApiException catch (e) {
-        emit(HolidayError(e.toString()));
+        emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : e.toString()));
       }
     });
 
-    on<DeleteHoliday>((event, emit) async {
+    on<DeleteHoliday>((DeleteHoliday event, Emitter<HolidayState> emit) async {
       try {
         final holiday = event.holiday;
         await holidayRepository.deleteHoliday(holiday);
 
       } on ApiException catch (e) {
-        emit(HolidayError(e.toString()));
+        emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : e.toString()));
       }
+    });
+
+    on<WaitingActivityAction>((WaitingActivityAction event, Emitter<HolidayState> emit) async {
+      emit(state.copyWith(status: HolidayStateStatus.waitingActivityAction));
     });
 
   }

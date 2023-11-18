@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:geocoding/geocoding.dart' as geocoding;
 
 part 'location.g.dart';
 
@@ -22,4 +23,20 @@ class Location {
 
   factory Location.fromJson(Map<String, dynamic> json) => _$LocationFromJson(json);
   Map<String, dynamic> toJson() => _$LocationToJson(this);
+
+
+  String getFormattedAddress() {
+    return '$street $number, $locality';
+  }
+
+  static Future<List<geocoding.Location>> locationsFromAddress(String address) async {
+    try {
+      print(address);
+      List<geocoding.Location> geocodedLocations = await geocoding.locationFromAddress(address);
+
+      return geocodedLocations;
+    } catch (e) {
+      return [];
+    }
+  }
 }

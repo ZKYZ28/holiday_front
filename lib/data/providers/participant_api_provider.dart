@@ -36,4 +36,19 @@ class ParticipantApiProvider{
       throw ApiException("Une erreur s'est produite lors de la récupération des utilisateurs ajoutables à la vacances.", stacktrace);
     }
   }
+
+  Future<List<Participant>> getAllParticipantNotYetInActivity(String activityId) async {
+    try {
+      final response = await _dio.get('v1/Participant/activity/$activityId');
+
+      List<Participant> participants = (response.data as List<dynamic>).map((index) => Participant.fromJson(index as Map<String, dynamic>)).toList();
+      return participants;
+
+    } on DioException catch (e){
+      throw ApiException(e.response?.data, e);
+
+    } catch (e, stacktrace) {
+      throw ApiException("Une erreur s'est produite lors de la récupération des utilisateurs ajoutables à la vacances.", stacktrace);
+    }
+  }
 }

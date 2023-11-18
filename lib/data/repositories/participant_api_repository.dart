@@ -12,4 +12,8 @@ class ParticipantApiRepository{
   Future<List<Participant>> getAllParticipantNotYetInHoliday(String holidayId) {
     return _participantProvider.getAllParticipantNotYetInHoliday(holidayId);
   }
+
+  Future<List<Participant>> getAllParticipantNotYetInActivity(String activityId) {
+    return _participantProvider.getAllParticipantNotYetInActivity(activityId);
+  }
 }

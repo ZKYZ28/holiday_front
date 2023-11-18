@@ -11,21 +11,22 @@ part 'invitation_state.dart';
 class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
   final InvitationApiRepository invitationApiRepository = InvitationApiRepository();
 
-  InvitationBloc() : super(InvitationState()) {
+  InvitationBloc() : super(const InvitationState()) {
 
-    on<CreateInvitations>((event, emit) async {
+    on<CreateInvitations>((CreateInvitations event, Emitter<InvitationState> emit) async {
       try {
         final List<Participant> participants = event.participants;
         final holidayId = event.holidayId;
 
         await invitationApiRepository.createInvitations(participants, holidayId);
 
+        emit(state.copyWith(status: InvitationStateStatus.sent));
       } on ApiException catch (e) {
-        emit(state.copyWith(errorMessage : e.toString()));
+        emit(state.copyWith(status: InvitationStateStatus.error,errorMessage : e.toString()));
       }
     });
 
-    on<GetAllInvitationsByParticipant>((event, emit) async {
+    on<GetAllInvitationsByParticipant>((GetAllInvitationsByParticipant event, Emitter<InvitationState> emit) async {
       try {
         emit(state.copyWith(status: InvitationStateStatus.loading));
 
@@ -35,31 +36,31 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
         emit(state.copyWith(status: InvitationStateStatus.loaded, invitationsList: invitationsList));
 
       } on ApiException catch (e) {
-        emit(state.copyWith(errorMessage: e.toString()));
+        emit(state.copyWith(status: InvitationStateStatus.error, errorMessage: e.toString()));
       }
     });
 
-    on<AcceptInvitation>((event, emit) async {
+    on<AcceptInvitation>((AcceptInvitation event, Emitter<InvitationState> emit) async {
       try {
         final invitation = event.invitation;
 
         await invitationApiRepository.acceptInvitation(invitation);
 
+        emit(state.copyWith(status: InvitationStateStatus.accepted));
       } on ApiException catch (e) {
-        emit(state.copyWith(errorMessage: e.toString()));
+        emit(state.copyWith(status: InvitationStateStatus.error, errorMessage: e.toString()));
       }
     });
 
-    on<RefuseInvitation>((event, emit) async {
+    on<RefuseInvitation>((RefuseInvitation event, Emitter<InvitationState> emit) async {
       try {
         final invitation = event.invitation;
 
         await invitationApiRepository.refuseInvitation(invitation);
 
       } on ApiException catch (e) {
-        emit(state.copyWith(errorMessage: e.toString()));
+        emit(state.copyWith(status: InvitationStateStatus.error, errorMessage: e.toString()));
       }
     });
-
   }
 }

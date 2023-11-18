@@ -1,6 +1,6 @@
 part of 'invitation_bloc.dart';
 
-enum InvitationStateStatus {initial, loading, loaded, error}
+enum InvitationStateStatus {initial, loading, loaded, error, accepted, sent}
 
 class InvitationState extends Equatable {
   final InvitationStateStatus status;
@@ -29,25 +29,3 @@ class InvitationState extends Equatable {
   List<Object?> get props => [status, invitationsList, errorMessage];
 
 }
-
-// abstract class InvitationState extends Equatable {
-//   const InvitationState();
-//
-//   @override
-//   List<Object?> get props => [];
-// }
-//
-// class InvitationInitial extends InvitationState {}
-//
-// class InvitationLoading extends InvitationState {}
-//
-// class InvitationLoaded extends InvitationState {
-//   final List<Invitation>? invitationsList;
-//
-//   const InvitationLoaded(this.invitationsList);
-// }
-//
-// class InvitationError extends InvitationState {
-//   final String? message;
-//   const InvitationError(this.message);
-// }

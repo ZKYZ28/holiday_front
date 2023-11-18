@@ -1,4 +1,4 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/participant/participant.dart';
@@ -10,16 +10,16 @@ import 'package:holiday_mobile/presentation/widgets/common/progress_loading_widg
 
 
 @RoutePage()
-class EncodeParticipant extends StatefulWidget {
+class EncodeParticipantHolidayScreen extends StatefulWidget {
   final String holidayId;
 
-  const EncodeParticipant({super.key, @PathParam() required this.holidayId});
+  const EncodeParticipantHolidayScreen({super.key, @PathParam() required this.holidayId});
 
   @override
-  _EncodeParticipantState createState() => _EncodeParticipantState();
+  _EncodeParticipantHolidayScreenState createState() => _EncodeParticipantHolidayScreenState();
 }
 
-class _EncodeParticipantState extends State<EncodeParticipant> {
+class _EncodeParticipantHolidayScreenState extends State<EncodeParticipantHolidayScreen> {
   //Création des blocs
   final ParticipantBloc _participantBloc = ParticipantBloc();
   final InvitationBloc _invitationBloc = InvitationBloc();
@@ -32,7 +32,7 @@ class _EncodeParticipantState extends State<EncodeParticipant> {
 
   List<Participant> participantsBase = [];
 
-  List<Participant> _selectedParticipants = [];
+  final List<Participant> _selectedParticipants = [];
 
   void _selectParticipant(Participant participant) {
     setState(() {
@@ -85,16 +85,15 @@ class _EncodeParticipantState extends State<EncodeParticipant> {
         providers: [
           BlocProvider<ParticipantBloc>(create: (_) => _participantBloc),
           BlocProvider<InvitationBloc>(create: (_) => _invitationBloc),
-          // Ajoutez d'autres BlocProvider pour les blocs supplémentaires que vous souhaitez écouter
         ],
         child: MultiBlocListener(
           listeners: [
             BlocListener<ParticipantBloc, ParticipantState>(
               listener: (context, state) {
-                if (state is ParticipantError) {
+                if (state.status == ParticipantStateStatus.error) {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentMaterialBanner()
-                    ..showMaterialBanner(CustomMessage(message: state.message!).build(context));
+                    ..showMaterialBanner(CustomMessage(message: state.errorMessage!).build(context));
                 }
               },
             ),
@@ -105,21 +104,24 @@ class _EncodeParticipantState extends State<EncodeParticipant> {
                     ..hideCurrentMaterialBanner()
                     ..showMaterialBanner(CustomMessage(message: state.errorMessage!).build(context));
                 }
+                if (state.status == InvitationStateStatus.sent) {
+                  context.router.pop();
+                }
               },
             ),
           ],
           child: BlocBuilder<ParticipantBloc, ParticipantState>(
-            builder: (context, state) {
-              if (state is ParticipantInitial || state is ParticipantLoading) {
-                return const LoadingProgressor();
-              } else if (state is ParticipantLoaded) {
-                final participants = state.participants ?? [];
-                participantsBase = state.participants!;
-                return _buildEncodeParticipantInfo(context, participants);
-              } else {
-                return Container();
-              }
-            },
+                builder: (context, state) {
+                  if (state.status == ParticipantStateStatus.initial || state.status == ParticipantStateStatus.loading) {
+                    return const LoadingProgressor();
+                  } else if (state.status == ParticipantStateStatus.loaded) {
+                    final participants = state.participantsList ?? [];
+                    participantsBase = participants;
+                    return _buildEncodeParticipantInfo(context, participants);
+                  } else {
+                    return Container();
+                  }
+                },
           ),
         ),
       ),

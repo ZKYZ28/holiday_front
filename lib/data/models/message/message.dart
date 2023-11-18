@@ -10,16 +10,16 @@ part 'message.g.dart';
 class Message {
   final String sendAt;
   final String content;
-  final Holiday holiday;
-  final String holidayId;
+  final Holiday? holiday;
+  final String? holidayId;
   final Participant participant;
   final String participantId;
 
   Message({
     required this.sendAt,
     required this.content,
-    required this.holiday,
-    required this.holidayId,
+    this.holiday,
+    this.holidayId,
     required this.participant,
     required this.participantId,
   });

@@ -44,3 +44,7 @@ class DeleteHoliday extends HolidayEvent {
     @override
     List<Object> get props => [holiday];
 }
+
+class WaitingActivityAction extends HolidayEvent {
+
+}

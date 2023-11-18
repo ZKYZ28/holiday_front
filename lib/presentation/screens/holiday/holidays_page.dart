@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,16 +32,16 @@ class _HolidaysPageState extends State<HolidaysPage> {
     //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
     _holidayBloc.add(const GetHolidayByParticipant(
       //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-        participantId: '9e0b1891-15d0-4b81-8f50-a5f63d1b94c9'));
+        participantId: 'c01eb36d-d676-4878-bc3c-b9710e4a37ba'));
     _invitationBloc.add(const GetAllInvitationsByParticipant(
       //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-        participantId: 'ca0d0174-bc3f-4af4-8aa9-8f65106a5daa'));
+        participantId: 'c01eb36d-d676-4878-bc3c-b9710e4a37ba'));
     super.initState();
   }
 
-  // Switch du toggle
   bool isToggled = false;
   List<Invitation> inivtationsList = [];
+  List<Holiday> _holidays = [];
 
   void toggleSwitch(bool value) {
     setState(() {
@@ -51,13 +53,31 @@ class _HolidaysPageState extends State<HolidaysPage> {
       } else {
         //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
         _holidayBloc.add(const GetHolidayByParticipant(
-            participantId: '9e0b1891-15d0-4b81-8f50-a5f63d1b94c9'));
+            participantId: 'c01eb36d-d676-4878-bc3c-b9710e4a37ba'));
       }
     });
   }
 
+  Future<void> _afterNavigation() async {
+    //TODO CHANGER ICI
+    _invitationBloc.add(const GetAllInvitationsByParticipant(participantId: "d48956dd-5a64-47c1-b0ee-1edd55650155"));
+    _holidayBloc.add(const GetHolidayByParticipant(participantId: "c01eb36d-d676-4878-bc3c-b9710e4a37ba"));
+
+    _buildListHoliday();
+  }
+
+
+  void _removeHoliday(Holiday holiday) {
+    setState(() {
+      _holidays.remove(holiday);
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF1E3A8A),
@@ -67,9 +87,9 @@ class _HolidaysPageState extends State<HolidaysPage> {
         actions: [
           // INVITATIONS
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-              context.router.push(InvitationsRoute(participantId: "ca0d0174-bc3f-4af4-8aa9-8f65106a5daa"));
+              context.router.push(InvitationsRoute(participantId: "d48956dd-5a64-47c1-b0ee-1edd55650155")).then((value) async => await _afterNavigation());
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF1E3A8A),
@@ -90,9 +110,9 @@ class _HolidaysPageState extends State<HolidaysPage> {
                             style: TextStyle(color: Colors.white),
                           ),
                         );
-                      } else if (state.status == InvitationStateStatus.loaded) {
-                        inivtationsList = state.invitationsList ?? [];
 
+                      } else if (state.status == InvitationStateStatus.loaded || state.status == InvitationStateStatus.accepted) {
+                        inivtationsList = state.invitationsList ?? [];
                         return CircleAvatar(
                           backgroundColor: Colors.red,
                           radius: 15.0,
@@ -142,11 +162,11 @@ class _HolidaysPageState extends State<HolidaysPage> {
           listeners: [
             BlocListener<HolidayBloc, HolidayState>(
               listener: (context, state) {
-                if (state is HolidayError) {
+                if (state.status == HolidayStateStatus.error) {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentMaterialBanner()
                     ..showMaterialBanner(
-                        CustomMessage(message: state.message!).build(context));
+                        CustomMessage(message: state.errorMessage!).build(context));
                 }
               },
             ),
@@ -163,11 +183,11 @@ class _HolidaysPageState extends State<HolidaysPage> {
           ],
           child: BlocBuilder<HolidayBloc, HolidayState>(
             builder: (context, state) {
-              if (state is HolidayInitial || state is HolidayLoading) {
+              if (state.status == HolidayStateStatus.initial || state.status == HolidayStateStatus.loading) {
                 return const LoadingProgressor();
-              } else if (state is HolidayLoaded) {
-                final holidays = state.holidaysList ?? [];
-                return _buildHolidayCard(context, holidays);
+              } else if (state.status == HolidayStateStatus.loaded) {
+                _holidays = state.holidaysList ?? [];
+                return _buildHolidayCard(context, _holidays);
               } else {
                 return Container();
               }
@@ -197,7 +217,12 @@ class _HolidaysPageState extends State<HolidaysPage> {
             itemCount: holidays.length,
             itemBuilder: (context, index) {
               final holiday = holidays[index];
-              return HolidayCard(holiday: holiday, holidayBloc: _holidayBloc);
+              return HolidayCard(
+                  holiday: holiday,
+                  holidayBloc: _holidayBloc,
+                  onRemove: () => _removeHoliday(holiday),
+                  afterNavigation: _afterNavigation,
+              );
             },
           ),
         ),

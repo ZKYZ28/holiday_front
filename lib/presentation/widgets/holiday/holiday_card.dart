@@ -3,21 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
+import 'package:intl/intl.dart';
 
 import '../common/icon_with_text.dart';
 
 class HolidayCard extends StatelessWidget {
   final Holiday holiday;
   final HolidayBloc holidayBloc;
+  final VoidCallback onRemove;
+  final Future<void> Function() afterNavigation;
 
-
-  const HolidayCard({super.key, required this.holiday, required this.holidayBloc});
+  const HolidayCard({super.key, required this.holiday, required this.holidayBloc, required this.onRemove, required this.afterNavigation});
 
   @override
   Widget build(BuildContext context) {
+    DateFormat dateFormatDay = DateFormat('dd-MM-yyyy');
+
     return InkWell(
-      onTap: () {
-        context.router.push(MyHolidayRoute(holidayId: holiday.id!));
+      onTap: () async {
+        context.router.push(MyHolidayRoute(holidayId: holiday.id!)).then((value) async => await afterNavigation());
       },
       child: Card(
         margin: const EdgeInsets.all(10),
@@ -65,7 +69,6 @@ class HolidayCard extends StatelessWidget {
                 children: [
                   Flexible(
                     flex: 2, // La partie image occupe 2 parts sur 5 (40%)
-                    // child: Image.asset("assets/images/bgHoliday.jpg"),
                     child: Image.network(
                         'https://10.0.2.2:7048/${holiday.holidayPath}'),
                   ),
@@ -87,10 +90,9 @@ class HolidayCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          iconWithText(
-                              Icons.calendar_month, '30/03/2022-27/09/2023'),
-                              iconWithText(Icons.people_sharp, '4'),
-                              iconWithText(Icons.location_on, 'Monaco'),
+                          iconWithText(Icons.calendar_month, '${dateFormatDay.format(DateTime.parse(holiday.startDate))} - ${dateFormatDay.format(DateTime.parse(holiday.endDate))}'),
+                          iconWithText(Icons.people_sharp, "A CHANGER"),
+                          iconWithText(Icons.location_on, holiday.location.country),
                         ],
                       ),
                     ),
@@ -132,6 +134,7 @@ class HolidayCard extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     holidayBloc.add(DeleteHoliday(holiday: holiday));
+                    onRemove;
                     Navigator.of(context).pop();
                   },
                   child: const Text("Supprimer"),
