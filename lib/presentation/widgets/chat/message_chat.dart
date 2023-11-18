@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:holiday_mobile/data/models/message/message.dart';
+import 'package:holiday_mobile/data/models/user_authentificated/user_authentificated.dart';
+import 'package:holiday_mobile/logic/blocs/chat_bloc/chat_bloc.dart';
 import 'package:intl/intl.dart';
 
 class ChatMessage extends StatelessWidget {
-  final String text;
-  final String sender;
-  final DateTime sendAt;
-  final bool isUserMessage;
+  final Message message;
 
-  ChatMessage({required this.text, required this.isUserMessage, required String this.sender, required DateTime this.sendAt});
+  ChatMessage({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
+    //TODO CHANGER AVEC L'UTILISATEUR CONNECTE
+    final user = UserAuthentificated(id: "c01eb36d-d676-4878-bc3c-b9710e4a37ba", firstName: "François", lastName: "Mahy", email: "Francis@gmail.com", exp: 12345);
+
+    bool isUserMessage = message.participantId == user.id;
+
     return Container(
       margin: const EdgeInsets.only(top: 10),
       child: Row(
-        mainAxisAlignment: isUserMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isUserMessage? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isUserMessage)
             const Padding(
@@ -39,7 +44,7 @@ class ChatMessage extends StatelessWidget {
                     maxWidth: 200,
                   ),
                   child: Text(
-                    text,
+                    message.content,
                     style: const TextStyle(color: Colors.white),
                     overflow: TextOverflow.visible,
                     textAlign: isUserMessage ? TextAlign.end : TextAlign.start,
@@ -49,7 +54,7 @@ class ChatMessage extends StatelessWidget {
               ),
 
               Text(
-                '${DateFormat('dd/MM/yyyy à HH:mm').format(sendAt)} par ${sender}',
+                '${DateFormat('dd/MM/yyyy à HH:mm').format(DateTime.parse(message.sendAt))} par ${message.participant.firstName}  ${message.participant.lastName}',
                 style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 12,

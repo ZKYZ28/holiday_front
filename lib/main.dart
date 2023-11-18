@@ -6,6 +6,7 @@ import 'package:holiday_mobile/data/providers/authentification_api_provider.dart
 import 'package:holiday_mobile/data/providers/dio/dio_instance.dart';
 import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
 import 'package:holiday_mobile/logic/blocs/auth_bloc/auth_bloc.dart';
+import 'package:holiday_mobile/logic/blocs/chat_bloc/chat_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/presentation/widgets/common/bottom_navbar.dart';
 import 'package:holiday_mobile/routes/app_router.dart';

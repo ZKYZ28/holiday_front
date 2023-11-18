@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:holiday_mobile/data/models/message/message.dart';
+import 'package:holiday_mobile/data/providers/signalr/connection_hub.dart';
 import 'package:holiday_mobile/presentation/widgets/chat/message_chat.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
@@ -21,42 +23,21 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatWidgetState extends State<ChatScreen> {
   final ChatBloc _chatBloc = ChatBloc();
-  final List<ChatMessage> messages = [
-    ChatMessage(
-      text: "Salut, comment ça va fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff?",
-      sender: "Alice",
-      sendAt: DateTime.now(),
-      isUserMessage: false,
-    ),
+  List<Message> messages = [];
+  ConnectionHub? connectionHub;
 
-    ChatMessage(
-      text: "Bonjour ! Je vais bien, merci.",
-      sender: "Bob",
-      sendAt: DateTime.now(),
-      isUserMessage: true,
-    ),
-
-    ChatMessage(
-      text: "Et toi, comment vas-tu ?",
-      sender: "Bob",
-      sendAt: DateTime.now(),
-      isUserMessage: true,
-    ),
-
-    ChatMessage(
-      text: "JE vais bien merci !",
-      sender: "Bob",
-      sendAt: DateTime.now(),
-      isUserMessage: false,
-    ),
-
-  ];
-
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
-    _chatBloc.add(JoinRoom(
-        holidayId: widget.holidayId));
+    try{
+      connectionHub = ConnectionHub(_chatBloc);
+      connectionHub?.joinRoom(widget.holidayId);
+    }catch (e){
+      ScaffoldMessenger.of(context)
+        ..hideCurrentMaterialBanner()
+        ..showMaterialBanner(CustomMessage(message: "Erreur lors de la récupération de vos messages").build(context));
+    }
     super.initState();
   }
 
@@ -75,7 +56,7 @@ class _ChatWidgetState extends State<ChatScreen> {
     return Container(
       margin: const EdgeInsets.all(8.0),
       child: BlocProvider(
-        create: (_) => _chatBloc,
+        create: (_) =>  _chatBloc,
         child: BlocListener<ChatBloc, ChatState>(
           listener: (context, state) {
             if (state.status == ChatStateStatus.error) {
@@ -85,12 +66,15 @@ class _ChatWidgetState extends State<ChatScreen> {
             }
           },
           child: BlocBuilder<ChatBloc, ChatState>(
+            buildWhen: (previous, current) => previous.numberMessage != current.numberMessage,
             builder: (context, state) {
-              if (state.status == ChatStateStatus.joined) {
-                return _buildChat(context);
-              }  else {
-                return Container();
-              }
+              print(state.numberMessage);
+              messages = state.messageList!;
+
+              WidgetsBinding.instance!.addPostFrameCallback((_) {
+                _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+              });
+              return _buildChat(context);
             },
           ),
         ),
@@ -98,14 +82,15 @@ class _ChatWidgetState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildChat(BuildContext context){
+  Widget _buildChat(BuildContext context) {
     return Column(
       children: [
         Expanded(
           child: ListView.builder(
+            controller: _scrollController,
             itemCount: messages.length,
             itemBuilder: (context, index) {
-              return messages[index];
+              return ChatMessage(message: messages[index]);
             },
           ),
         ),
@@ -114,17 +99,20 @@ class _ChatWidgetState extends State<ChatScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: "Entrez votre message...",
                   ),
+                  onChanged: (value) {
+                    _chatBloc.add(MessageChanged(message: value));
+                  },
                 ),
               ),
               IconButton(
                 icon: const Icon(Icons.send),
                 onPressed: () {
-                  // Gérer l'envoi du message
+                  _chatBloc.add(MessageSent(connectionHub: connectionHub!, holidayId: widget.holidayId));
                 },
               ),
             ],

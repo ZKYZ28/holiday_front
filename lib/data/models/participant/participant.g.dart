@@ -8,10 +8,10 @@ part of 'participant.dart';
 
 Participant _$ParticipantFromJson(Map<String, dynamic> json) => Participant(
       id: json['id'] as String?,
-      lastName: json['lastName'] as String,
+      lastName: json['lastName'] as String?,
       firstName: json['firstName'] as String,
-      email: json['email'] as String,
-      passwordHash: json['passwordHash'] as String,
+      email: json['email'] as String?,
+      passwordHash: json['passwordHash'] as String?,
     );
 
 Map<String, dynamic> _$ParticipantToJson(Participant instance) =>

@@ -9,8 +9,10 @@ part of 'message.dart';
 Message _$MessageFromJson(Map<String, dynamic> json) => Message(
       sendAt: json['sendAt'] as String,
       content: json['content'] as String,
-      holiday: Holiday.fromJson(json['holiday'] as Map<String, dynamic>),
-      holidayId: json['holidayId'] as String,
+      holiday: json['holiday'] == null
+          ? null
+          : Holiday.fromJson(json['holiday'] as Map<String, dynamic>),
+      holidayId: json['holidayId'] as String?,
       participant:
           Participant.fromJson(json['participant'] as Map<String, dynamic>),
       participantId: json['participantId'] as String,

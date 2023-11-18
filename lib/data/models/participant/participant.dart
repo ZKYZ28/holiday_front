@@ -5,17 +5,17 @@ part 'participant.g.dart';
 @JsonSerializable()
 class Participant {
   final String? id;
-  final String lastName;
+  final String? lastName;
   final String firstName;
-  final String email;
-  final String passwordHash;
+  final String? email;
+  final String? passwordHash;
 
   Participant({
     this.id,
-    required this.lastName,
+    this.lastName,
     required this.firstName,
-    required this.email,
-    required this.passwordHash
+    this.email,
+    this.passwordHash
   });
 
   factory Participant.fromJson(Map<String, dynamic> json) => _$ParticipantFromJson(json);
