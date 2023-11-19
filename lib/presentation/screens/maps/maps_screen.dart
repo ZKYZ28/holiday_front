@@ -114,7 +114,7 @@ class _MapScreenState extends State<MapScreen> {
           ? const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [LoadingProgressor(), Text("Loading")],
+        children: [CircularProgressIndicator(), Text("Loading")],
       )
           : GoogleMap(
         initialCameraPosition: CameraPosition(

@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
             BlocProvider<AuthBloc>(
                 create: (context) => AuthBloc(repository: AuthRepository(RepositoryProvider.of<AuthAPiProvider>(context)))),
             BlocProvider<HolidayBloc>(
-                create: (context) => HolidayBloc()),
+                create: (context) => HolidayBloc(repository : AuthRepository(RepositoryProvider.of<AuthAPiProvider>(context)))),
           ],
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {

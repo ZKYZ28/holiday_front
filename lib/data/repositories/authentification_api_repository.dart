@@ -11,6 +11,8 @@ class AuthRepository{
 
   Stream<AuthStatus> get authStatusStream => _authProvider.authStatusStream;
 
+  UserAuthentificated get userConnected => _authProvider.userConnected;
+
   Future<void> logInRequest(Login login) {
     return _authProvider.logInSimple(login);
   }

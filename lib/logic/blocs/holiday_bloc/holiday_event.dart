@@ -10,12 +10,10 @@ abstract class HolidayEvent extends Equatable{
 class GetHolidayPublished extends HolidayEvent {}
 
 class GetHolidayByParticipant extends HolidayEvent {
-    final String participantId;
-
-    const GetHolidayByParticipant({required this.participantId});
+    const GetHolidayByParticipant();
 
     @override
-    List<Object> get props => [participantId];
+    List<Object> get props => [];
 }
 
 class GetHoliday extends HolidayEvent {

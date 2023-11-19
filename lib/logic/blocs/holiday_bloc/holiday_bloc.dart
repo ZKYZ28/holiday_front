@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
+import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
 import 'package:holiday_mobile/data/repositories/holiday_api_repository.dart';
 
 part 'holiday_event.dart';
@@ -9,15 +10,16 @@ part 'holiday_state.dart';
 
 class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
   final HolidayApiRepository holidayRepository = HolidayApiRepository();
+  late AuthRepository _repository;
 
-  HolidayBloc() : super(const HolidayState()) {
-
+  HolidayBloc({ required AuthRepository repository}) : super(const HolidayState()) {
+    _repository = repository;
 
     on<GetHolidayByParticipant>((GetHolidayByParticipant event, Emitter<HolidayState> emit) async {
       try {
         emit(state.copyWith(status: HolidayStateStatus.loading));
 
-        final participantId = event.participantId;
+        final participantId = _repository.userConnected.id;
         final holidaysByParticipant = await holidayRepository.fetchHolidayByParticipant(participantId);
 
         emit(state.copyWith(status: HolidayStateStatus.loaded, holidaysList: holidaysByParticipant));

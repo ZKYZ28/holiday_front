@@ -24,15 +24,12 @@ class HolidaysPage extends StatefulWidget {
 
 class _HolidaysPageState extends State<HolidaysPage> {
   //Création du bloc
-  final HolidayBloc _holidayBloc = HolidayBloc();
   final InvitationBloc _invitationBloc = InvitationBloc();
 
   @override
   void initState() {
     //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-    _holidayBloc.add(const GetHolidayByParticipant(
-      //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-        participantId: 'c01eb36d-d676-4878-bc3c-b9710e4a37ba'));
+    context.read<HolidayBloc>().add(const GetHolidayByParticipant());
     _invitationBloc.add(const GetAllInvitationsByParticipant(
       //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
         participantId: 'c01eb36d-d676-4878-bc3c-b9710e4a37ba'));
@@ -49,11 +46,10 @@ class _HolidaysPageState extends State<HolidaysPage> {
 
       // Appeler la méthode du bloc en fonction de la valeur de isToggled
       if (isToggled) {
-        _holidayBloc.add(GetHolidayPublished());
+        context.read<HolidayBloc>().add(GetHolidayPublished());
       } else {
         //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-        _holidayBloc.add(const GetHolidayByParticipant(
-            participantId: 'c01eb36d-d676-4878-bc3c-b9710e4a37ba'));
+        context.read<HolidayBloc>().add(const GetHolidayByParticipant());
       }
     });
   }
@@ -61,7 +57,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
   Future<void> _afterNavigation() async {
     //TODO CHANGER ICI
     _invitationBloc.add(const GetAllInvitationsByParticipant(participantId: "d48956dd-5a64-47c1-b0ee-1edd55650155"));
-    _holidayBloc.add(const GetHolidayByParticipant(participantId: "c01eb36d-d676-4878-bc3c-b9710e4a37ba"));
+    context.read<HolidayBloc>().add(const GetHolidayByParticipant());
 
     _buildListHoliday();
   }
@@ -155,7 +151,6 @@ class _HolidaysPageState extends State<HolidaysPage> {
       margin: const EdgeInsets.all(8.0),
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<HolidayBloc>(create: (_) => _holidayBloc),
           BlocProvider<InvitationBloc>(create: (_) => _invitationBloc),
         ],
         child: MultiBlocListener(
@@ -219,7 +214,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
               final holiday = holidays[index];
               return HolidayCard(
                   holiday: holiday,
-                  holidayBloc: _holidayBloc,
+                  holidayBloc: context.read<HolidayBloc>(),
                   onRemove: () => _removeHoliday(holiday),
                   afterNavigation: _afterNavigation,
               );

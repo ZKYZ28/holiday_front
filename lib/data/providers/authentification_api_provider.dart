@@ -21,6 +21,8 @@ class AuthAPiProvider {
 
   late UserAuthentificated? _userAuthentificated;
 
+  UserAuthentificated get userConnected => _userAuthentificated!;
+
   // Syntaxe dart qui me permet de donner une liste
   // d'intialisation du constructeur mais qui sera exécute avant celui-ci
   AuthAPiProvider() : _dioService = DioService() {
@@ -132,8 +134,11 @@ class AuthAPiProvider {
         _dioService.setAuthorizationBearer(token);
         _controller.add(AuthStatus.authentificated);
       } else {
+        _controller.add(AuthStatus.disconnected);
         _authService.secureStorage.deleteSecureData(SecureStorage.jwtKey);
       }
+    } else {
+      _controller.add(AuthStatus.disconnected);
     }
   }
 }

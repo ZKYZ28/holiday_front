@@ -251,7 +251,7 @@ class GoogleButton extends StatelessWidget {
       print(await googleKey.accessToken);
       print( googleKey.idToken);
       //print(googleKey.toString());
-      GoogleSignInAuthentication googleKey2 = await account!.authentication;
+      GoogleSignInAuthentication googleKey2 = await account.authentication;
       print(googleKey2.idToken);
       loginBloc.add(GoogleLoginSubmitted(idToken: googleKey.idToken ?? 'INVALID_KEY'));
     }
@@ -268,8 +268,7 @@ class GoogleButton extends StatelessWidget {
             child: SignInButton(
                 Buttons.googleDark,
                 text: 'Se connecter avec Google',
-               // onPressed: () => context.read<LoginBloc>().add(const GoogleLoginSubmit())));
-                onPressed: () => loginGoogle(context.read<LoginBloc>())));
+                onPressed: () => context.read<LoginBloc>().add(GoogleLoginSubmit())));
       },
     );
   }
