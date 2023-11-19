@@ -14,16 +14,8 @@ class SplashPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            RichText(
-              text: TextSpan(
-                style: DefaultTextStyle.of(context).style,
-                children: const <TextSpan>[
-                  TextSpan(text: "Holiday", style: TextStyle(color: Colors.black)),
-                  TextSpan(text: ".", style: TextStyle(color: Colors.lightBlueAccent)),
-                ],
-              ),
-            ),
-            CircularProgressIndicator()
+          Text("Holiday"),
+            const CircularProgressIndicator()
           ],
         ),
       ),

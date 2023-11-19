@@ -19,7 +19,7 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
       try {
         emit(state.copyWith(status: HolidayStateStatus.loading));
 
-        final participantId = _repository.userConnected.id;
+        final participantId = _repository.userConnected!.id;
         final holidaysByParticipant = await holidayRepository.fetchHolidayByParticipant(participantId);
 
         emit(state.copyWith(status: HolidayStateStatus.loaded, holidaysList: holidaysByParticipant));

@@ -19,9 +19,9 @@ class AuthAPiProvider {
 
   final _controller = StreamController<AuthStatus>();
 
-  late UserAuthentificated? _userAuthentificated;
+  UserAuthentificated? _userAuthentificated;
 
-  UserAuthentificated get userConnected => _userAuthentificated!;
+  UserAuthentificated? get userConnected => _userAuthentificated;
 
   // Syntaxe dart qui me permet de donner une liste
   // d'intialisation du constructeur mais qui sera exécute avant celui-ci
@@ -132,6 +132,7 @@ class AuthAPiProvider {
 
       if (tokenExpiration != 0 && !_authService.isTokenExpired(tokenExpiration)) {
         _dioService.setAuthorizationBearer(token);
+        _userAuthentificated = _authService.decodeJwt(token);
         _controller.add(AuthStatus.authentificated);
       } else {
         _controller.add(AuthStatus.disconnected);
