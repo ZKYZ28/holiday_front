@@ -14,25 +14,22 @@ import '../../widgets/common/progress_loading_widget.dart';
 import '../../widgets/holiday/holiday_card.dart';
 
 @RoutePage()
-class HolidaysPage extends StatefulWidget {
-  const HolidaysPage({super.key});
+class HolidaysScreen extends StatefulWidget {
+  const HolidaysScreen({super.key});
 
   //Création de l'état
   @override
-  _HolidaysPageState createState() => _HolidaysPageState();
+  _HolidaysScreenState createState() => _HolidaysScreenState();
 }
 
-class _HolidaysPageState extends State<HolidaysPage> {
-  //Création du bloc
-  final InvitationBloc _invitationBloc = InvitationBloc();
+class _HolidaysScreenState extends State<HolidaysScreen> {
+
 
   @override
   void initState() {
-    //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
+    context.read<HolidayBloc>().add(ResetHolidayStatus());
     context.read<HolidayBloc>().add(const GetHolidayByParticipant());
-    _invitationBloc.add(const GetAllInvitationsByParticipant(
-      //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-        participantId: 'c01eb36d-d676-4878-bc3c-b9710e4a37ba'));
+    context.read<InvitationBloc>().add(GetAllInvitationsByParticipant());
     super.initState();
   }
 
@@ -44,19 +41,16 @@ class _HolidaysPageState extends State<HolidaysPage> {
     setState(() {
       isToggled = value;
 
-      // Appeler la méthode du bloc en fonction de la valeur de isToggled
       if (isToggled) {
         context.read<HolidayBloc>().add(GetHolidayPublished());
       } else {
-        //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
         context.read<HolidayBloc>().add(const GetHolidayByParticipant());
       }
     });
   }
 
   Future<void> _afterNavigation() async {
-    //TODO CHANGER ICI
-    _invitationBloc.add(const GetAllInvitationsByParticipant(participantId: "d48956dd-5a64-47c1-b0ee-1edd55650155"));
+    context.read<InvitationBloc>().add(GetAllInvitationsByParticipant());
     context.read<HolidayBloc>().add(const GetHolidayByParticipant());
 
     _buildListHoliday();
@@ -73,6 +67,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
 
   @override
   Widget build(BuildContext context) {
+  HolidayBloc holidayBloc = context.read<HolidayBloc>();
 
     return Scaffold(
       appBar: AppBar(
@@ -84,8 +79,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
           // INVITATIONS
           ElevatedButton(
             onPressed: () async {
-              //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-              context.router.push(InvitationsRoute(participantId: "d48956dd-5a64-47c1-b0ee-1edd55650155")).then((value) async => await _afterNavigation());
+              context.router.push(const InvitationsRoute()).then((value) async => await _afterNavigation());
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF1E3A8A),
@@ -93,9 +87,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                BlocProvider<InvitationBloc>.value(
-                  value: _invitationBloc,
-                  child: BlocBuilder<InvitationBloc, InvitationState>(
+                 BlocBuilder<InvitationBloc, InvitationState>(
                     builder: (context, state) {
                       if (state.status == InvitationStateStatus.initial || state.status == InvitationStateStatus.loading) {
                         return const CircleAvatar(
@@ -122,7 +114,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
                       }
                     },
                   ),
-                ),
+
                 const SizedBox(width: 8.0),
                 const Text('Invitations'),
               ],
@@ -149,10 +141,6 @@ class _HolidaysPageState extends State<HolidaysPage> {
   Widget _buildListHoliday() {
     return Container(
       margin: const EdgeInsets.all(8.0),
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<InvitationBloc>(create: (_) => _invitationBloc),
-        ],
         child: MultiBlocListener(
           listeners: [
             BlocListener<HolidayBloc, HolidayState>(
@@ -189,7 +177,6 @@ class _HolidaysPageState extends State<HolidaysPage> {
             },
           ),
         ),
-      ),
     );
   }
 
@@ -214,7 +201,6 @@ class _HolidaysPageState extends State<HolidaysPage> {
               final holiday = holidays[index];
               return HolidayCard(
                   holiday: holiday,
-                  holidayBloc: context.read<HolidayBloc>(),
                   onRemove: () => _removeHoliday(holiday),
                   afterNavigation: _afterNavigation,
               );

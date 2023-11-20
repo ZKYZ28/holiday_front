@@ -5,9 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/providers/authentification_api_provider.dart';
 import 'package:holiday_mobile/data/providers/dio/dio_instance.dart';
 import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
+import 'package:holiday_mobile/logic/blocs/activity_bloc/activity_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/auth_bloc/auth_bloc.dart';
-import 'package:holiday_mobile/logic/blocs/chat_bloc/chat_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
+import 'package:holiday_mobile/logic/blocs/invitation_bloc/invitation_bloc.dart';
+import 'package:holiday_mobile/logic/blocs/participant_bloc/participant_bloc.dart';
 import 'package:holiday_mobile/presentation/widgets/common/bottom_navbar.dart';
 import 'package:holiday_mobile/routes/app_router.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
@@ -23,7 +25,6 @@ class MyHttpOverrides extends HttpOverrides {
           int port) => true;
   }
 }
-
 
 void main() {
   tz.initializeTimeZones();
@@ -56,6 +57,10 @@ class MyApp extends StatelessWidget {
                 create: (context) => AuthBloc(repository: AuthRepository(RepositoryProvider.of<AuthAPiProvider>(context)))),
             BlocProvider<HolidayBloc>(
                 create: (context) => HolidayBloc(repository : AuthRepository(RepositoryProvider.of<AuthAPiProvider>(context)))),
+            BlocProvider<InvitationBloc>(
+                create: (context) => InvitationBloc(repository : AuthRepository(RepositoryProvider.of<AuthAPiProvider>(context)))),
+            BlocProvider<ParticipantBloc>(
+                create: (context) => ParticipantBloc(repository : AuthRepository(RepositoryProvider.of<AuthAPiProvider>(context)))),
           ],
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {

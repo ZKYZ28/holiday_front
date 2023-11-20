@@ -10,6 +10,7 @@ import 'package:holiday_mobile/presentation/widgets/common/icon_with_text.dart';
 import 'package:holiday_mobile/presentation/widgets/common/progress_loading_widget.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
+import 'package:intl/intl.dart';
 
 @RoutePage()
 class ActivityScreen extends StatefulWidget {
@@ -36,10 +37,19 @@ class _ActivityState extends State<ActivityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: const Color(0xFF1E3A8A),
           title: const Text("Activité"),
         ),
       body: _buildActivity(),
     );
+  }
+
+
+  void deleteActivity(Activity activity){
+    _activityBloc.add(DeleteActivity(activity: activity));
+    context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
+    context.router.popUntilRoot();
+    context.router.push(MyHolidayRoute(holidayId: widget.holidayId));
   }
 
   Widget _buildActivity(){
@@ -92,16 +102,6 @@ class _ActivityState extends State<ActivityScreen> {
                   child: Image.network('https://10.0.2.2:7048/${activity.activityPath}'),
                 ),
 
-                /**
-                 * Container(
-                    height: 200,
-                    child: Image.asset(
-                    "assets/images/bgHoliday.jpg",
-                    fit: BoxFit.cover, // Ajuste l'image pour remplir la largeur sans déformation
-                    ),
-                    )
-                 */
-
                 Container(
                   margin: const EdgeInsets.fromLTRB(15, 20, 0, 10),
                   child: Row(
@@ -123,13 +123,6 @@ class _ActivityState extends State<ActivityScreen> {
                       ),
                       Row(
                         children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.logout,
-                              color: Colors.blue,
-                            ),
-                          ),
                           IconButton(
                             onPressed: () {},
                             icon: const Icon(
@@ -164,10 +157,9 @@ class _ActivityState extends State<ActivityScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      iconWithText(Icons.calendar_month, '30/03/2022'),
+                      iconWithText(Icons.calendar_month, DateFormat('dd/MM/yyyy').format(DateTime.parse(activity.startDate))),
                       iconWithText(Icons.euro, '${activity.price}'),
                       iconWithText(Icons.location_on, activity.location.country),
-                      iconWithText(Icons.people_sharp, 'XX'),
                     ],
                   ),
                 ),
@@ -191,8 +183,7 @@ class _ActivityState extends State<ActivityScreen> {
                         onPressed: () async {
                           //TODO METTRE DANS UN BLOC ?
                           List<geocoding.Location> geocodedLocations = await Location.locationsFromAddress(activity.location.getFormattedAddress());
-                          //TODO CHANGER ICI POUR METTRE l'ID DE LA HOLIDAY
-                          context.router.push(MapRoute(destinationLatitude: geocodedLocations[0].latitude, destinationLongitude: geocodedLocations[0].longitude));
+                          context.router.push(MapRoute(destinationLatitude: geocodedLocations[0].latitude, destinationLongitude: geocodedLocations[0].longitude, activityName: activity.name));
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF1E3A8A),
@@ -216,8 +207,7 @@ class _ActivityState extends State<ActivityScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Confirmation"),
-          content: const Text(
-              "Etes-vous sûr de vouloir supprimer cette activité ?"),
+          content: const Text("Etes-vous sûr de vouloir supprimer cette activité ?"),
           actions: [
             ButtonBar(
               alignment: MainAxisAlignment.spaceAround,
@@ -230,10 +220,10 @@ class _ActivityState extends State<ActivityScreen> {
                   child: const Text("Annuler"),
                 ),
                 TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    _activityBloc.add(DeleteActivity(activity: activity));
-                    context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
+                  onPressed: () async {
+                    Navigator.of(context)
+                        .pop();
+                    deleteActivity(activity);
                   },
                   child: const Text("Supprimer"),
                 ),

@@ -10,8 +10,7 @@ import 'package:holiday_mobile/presentation/widgets/common/progress_loading_widg
 import 'package:holiday_mobile/presentation/widgets/holiday/holiday_published_button.dart';
 import 'package:holiday_mobile/presentation/widgets/participant/participant_card.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
-
-import '../chat/chat_page.dart';
+import 'package:intl/intl.dart';
 
 @RoutePage()
 class MyHolidayPage extends StatefulWidget {
@@ -25,11 +24,8 @@ class MyHolidayPage extends StatefulWidget {
 }
 
 class _MyHolidayPageState extends State<MyHolidayPage> {
-  //Création du bloc
   late Holiday _holiday;
 
-  //Création du bloc
-  final ParticipantBloc _participantBloc = ParticipantBloc();
 
   @override
   void initState() {
@@ -39,60 +35,95 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const SizedBox(
-              width: 150,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'TITRE VACANCES',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.visible,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    'DATE DEBUT VACANCES',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  )
-                ],
-              ),
-            ),
-            ElevatedButton.icon(
-              style: ButtonStyle(
-                padding: MaterialStateProperty.all(
-                    const EdgeInsets.only(left: 10, right: 10)),
-                backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.pressed)) {
-                      return const Color(0xFF1E3A8A);
+      centerTitle: true,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            width: 125,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                BlocBuilder<HolidayBloc, HolidayState>(
+                  builder: (context, state) {
+                    if (state.status == HolidayStateStatus.loaded || state.status == HolidayStateStatus.waitingActivityAction) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            state.holidayItem?.name ?? "",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.visible,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            state.holidayItem != null
+                                ? DateFormat('dd/MM/yyyy').format(DateTime.parse(state.holidayItem!.startDate))
+                                : "",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const CircularProgressIndicator();
                     }
-                    return const Color(0xFF1E3A8A);
                   },
                 ),
-              ),
-              icon: const Icon(Icons.chat),
-              label: const Text('Chatter'),
-              onPressed: () {
-                context.router.push(ChatRoute(holidayId: widget.holidayId));
+              ],
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        ElevatedButton.icon(
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(const EdgeInsets.only(left: 5, right: 5)),
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                if (states.contains(MaterialState.pressed)) {
+                  return const Color(0xFF1E3A8A);
+                }
+                return const Color(0xFF1E3A8A);
               },
             ),
-          ],
+          ),
+          icon: const Icon(Icons.calendar_month),
+          label: const Text('Exporter'),
+          onPressed: () {
+            context.read<HolidayBloc>().add(ExportHolidayToIcs(holidayId: widget.holidayId));
+          },
         ),
-        backgroundColor: const Color(0xFF1E3A8A),
-      ),
+        ElevatedButton.icon(
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(const EdgeInsets.only(left: 5, right: 5)),
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                if (states.contains(MaterialState.pressed)) {
+                  return const Color(0xFF1E3A8A);
+                }
+                return const Color(0xFF1E3A8A);
+              },
+            ),
+          ),
+          icon: const Icon(Icons.chat),
+          label: const Text('Chatter'),
+          onPressed: () {
+            context.router.push(ChatRoute(holidayId: widget.holidayId, holidayName: _holiday.name));
+          },
+        ),
+      ],
+      backgroundColor: const Color(0xFF1E3A8A),
+    ),
       body: _buildMyHoliday(),
     );
   }
@@ -100,11 +131,6 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
   Widget _buildMyHoliday() {
     return Container(
       margin: const EdgeInsets.all(8.0),
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<HolidayBloc>(create: (_) =>   context.read<HolidayBloc>()),
-          BlocProvider<ParticipantBloc>(create: (_) => _participantBloc),
-        ],
         child: MultiBlocListener(
           listeners: [
             BlocListener<HolidayBloc, HolidayState>(
@@ -132,26 +158,23 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
               },
             ),
           ],
-          child: BlocProvider(
-            create: (_) =>   context.read<HolidayBloc>(),
-            child: BlocBuilder<HolidayBloc, HolidayState>(
-              builder: (context, state) {
-                if (state.status == HolidayStateStatus.initial ||
-                    state.status == HolidayStateStatus.loading) {
-                  return const LoadingProgressor();
-                } else if (state.status == HolidayStateStatus.loaded ||
-                    state.status == HolidayStateStatus.published) {
-                  if (state.status == HolidayStateStatus.loaded) {
+          child: BlocBuilder<HolidayBloc, HolidayState>(
+            builder: (context, state) {
+              if (state.status == HolidayStateStatus.initial || state.status == HolidayStateStatus.loading) {
+                return const LoadingProgressor();
+
+              } else if (state.status == HolidayStateStatus.loaded || state.status == HolidayStateStatus.published || state.status == HolidayStateStatus.waitingActivityAction) {
+                if (state.status == HolidayStateStatus.loaded) {
+                  if(state.holidayItem != null){
                     _holiday = state.holidayItem!;
                   }
-                  return _buildHoliday(context, _holiday!);
-                } else {
-                  return Container();
                 }
-              },
-            ),
+                return _buildHoliday(context, _holiday!);
+              } else {
+                return Container();
+              }
+            },
           ),
-        ),
       ),
     );
   }
@@ -190,7 +213,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                       label: const Text('Météo'),
                       onPressed: () {
                         context.router
-                            .push(WeatherRoute(holidayId: holiday.id!));
+                            .push(WeatherRoute(holidayId: holiday.id!, holidayName: holiday.name));
                       },
                     ),
                   ),
@@ -242,10 +265,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                       icon: const Icon(Icons.exit_to_app),
                       label: const Text('Quitter'),
                       onPressed: () {
-                        //TODO CHANGE PARTICIPANT ID QUAND ON SERA CONNECTE
-                        _participantBloc.add(LeaveHoliday(
-                            participantId: "c01eb36d-d676-4878-bc3c-b9710e4a37ba",
-                            holiday: holiday));
+                        context.read<ParticipantBloc>().add(LeaveHoliday(holiday: holiday));
                       },
                     ),
                   ),

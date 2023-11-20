@@ -21,7 +21,11 @@ class HolidayApiRepository{
   }
 
   Future<void>  deleteHoliday(Holiday holiday) {
-    return _holidayProvider. deleteHoliday(holiday);
+    return _holidayProvider.deleteHoliday(holiday);
+  }
+
+  Future<void> exportHolidayToIcs(String holidayId) {
+    return _holidayProvider.exportHolidayToIcs(holidayId);
   }
 
 

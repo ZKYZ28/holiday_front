@@ -12,8 +12,9 @@ import 'package:url_launcher/url_launcher.dart';
 class MapScreen extends StatefulWidget {
   final double destinationLatitude;
   final double destinationLongitude;
+  final String activityName;
 
-  const MapScreen({super.key, @PathParam() required this.destinationLatitude, @PathParam() required this.destinationLongitude});
+  const MapScreen({super.key, @PathParam() required this.activityName, @PathParam() required this.destinationLatitude, @PathParam() required this.destinationLongitude});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -100,7 +101,9 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('MAP'),
+      appBar: AppBar(
+        title: Text(widget.activityName),
+        backgroundColor: const Color(0xFF1E3A8A),
           actions: [
               IconButton(
                 icon: const Icon(Icons.map),
@@ -114,7 +117,7 @@ class _MapScreenState extends State<MapScreen> {
           ? const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [CircularProgressIndicator(), Text("Loading")],
+        children: [LoadingProgressor()],
       )
           : GoogleMap(
         initialCameraPosition: CameraPosition(

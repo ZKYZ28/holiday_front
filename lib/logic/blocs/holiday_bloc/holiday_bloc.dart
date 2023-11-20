@@ -75,8 +75,22 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
       }
     });
 
+    on<ExportHolidayToIcs>((ExportHolidayToIcs event, Emitter<HolidayState> emit) async {
+      try {
+        final holidayId = event.holidayId;
+        await holidayRepository.exportHolidayToIcs(holidayId);
+
+      } on ApiException catch (e) {
+        emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : e.toString()));
+      }
+    });
+
     on<WaitingActivityAction>((WaitingActivityAction event, Emitter<HolidayState> emit) async {
       emit(state.copyWith(status: HolidayStateStatus.waitingActivityAction));
+    });
+
+    on<ResetHolidayStatus>((ResetHolidayStatus event, Emitter<HolidayState> emit) async {
+      emit(state.copyWith(status: HolidayStateStatus.loading));
     });
 
   }

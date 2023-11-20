@@ -8,13 +8,12 @@ abstract class ParticipantEvent extends Equatable{
 }
 
 class LeaveHoliday extends ParticipantEvent {
-  final String participantId;
   final Holiday holiday;
 
-  const LeaveHoliday({required this.participantId, required this.holiday});
+  const LeaveHoliday({required this.holiday});
 
   @override
-  List<Object> get props => [participantId, holiday];
+  List<Object> get props => [holiday];
 }
 
 class GetAllParticipantNotYetInHoliday extends ParticipantEvent {

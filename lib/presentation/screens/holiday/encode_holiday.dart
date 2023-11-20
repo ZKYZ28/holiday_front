@@ -34,6 +34,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF1E3A8A),
         title: const Text('Encoder une vacance'),
       ),
 

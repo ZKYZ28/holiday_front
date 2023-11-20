@@ -1,9 +1,9 @@
-import 'dart:convert';
-
+import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:holiday_mobile/data/providers/dio/dio_instance.dart';
+import 'package:open_file/open_file.dart';
 
 class HolidayApiProvider{
 
@@ -84,6 +84,25 @@ class HolidayApiProvider{
 
       } catch (e, stacktrace) {
         throw ApiException("Une erreur s'est produite lors de la suppression de votre vacances", stacktrace);
+      }
+    }
+
+    Future<void> exportHolidayToIcs(String holidayId) async {
+      try {
+        String filePath = '${(await getTemporaryDirectory()).path}/activity.ics';
+
+        await _dio.download(
+          'v1/Holiday/export/$holidayId',
+          filePath,
+        );
+
+        OpenFile.open(filePath);
+
+      } on DioException catch (e){
+        throw ApiException(e.response?.data, e);
+
+      } catch (e, stacktrace) {
+        throw ApiException("Une erreur s'est produite lors de l'exportation de votre vacance", stacktrace);
       }
     }
 }

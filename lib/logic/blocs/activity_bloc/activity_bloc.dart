@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/models/activity/activity.dart';
 import 'package:holiday_mobile/data/repositories/activity_api_repository.dart';
-import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 
 part 'activity_event.dart';
 part 'activity_state.dart';

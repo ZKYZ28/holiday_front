@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/participant/participant.dart';
 import 'package:holiday_mobile/logic/blocs/participant_bloc/participant_bloc.dart';
+import 'package:holiday_mobile/presentation/widgets/participant/addable_participant.dart';
+import 'package:holiday_mobile/presentation/widgets/participant/my_search.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
 import 'package:holiday_mobile/presentation/widgets/common/progress_loading_widget.dart';
 import 'package:holiday_mobile/data/models/participate/participate.dart';
+import 'package:holiday_mobile/presentation/widgets/participant/participant_being_added.dart';
 import '../../../logic/blocs/participate_bloc/participate_bloc.dart';
 import '../../widgets/participant/participant_card.dart';
 
@@ -23,12 +26,11 @@ class EncodeParticipantActivityScreen extends StatefulWidget {
 
 class _EncodeParticipantActivityScreenState extends State<EncodeParticipantActivityScreen> {
   //Création des blocs
-  final ParticipantBloc _participantBloc = ParticipantBloc();
   final ParticipateBloc _participateBloc = ParticipateBloc();
 
   @override
   void initState() {
-    _participantBloc.add(GetAllParticipantNotYetInActivity(activityId: widget.activityId));
+    context.read<ParticipantBloc>().add(GetAllParticipantNotYetInActivity(activityId: widget.activityId));
     _participateBloc.add(GetAllParticipatesByActivity(activityId: widget.activityId));
     super.initState();
   }
@@ -80,11 +82,7 @@ class _EncodeParticipantActivityScreenState extends State<EncodeParticipantActiv
                   participants: participantsBase,
                   onParticipantSelected: _selectParticipant,
                 ),
-              ).then((selectedParticipant) {
-                if (selectedParticipant != null) {
-                  print('Selected participant: ${selectedParticipant.nom}');
-                }
-              });
+              );
             },
           )
         ],
@@ -96,49 +94,46 @@ class _EncodeParticipantActivityScreenState extends State<EncodeParticipantActiv
   Widget _buildEncodeParticipant() {
     return Container(
       margin: const EdgeInsets.all(8.0),
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<ParticipantBloc>(create: (_) => _participantBloc),
-          BlocProvider<ParticipateBloc>(create: (_) => _participateBloc),
-        ],
-        child: MultiBlocListener(
-          listeners: [
-            BlocListener<ParticipantBloc, ParticipantState>(
-              listener: (context, state) {
-                if (state.status == ParticipantStateStatus.error) {
-                  ScaffoldMessenger.of(context)
-                    ..hideCurrentMaterialBanner()
-                    ..showMaterialBanner(CustomMessage(message: state.errorMessage!).build(context));
+      child: BlocProvider(
+          create: (_) => _participateBloc,
+          child: MultiBlocListener(
+            listeners: [
+              BlocListener<ParticipantBloc, ParticipantState>(
+                listener: (context, state) {
+                  if (state.status == ParticipantStateStatus.error) {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentMaterialBanner()
+                      ..showMaterialBanner(CustomMessage(message: state.errorMessage).build(context));
+                  }
+                },
+              ),
+              BlocListener<ParticipateBloc, ParticipateState>(
+                listener: (context, state) {
+                  if (state.status == ParticipateStateStatus.error) {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentMaterialBanner()
+                      ..showMaterialBanner(CustomMessage(message: state.errorMessage).build(context));
+                  }
+                  if (state.status == ParticipateStateStatus.sent) {
+                    context.router.pop();
+                  }
+                },
+              ),
+            ],
+            child: BlocBuilder<ParticipantBloc, ParticipantState>(
+              builder: (context, state) {
+                if (state.status == ParticipantStateStatus.initial || state.status == ParticipantStateStatus.loading) {
+                  return const LoadingProgressor();
+                } else if (state.status == ParticipantStateStatus.loaded) {
+                  final participants = state.participantsList ?? [];
+                  participantsBase = participants;
+                  return _buildEncodeParticipantInfo(context, participants);
+                } else {
+                  return Container();
                 }
               },
             ),
-            BlocListener<ParticipateBloc, ParticipateState>(
-              listener: (context, state) {
-                if (state.status == ParticipateStateStatus.error) {
-                  ScaffoldMessenger.of(context)
-                    ..hideCurrentMaterialBanner()
-                    ..showMaterialBanner(CustomMessage(message: state.errorMessage!).build(context));
-                }
-                if (state.status == ParticipateStateStatus.sent) {
-                  context.router.pop();
-                }
-              },
-            ),
-          ],
-          child: BlocBuilder<ParticipantBloc, ParticipantState>(
-            builder: (context, state) {
-              if (state.status == ParticipantStateStatus.initial || state.status == ParticipantStateStatus.loading) {
-                return const LoadingProgressor();
-              } else if (state.status == ParticipantStateStatus.loaded) {
-                final participants = state.participantsList ?? [];
-                participantsBase = participants;
-                return _buildEncodeParticipantInfo(context, participants);
-              } else {
-                return Container();
-              }
-            },
           ),
-        ),
       ),
     );
   }
@@ -194,96 +189,18 @@ class _EncodeParticipantActivityScreenState extends State<EncodeParticipantActiv
             const SizedBox(
               height: 10,
             ),
-            Container(
-              constraints: BoxConstraints(maxHeight: tableHeight),
-              width: cardWith,
-              child: Card(
-                elevation: 5,
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                        child: Text(
-                          'Participant(s) ajoutable(s) : ',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E3A8A),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: participantsBase.length,
-                          itemBuilder: (context, index) {
-                            final participant = participantsBase[index];
-                            return Card(
-                              color: Colors.grey[100],
-                              child: ListTile(
-                                title: Text('${participant.firstName} (${participant.email})'),
-                                trailing: const Icon(Icons.add),
-                                onTap: () {
-                                  _selectParticipant(participant);
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            buildParticipantAddable(
+              tableHeight: tableHeight,
+              cardWith: cardWith,
+              participantsBase: participantsBase,
+              onParticipantSelected: _selectParticipant,
             ),
 
-            Container(
-              constraints: BoxConstraints(maxHeight: tableHeight),
-              width: cardWith,
-              child: Card(
-                elevation: 5,
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                        child: Text(
-                          'Participant(s) en cours d\'ajout : ',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E3A8A),
-                          ),
-                        ),
-                      ),
-
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: _selectedParticipants.length,
-                          itemBuilder: (context, index) {
-                            final participant = _selectedParticipants[index];
-                            return Card(
-                              color: Colors.grey[100],
-                              child: ListTile(
-                                title: Text('${participant.firstName} (${participant.email})'),
-                                trailing: const Icon(Icons.delete, color: Colors.red),
-                                onTap: () {
-                                  _deselectParticipant(participant);
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-
-                    ],
-                  ),
-                ),
-              ),
+            buildParticipantBeingAdded(
+              tableHeight: tableHeight,
+              cardWith: cardWith,
+              selectedParticipants: _selectedParticipants,
+              onDeselectParticipant: _deselectParticipant,
             ),
 
             Container(
@@ -315,73 +232,6 @@ class _EncodeParticipantActivityScreenState extends State<EncodeParticipantActiv
           ],
         ),
       ),
-    );
-  }
-}
-
-class MySearch extends SearchDelegate {
-  final List<Participant> participants;
-  final Function(Participant) onParticipantSelected;
-
-  MySearch({required this.participants, required this.onParticipantSelected});
-
-  @override
-  List<Widget>? buildActions(BuildContext context) => [
-    IconButton(
-        onPressed: () => close(context, null),
-        icon: const Icon(Icons.clear))
-  ];
-
-  @override
-  Widget? buildLeading(BuildContext context) => IconButton(
-      onPressed: () {
-        if (query.isEmpty) {
-          close(context, null);
-        } else {
-          query = '';
-        }
-      },
-      icon: const Icon(Icons.arrow_back));
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return Center(
-      child: Card(
-        child: ListTile(
-          title: Text(query),
-          onTap: () {
-            // Pass back the selected suggestion
-            close(context, query);
-          },
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    final List<Participant> filteredParticipants = participants
-        .where(
-          (participant) =>
-          participant.firstName.toLowerCase().contains(query.toLowerCase()),
-    )
-        .toList();
-
-    return ListView.builder(
-      itemCount: filteredParticipants.length,
-      itemBuilder: (context, index) {
-        final participant = filteredParticipants[index];
-
-        return ListTile(
-          title: Text('${participant.firstName} (${participant.email})'),
-          onTap: () {
-            query = participant.firstName;
-            showResults(context);
-            onParticipantSelected(participant);
-            close(context, participant);
-          },
-        );
-      },
     );
   }
 }

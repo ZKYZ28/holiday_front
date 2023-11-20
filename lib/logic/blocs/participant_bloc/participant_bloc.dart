@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:holiday_mobile/data/models/participant/participant.dart';
+import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
 import 'package:holiday_mobile/data/repositories/participant_api_repository.dart';
 
 part 'participant_event.dart';
@@ -10,12 +11,14 @@ part 'participant_state.dart';
 
 class ParticipantBloc extends Bloc<ParticipantEvent, ParticipantState> {
   final ParticipantApiRepository participantApiRepository = ParticipantApiRepository();
+  late AuthRepository _repository;
 
-  ParticipantBloc() : super(const ParticipantState()) {
+    ParticipantBloc({ required AuthRepository repository}) : super(const ParticipantState()) {
+    _repository = repository;
 
-    on<LeaveHoliday>((event, Emitter<ParticipantState> emit) async {
+    on<LeaveHoliday>((LeaveHoliday event, Emitter<ParticipantState> emit) async {
       try {
-        final String participantId = event.participantId;
+        final participantId = _repository.userConnected!.id;
         final holiday = event.holiday;
 
         await participantApiRepository.leaveHoliday(participantId, holiday);
@@ -26,7 +29,7 @@ class ParticipantBloc extends Bloc<ParticipantEvent, ParticipantState> {
       }
     });
 
-    on<GetAllParticipantNotYetInHoliday>((event, Emitter<ParticipantState> emit) async {
+    on<GetAllParticipantNotYetInHoliday>((GetAllParticipantNotYetInHoliday event, Emitter<ParticipantState> emit) async {
       try {
         emit(state.copyWith(status: ParticipantStateStatus.loading));
 
@@ -39,7 +42,7 @@ class ParticipantBloc extends Bloc<ParticipantEvent, ParticipantState> {
       }
     });
 
-    on<GetAllParticipantNotYetInActivity>((event, Emitter<ParticipantState> emit) async {
+    on<GetAllParticipantNotYetInActivity>((GetAllParticipantNotYetInActivity event, Emitter<ParticipantState> emit) async {
       try {
         emit(state.copyWith(status: ParticipantStateStatus.loading));
 
