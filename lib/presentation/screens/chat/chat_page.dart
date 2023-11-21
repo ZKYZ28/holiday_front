@@ -11,9 +11,11 @@ import '../../../logic/blocs/chat_bloc/chat_bloc.dart';
 @RoutePage()
 class ChatScreen extends StatefulWidget {
   final String holidayId;
+  final String holidayName;
 
   const ChatScreen({
     super.key,
+    @PathParam() required this.holidayName,
     @PathParam() required this.holidayId,
   });
 
@@ -45,7 +47,8 @@ class _ChatWidgetState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat Page'),
+        title: Text(widget.holidayName),
+        backgroundColor: const Color(0xFF1E3A8A),
       ),
 
       body: _buildListMessage()

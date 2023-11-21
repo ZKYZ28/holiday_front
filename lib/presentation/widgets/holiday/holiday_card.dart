@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
@@ -9,11 +10,10 @@ import '../common/icon_with_text.dart';
 
 class HolidayCard extends StatelessWidget {
   final Holiday holiday;
-  final HolidayBloc holidayBloc;
   final VoidCallback onRemove;
   final Future<void> Function() afterNavigation;
 
-  const HolidayCard({super.key, required this.holiday, required this.holidayBloc, required this.onRemove, required this.afterNavigation});
+  const HolidayCard({super.key, required this.holiday, required this.onRemove, required this.afterNavigation});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +21,7 @@ class HolidayCard extends StatelessWidget {
 
     return InkWell(
       onTap: () async {
+        context.read<HolidayBloc>().add(ResetHolidayStatus());
         context.router.push(MyHolidayRoute(holidayId: holiday.id!)).then((value) async => await afterNavigation());
       },
       child: Card(
@@ -133,7 +134,7 @@ class HolidayCard extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    holidayBloc.add(DeleteHoliday(holiday: holiday));
+                    context.read<HolidayBloc>().add(DeleteHoliday(holiday: holiday));
                     onRemove;
                     Navigator.of(context).pop();
                   },

@@ -43,6 +43,15 @@ class DeleteHoliday extends HolidayEvent {
     List<Object> get props => [holiday];
 }
 
-class WaitingActivityAction extends HolidayEvent {
+class ExportHolidayToIcs extends HolidayEvent {
+    final String holidayId;
 
+    const ExportHolidayToIcs({required this.holidayId});
+
+    @override
+    List<Object> get props => [holidayId];
 }
+
+class WaitingActivityAction extends HolidayEvent {}
+
+class ResetHolidayStatus extends HolidayEvent {}

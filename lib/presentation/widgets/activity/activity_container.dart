@@ -1,6 +1,8 @@
 import 'dart:core';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/data/models/activity/activity.dart';
+import 'package:holiday_mobile/routes/app_router.gr.dart';
 import 'activity_card.dart';
 
 
@@ -40,24 +42,6 @@ class ActivityContainer extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        width: 35,
-                        height: 35,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle, // cerle en fond
-                          color: Color(0xFF1E3A8A),
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-
-                          },
-                          icon: const Icon(
-                            Icons.calendar_month,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
                       const SizedBox(
                         width: 10,
                       ),
@@ -70,7 +54,7 @@ class ActivityContainer extends StatelessWidget {
                         ),
                         child: IconButton(
                           onPressed: () {
-                            print('Add appuyé');
+                            context.router.push(EncodeActivityRoute(holidayId: holidayId));
                           },
                           icon: const Icon(
                             Icons.add,

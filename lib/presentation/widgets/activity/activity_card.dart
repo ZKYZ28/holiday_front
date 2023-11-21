@@ -2,7 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/activity/activity.dart';
+import 'package:holiday_mobile/logic/blocs/activity_bloc/activity_bloc.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
+import 'package:intl/intl.dart';
 
 import '../../../logic/blocs/holiday_bloc/holiday_bloc.dart';
 
@@ -13,12 +15,13 @@ class ActivityCard extends StatelessWidget {
   const ActivityCard({
     super.key,
     required this.activity,
-    required this.holidayId
+    required this.holidayId,
   });
 
 
   @override
   Widget build(BuildContext context) {
+
     return Card(
       color: Colors.grey[100],
       child :ListTile(
@@ -38,7 +41,7 @@ class ActivityCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
         Text(
-        activity.startDate,
+        DateFormat('dd/MM/yyyy à HH:mm').format(DateTime.parse(activity.startDate)),
         style: const TextStyle(
           fontSize: 14,
           color: Colors.black,

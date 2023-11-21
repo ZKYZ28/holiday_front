@@ -2,6 +2,8 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/invitation/invitation.dart';
+import 'package:holiday_mobile/data/providers/authentification_api_provider.dart';
+import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
 import 'package:holiday_mobile/logic/blocs/invitation_bloc/invitation_bloc.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
 import 'package:holiday_mobile/presentation/widgets/common/progress_loading_widget.dart';
@@ -9,11 +11,9 @@ import 'package:holiday_mobile/presentation/widgets/invitations/invitation_card.
 
 @RoutePage()
 class InvitationsScreen extends StatefulWidget {
-  final String participantId;
 
   const InvitationsScreen({
-    super.key,
-    @PathParam() required this.participantId,
+    super.key
   });
 
   @override
@@ -22,14 +22,11 @@ class InvitationsScreen extends StatefulWidget {
 
 class _InvitationsScreenState extends State<InvitationsScreen> {
   //Création du bloc
-  final InvitationBloc _invitationBloc = InvitationBloc();
   List<Invitation> invitations = [];
 
   @override
   void initState() {
-    _invitationBloc.add(GetAllInvitationsByParticipant(
-      //TODO CHANGER UNE FOIS QU'ON SERA CONNECTE
-        participantId: widget.participantId));
+    context.read<InvitationBloc>().add(GetAllInvitationsByParticipant());
     super.initState();
   }
 
@@ -41,7 +38,6 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF1E3A8A),
@@ -54,8 +50,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
   Widget _buildListInvitations(){
     return Container(
       margin: const EdgeInsets.all(8.0),
-      child: BlocProvider(
-        create: (_) => _invitationBloc,
+
         child: BlocListener<InvitationBloc, InvitationState>(
           listener: (context, state) {
             if (state.status == InvitationStateStatus.error) {
@@ -70,25 +65,23 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                 return const LoadingProgressor();
               } else if (state.status == InvitationStateStatus.loaded) {
                 invitations = state.invitationsList ?? [];
-                return _buildInvitations(context, invitations, _invitationBloc);
+                return _buildInvitations(context, invitations);
               } else {
                 return Container();
               }
             },
           ),
         ),
-      ),
     );
   }
 
-  Widget _buildInvitations(BuildContext context, List<Invitation> invitations, InvitationBloc invitationBloc) {
+  Widget _buildInvitations(BuildContext context, List<Invitation> invitations) {
     return ListView.builder(
       itemCount: invitations.length,
       itemBuilder: (context, index) {
         final invitation = invitations[index];
         return InvitationCard(
           invitation: invitation,
-          invitationBloc: invitationBloc,
           onClick: () => _removeInvitation(invitation),
         );
       },

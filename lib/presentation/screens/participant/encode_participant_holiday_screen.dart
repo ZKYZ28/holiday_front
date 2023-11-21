@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/participant/participant.dart';
 import 'package:holiday_mobile/logic/blocs/invitation_bloc/invitation_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/participant_bloc/participant_bloc.dart';
+import 'package:holiday_mobile/presentation/widgets/participant/addable_participant.dart';
+import 'package:holiday_mobile/presentation/widgets/participant/my_search.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
 import 'package:holiday_mobile/presentation/widgets/common/progress_loading_widget.dart';
-
+import 'package:holiday_mobile/presentation/widgets/participant/participant_being_added.dart';
 
 
 @RoutePage()
@@ -20,13 +22,10 @@ class EncodeParticipantHolidayScreen extends StatefulWidget {
 }
 
 class _EncodeParticipantHolidayScreenState extends State<EncodeParticipantHolidayScreen> {
-  //Création des blocs
-  final ParticipantBloc _participantBloc = ParticipantBloc();
-  final InvitationBloc _invitationBloc = InvitationBloc();
 
   @override
   void initState() {
-    _participantBloc.add(GetAllParticipantNotYetInHoliday(holidayId: widget.holidayId));
+    context.read<ParticipantBloc>().add(GetAllParticipantNotYetInHoliday(holidayId: widget.holidayId));
     super.initState();
   }
 
@@ -65,11 +64,7 @@ class _EncodeParticipantHolidayScreenState extends State<EncodeParticipantHolida
                     participants: participantsBase,
                     onParticipantSelected: _selectParticipant,
                   ),
-                ).then((selectedParticipant) {
-                  if (selectedParticipant != null) {
-                    print('Selected participant: ${selectedParticipant.nom}');
-                  }
-                });
+                );
               },
             )
           ],
@@ -81,11 +76,6 @@ class _EncodeParticipantHolidayScreenState extends State<EncodeParticipantHolida
   Widget _buildEncodeParticipant() {
     return Container(
       margin: const EdgeInsets.all(8.0),
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<ParticipantBloc>(create: (_) => _participantBloc),
-          BlocProvider<InvitationBloc>(create: (_) => _invitationBloc),
-        ],
         child: MultiBlocListener(
           listeners: [
             BlocListener<ParticipantBloc, ParticipantState>(
@@ -93,7 +83,7 @@ class _EncodeParticipantHolidayScreenState extends State<EncodeParticipantHolida
                 if (state.status == ParticipantStateStatus.error) {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentMaterialBanner()
-                    ..showMaterialBanner(CustomMessage(message: state.errorMessage!).build(context));
+                    ..showMaterialBanner(CustomMessage(message: state.errorMessage).build(context));
                 }
               },
             ),
@@ -124,7 +114,6 @@ class _EncodeParticipantHolidayScreenState extends State<EncodeParticipantHolida
                 },
           ),
         ),
-      ),
     );
   }
 
@@ -143,99 +132,24 @@ class _EncodeParticipantHolidayScreenState extends State<EncodeParticipantHolida
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              constraints: BoxConstraints(maxHeight: tableHeight),
-              width: cardWith,
-              child: Card(
-                elevation: 5,
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                        child: Text(
-                          'Participant(s) en cours d\'ajout : ',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E3A8A),
-                          ),
-                        ),
-                      ),
 
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: _selectedParticipants.length,
-                          itemBuilder: (context, index) {
-                            final participant = _selectedParticipants[index];
-                            return Card(
-                              color: Colors.grey[100],
-                              child: ListTile(
-                                title: Text('${participant.firstName} (${participant.email})'),
-                                trailing: const Icon(Icons.delete, color: Colors.red),
-                                onTap: () {
-                                  _deselectParticipant(participant);
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-
-                    ],
-                  ),
-                ),
-              ),
+            buildParticipantBeingAdded(
+              tableHeight: tableHeight,
+              cardWith: cardWith,
+              selectedParticipants: _selectedParticipants,
+              onDeselectParticipant: _deselectParticipant,
             ),
+
             const SizedBox(
               height: 10,
             ),
-            Container(
-              constraints: BoxConstraints(maxHeight: tableHeight),
-              width: cardWith,
-              child: Card(
-                elevation: 5,
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                        child: Text(
-                          'Participant(s) ajoutable(s) : ',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E3A8A),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: participantsBase.length,
-                          itemBuilder: (context, index) {
-                            final participant = participantsBase[index];
-                            return Card(
-                              color: Colors.grey[100],
-                              child: ListTile(
-                                title: Text('${participant.firstName} (${participant.email})'),
-                                trailing: const Icon(Icons.add),
-                                onTap: () {
-                                  _selectParticipant(participant);
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            buildParticipantAddable(
+              tableHeight: tableHeight,
+              cardWith: cardWith,
+              participantsBase: participantsBase,
+              onParticipantSelected: _selectParticipant,
             ),
+
             Container(
               margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
               child: Center(
@@ -256,7 +170,7 @@ class _EncodeParticipantHolidayScreenState extends State<EncodeParticipantHolida
                   icon: const Icon(Icons.add),
                   label: const Text('Ajouter'),
                   onPressed: () {
-                    _invitationBloc.add(CreateInvitations(participants: _selectedParticipants, holidayId: widget.holidayId));
+                    context.read<InvitationBloc>().add(CreateInvitations(participants: _selectedParticipants, holidayId: widget.holidayId));
                   },
                 ),
               ),
@@ -268,69 +182,4 @@ class _EncodeParticipantHolidayScreenState extends State<EncodeParticipantHolida
   }
 }
 
-class MySearch extends SearchDelegate {
-  final List<Participant> participants;
-  final Function(Participant) onParticipantSelected;
 
-  MySearch({required this.participants, required this.onParticipantSelected});
-
-  @override
-  List<Widget>? buildActions(BuildContext context) => [
-        IconButton(
-            onPressed: () => close(context, null),
-            icon: const Icon(Icons.clear))
-      ];
-
-  @override
-  Widget? buildLeading(BuildContext context) => IconButton(
-      onPressed: () {
-        if (query.isEmpty) {
-          close(context, null);
-        } else {
-          query = '';
-        }
-      },
-      icon: const Icon(Icons.arrow_back));
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return Center(
-      child: Card(
-        child: ListTile(
-          title: Text(query),
-          onTap: () {
-            // Pass back the selected suggestion
-            close(context, query);
-          },
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    final List<Participant> filteredParticipants = participants
-        .where(
-          (participant) =>
-              participant.firstName.toLowerCase().contains(query.toLowerCase()),
-        )
-        .toList();
-
-    return ListView.builder(
-      itemCount: filteredParticipants.length,
-      itemBuilder: (context, index) {
-        final participant = filteredParticipants[index];
-
-        return ListTile(
-          title: Text('${participant.firstName} (${participant.email})'),
-          onTap: () {
-            query = participant.firstName;
-            showResults(context);
-            onParticipantSelected(participant);
-            close(context, participant);
-          },
-        );
-      },
-    );
-  }
-}

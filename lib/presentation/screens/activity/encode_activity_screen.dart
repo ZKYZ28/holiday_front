@@ -6,19 +6,27 @@ import 'package:auto_route/annotations.dart';
 import 'dart:io';
 
 @RoutePage()
-class EncodeActivity extends StatefulWidget {
-  const EncodeActivity({super.key});
+class EncodeActivityScreen extends StatefulWidget {
+  final String holidayId;
+
+  const EncodeActivityScreen({super.key, @PathParam() required this.holidayId});
 
   @override
-  State<EncodeActivity> createState() => _EncodeActivityState();
+  State<EncodeActivityScreen> createState() => _EncodeActivityScreenState();
 }
 
-class _EncodeActivityState extends State<EncodeActivity> {
+class _EncodeActivityScreenState extends State<EncodeActivityScreen> {
   File? _image;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Scaffold(
+        appBar: AppBar(
+        backgroundColor: const Color(0xFF1E3A8A),
+        title: const Text('Encoder une activité'),
+    ),
+
+    body: Center(
       child: Container(
         margin: const EdgeInsets.all(20),
         child: SingleChildScrollView(
@@ -169,6 +177,7 @@ class _EncodeActivityState extends State<EncodeActivity> {
           ),
         ),
       ),
+    ),
     );
   }
 }

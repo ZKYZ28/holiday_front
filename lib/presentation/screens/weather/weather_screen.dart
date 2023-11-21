@@ -11,10 +11,11 @@ import 'package:intl/intl.dart';
 @RoutePage()
 class WeatherScreen extends StatefulWidget {
   final String holidayId;
+  final String holidayName;
 
   const WeatherScreen(
       {super.key,
-      @PathParam() required this.holidayId});
+      @PathParam() required this.holidayId, @PathParam() required this.holidayName});
 
   @override
   _WeatherScreenState createState() => _WeatherScreenState();
@@ -41,7 +42,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Météo'),
+        title: Text('Météo pour ${widget.holidayName}'),
+        backgroundColor: const Color(0xFF1E3A8A),
       ),
       body: _buildWeather(),
     );

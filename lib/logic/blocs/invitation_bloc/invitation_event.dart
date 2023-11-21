@@ -18,14 +18,7 @@ class CreateInvitations extends InvitationEvent {
 }
 
 
-class GetAllInvitationsByParticipant extends InvitationEvent {
-  final String participantId;
-
-  const GetAllInvitationsByParticipant({required this.participantId});
-
-  @override
-  List<Object> get props => [participantId];
-}
+class GetAllInvitationsByParticipant extends InvitationEvent {}
 
 class AcceptInvitation extends InvitationEvent {
   final Invitation invitation;
