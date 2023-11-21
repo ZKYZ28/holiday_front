@@ -12,7 +12,7 @@ class ChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //TODO CHANGER AVEC L'UTILISATEUR CONNECTE
-    final user = UserAuthentificated(id: "c01eb36d-d676-4878-bc3c-b9710e4a37ba", firstName: "François", lastName: "Mahy", email: "Francis@gmail.com", exp: 12345);
+    final user = UserAuthentificated(id: "c01eb36d-d676-4878-bc3c-b9710e4a37ba", firstName: "François", lastName: "Mahy", email: "Francis@gmail.com");
 
     bool isUserMessage = message.participantId == user.id;
 

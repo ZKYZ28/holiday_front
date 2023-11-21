@@ -226,37 +226,6 @@ class LoginButton extends StatelessWidget {
 class GoogleButton extends StatelessWidget {
   const GoogleButton({super.key});
 
-  void loginGoogle(LoginBloc loginBloc) async {
-
-    // TODO : mettre googleSignIn
-    // if (await _googleSignIn.isSignedIn()) {
-    //   await _googleSignIn.signOut();
-    // }
-
-    GoogleSignIn _googleSignIn = GoogleSignIn(
-      //serverClientId: "172376078595-ho5eovfe2cql2jsgvvm524qmoseps667.apps.googleusercontent.com",
-      scopes: <String>[
-      'email',
-      'profile',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-    );
-
-    GoogleSignInAccount? account = await _googleSignIn.signIn();
-    print(account);
-
-    // Récupération du token google
-    if (account != null) {
-      GoogleSignInAuthentication googleKey = await _googleSignIn.currentUser!.authentication;
-      print(await googleKey.accessToken);
-      print( googleKey.idToken);
-      //print(googleKey.toString());
-      GoogleSignInAuthentication googleKey2 = await account.authentication;
-      print(googleKey2.idToken);
-      loginBloc.add(GoogleLoginSubmitted(idToken: googleKey.idToken ?? 'INVALID_KEY'));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(

@@ -44,7 +44,6 @@ class MyApp extends StatelessWidget {
     void notAuthorizedReceived() {
       authRepository.logOut();
     }
-   //DioService(notAuthorizedCallback: notAuthorizedReceived);
     DioService().setCallBackMethod(notAuthorizedReceived);
     return MultiRepositoryProvider(
         providers: [

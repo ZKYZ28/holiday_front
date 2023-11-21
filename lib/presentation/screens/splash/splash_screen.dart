@@ -14,7 +14,15 @@ class SplashPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-          Text("Holiday"),
+            Image.asset("assets/images/palmarLogo.png"),
+            const Text("Holiday",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                overflow: TextOverflow.visible,
+              )
+            ),
+            const SizedBox(height: 20,),
             const CircularProgressIndicator()
           ],
         ),
