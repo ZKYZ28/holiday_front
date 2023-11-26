@@ -19,9 +19,13 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
       try {
         emit(state.copyWith(status: HolidayStateStatus.loading));
 
-        final participantId = _repository.userConnected!.id;
+        // TODO : tester si ça survient à nouveau (impossible de reproduire le bug)
+        final participantId = _repository.userConnected?.id ?? 'UNKNOW';
+        if (participantId == 'UNKNOW') {
+          emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : "Utilisateur non authentifié. Merci de vous reconnecter ! "));
+          return;
+        }
         final holidaysByParticipant = await holidayRepository.fetchHolidayByParticipant(participantId);
-
         emit(state.copyWith(status: HolidayStateStatus.loaded, holidaysList: holidaysByParticipant));
       } on ApiException catch (e) {
         emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : e.toString()));

@@ -27,14 +27,20 @@ class MyHolidayPage extends StatefulWidget {
 class _MyHolidayPageState extends State<MyHolidayPage> {
   late Holiday _holiday;
 
+
   @override
   void initState() {
     context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
     super.initState();
   }
 
+  Future<void> _afterEncodeOrEdit() async {
+    context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -308,8 +314,9 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
             ActivityContainer(
                 activities: holiday.activities,
                 activityHeight: cardActivityHeight,
-                holidayId: widget.holidayId)
-          ],
+                holidayId: widget.holidayId,
+                afterEncodeOrEdit : _afterEncodeOrEdit
+            )],
         ),
       ),
     );

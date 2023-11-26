@@ -33,8 +33,17 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
       try {
         emit(state.copyWith(status: InvitationStateStatus.loading));
 
-        final participantId = _repository.userConnected!.id;
-        final invitationsList = await invitationApiRepository.getAllInvitationsByParticipant(participantId);
+        // TODO : tester si ça survient à nouveau
+        final participantId = _repository.userConnected?.id ?? 'UNKNOW';
+        if (participantId == 'UNKNOW') {
+          emit(state.copyWith(
+              status: InvitationStateStatus.error,
+              errorMessage:
+                  "Utilisateur non authentifié. Merci de vous reconnecter ! "));
+          return;
+        }
+        final invitationsList = await invitationApiRepository
+            .getAllInvitationsByParticipant(participantId);
 
         emit(state.copyWith(status: InvitationStateStatus.loaded, invitationsList: invitationsList));
 

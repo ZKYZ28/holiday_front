@@ -1,5 +1,7 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
+import 'package:holiday_mobile/data/exceptions/holiday_auth_exception.dart';
+import 'package:holiday_mobile/data/exceptions/holiday_storage_exception.dart';
 import 'package:holiday_mobile/data/secure_storage/secure_storage.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -17,10 +19,10 @@ class AuthService {
   UserAuthentificated? decodeJwt(String jwtFromApi) {
     try {
       final jwt = JWT.decode(jwtFromApi);
-      return UserAuthentificated(id: jwt.payload['nameid'], firstName: jwt.payload['given_name'], lastName: jwt.payload['family_name'], email: jwt.payload['email'], exp: jwt.payload['exp']);
+      return UserAuthentificated(id: jwt.payload['nameid'], firstName: jwt.payload['given_name'], lastName: jwt.payload['family_name'], email: jwt.payload['email']);
     //  print('Payload ${jwt.payload}');
     } on JWTUndefinedException catch (e) {
-      throw ApiException("Impossible de décoder le JWT", null);
+      throw HolidayAuthException("Impossible de décoder le JWT");
     };
   }
 
@@ -30,7 +32,7 @@ class AuthService {
       return jwt.payload['exp'];
       //  print('Payload ${jwt.payload}');
     } on JWTUndefinedException catch (e) {
-      throw ApiException("Impossible de décoder le JWT", null);
+      throw HolidayAuthException("Impossible de décoder le JWT");
     };
   }
 

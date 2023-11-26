@@ -129,7 +129,7 @@ class _HolidaysScreenState extends State<HolidaysScreen> {
               backgroundColor: const Color(0xFF1E3A8A),
             ),
             onPressed: () {
-              context.router.push(const EncodeHoliday());
+              context.router.push(EncodeHoliday()).then((value) async => await _afterNavigation());
             },
           ),
         ],

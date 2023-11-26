@@ -9,6 +9,8 @@ import 'package:holiday_mobile/data/repositories/authentification_api_repository
 import 'package:holiday_mobile/logic/blocs/auth_bloc/auth_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/login_bloc/login_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/login_bloc/validators/email.dart';
+import 'package:holiday_mobile/presentation/widgets/common/GenericInputField.dart';
+import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
@@ -42,158 +44,115 @@ class _LoginPageState extends State<LoginPage> {
           ),
           backgroundColor: const Color(0xFF1E3A8A),
         ),
-        body: BlocListener<LoginBloc, LoginState>(
+        body: BlocConsumer<LoginBloc, LoginState>(
           listener: (context, state) {
             // Message d'erreur
             if (state.status.isFailure) {
               ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  // TODO SNACKBAR PERSO
-                  SnackBar(content: Text("${state.errorMessage}")),
-                );
+                ..hideCurrentMaterialBanner()
+                ..showMaterialBanner(CustomMessage(message: "${state.errorMessage}").build(context));
             }
-            // if (state.status.isSuccess) {
-            //   // Remplace toute la pile de navigation par juste la HomeRoute.
-            //   // Comme ça on s'assure qu'il ne revienne pas au login
-            //  // context.router.replaceAll([HolidaysRoute()]);
-            //
-            // }
           },
-          child: Center(
-            child: Container(
-              margin: const EdgeInsets.all(50),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 30),
-                      child: const Text(
-                        'Connexion',
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1E3A8A),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 10),
-                      child: const Form(
-                        child: Column(
-                          children: [
-                            EmailInput(),
-                            PasswordInput(),
-                            LoginButton(),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      // Espacement interne du Container
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(bottom: 10),
-                            child: const Divider(
-                              thickness: 1,
-                              color: Color(0xFF1E3A8A),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-                            child: GoogleButton(),
-                          ),
-                          const Text(
-                            'Vous n\'avez pas encore de compte ?',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Color(0xFF1E3A8A),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 15),
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF1E3A8A),
-                              ),
-                              child: const Text("S'inscrire"),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
+          builder: (context, state) {
+            return _buildLoginForm(context);
+          },
         ),
       ),
     );
   }
-}
 
-class EmailInput extends StatelessWidget {
-  const EmailInput({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) => previous.email != current.email,
-      builder: (context, state) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 20),
-          child: TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Email *',
-              hintText: 'exemple@gmail.com',
-              border: const OutlineInputBorder(),
-              errorText: !state.email.isPure && state.email.isNotValid
-                  ? state.errorMessage
-                  : null,
-              errorMaxLines: 2,
+  Widget _buildLoginForm(BuildContext context) {
+    return Center(
+          child: Container(
+            margin: const EdgeInsets.all(50),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 30),
+                    child: const Text(
+                      'Connexion',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1E3A8A),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: Form(
+                      child: Column(
+                        children: [
+                          // EmailInput(),
+                          Container(
+                            margin:  const EdgeInsets.only(bottom: 20),
+                            child: GenericInputField<LoginBloc, LoginState>(
+                                    buildWhen: (previous, current) => previous.email != current.email,
+                                    labelText: 'Email *',
+                                    hintText: 'john.doe@gmail.com',
+                                    onChanged: (email) => context.read<LoginBloc>().add(LoginEmailChanged(email: email)),
+                                    errorText: (state) => !state.email.isPure && state.email.isNotValid ? state.errorMessage : null
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            child: GenericInputField<LoginBloc, LoginState>(
+                                buildWhen: (previous, current) => previous.password != current.password,
+                                labelText: 'Mot de passe *',
+                                hintText: '***********',
+                                onChanged: (password) => context.read<LoginBloc>().add(LoginPasswordChanged(password: password)),
+                                isPassword: true,
+                                errorText: (state) => !state.password.isPure && state.password.isNotValid ? state.errorMessage : null
+                            ),
+                          ),
+                          LoginButton(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    // Espacement interne du Container
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: const Divider(
+                            thickness: 1,
+                            color: Color(0xFF1E3A8A),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                          child: GoogleButton(),
+                        ),
+                        const Text(
+                          'Vous n\'avez pas encore de compte ?',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Color(0xFF1E3A8A),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 15),
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF1E3A8A),
+                            ),
+                            child: const Text("S'inscrire"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-            onChanged: (email) =>
-                context.read<LoginBloc>().add(LoginEmailChanged(email: email)),
           ),
         );
-      },
-    );
-  }
-}
-
-class PasswordInput extends StatelessWidget {
-  const PasswordInput({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) => previous.password != current.password,
-      builder: (context, state) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          child: TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Mot de passe *',
-              hintText: '***********',
-              border: const OutlineInputBorder(),
-              errorText: !state.password.isPure && state.password.isNotValid
-                  ? state.errorMessage
-                  : null,
-              errorMaxLines: 2,
-            ),
-            obscureText: true,
-            onChanged: (password) => context
-                .read<LoginBloc>()
-                .add(LoginPasswordChanged(password: password)),
-          ),
-        );
-      },
-    );
   }
 }
 
@@ -225,37 +184,6 @@ class LoginButton extends StatelessWidget {
 
 class GoogleButton extends StatelessWidget {
   const GoogleButton({super.key});
-
-  void loginGoogle(LoginBloc loginBloc) async {
-
-    // TODO : mettre googleSignIn
-    // if (await _googleSignIn.isSignedIn()) {
-    //   await _googleSignIn.signOut();
-    // }
-
-    GoogleSignIn _googleSignIn = GoogleSignIn(
-      //serverClientId: "172376078595-ho5eovfe2cql2jsgvvm524qmoseps667.apps.googleusercontent.com",
-      scopes: <String>[
-      'email',
-      'profile',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-    );
-
-    GoogleSignInAccount? account = await _googleSignIn.signIn();
-    print(account);
-
-    // Récupération du token google
-    if (account != null) {
-      GoogleSignInAuthentication googleKey = await _googleSignIn.currentUser!.authentication;
-      print(await googleKey.accessToken);
-      print( googleKey.idToken);
-      //print(googleKey.toString());
-      GoogleSignInAuthentication googleKey2 = await account.authentication;
-      print(googleKey2.idToken);
-      loginBloc.add(GoogleLoginSubmitted(idToken: googleKey.idToken ?? 'INVALID_KEY'));
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -81,7 +81,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       GoogleLoginSubmit event, Emitter<LoginState> emit) async {
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
-
       GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: <String>[
           'email',
@@ -92,9 +91,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       // Si jamais, ça authentifie directement l'utilisateur avec son compte google
       // sans lui laisser le choix
-      // if (await googleSignIn.isSignedIn()) {
-      //   await googleSignIn.disconnect();
-      // }
+      if (await googleSignIn.isSignedIn()) {
+        await googleSignIn.signOut();
+      }
 
       GoogleSignInAccount? account = await googleSignIn.signIn();
 
@@ -102,14 +101,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (account == null) return;
 
       // Récupérer les informations de l'authentfiication
-      final GoogleSignInAuthentication googleAuth = await account.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await account.authentication;
       String tokenId = googleAuth.idToken ?? Configuration.googleInvalidKey;
-      print(tokenId);
 
       // Récupérer le tokenId pour le transmettre à l'api afin de renvoyer le JWT
       if (tokenId == Configuration.googleInvalidKey) {
-        print("ici");
-        emit(state.copyWith(status: FormzSubmissionStatus.failure, errorMessage: "Il a été impossible de vous authentifier avec Google. Merci de réessayer plus tard"));
+        emit(state.copyWith(
+            status: FormzSubmissionStatus.failure,
+            errorMessage:
+                "Il a été impossible de vous authentifier avec Google. Merci de réessayer plus tard"));
         return;
       }
 
@@ -118,7 +119,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(state.copyWith(status: FormzSubmissionStatus.success));
       print("SKIP TOKEN BIEN ENVOE");
     } catch (e) {
-      emit(state.copyWith(status: FormzSubmissionStatus.failure));
+      emit(state.copyWith(
+          status: FormzSubmissionStatus.failure, errorMessage: e.toString()));
     }
   }
 }

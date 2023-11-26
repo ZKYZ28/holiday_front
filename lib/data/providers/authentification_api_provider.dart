@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
+import 'package:holiday_mobile/data/exceptions/holiday_auth_exception.dart';
+import 'package:holiday_mobile/data/exceptions/holiday_storage_exception.dart';
 import 'package:holiday_mobile/data/models/login/login.dart';
 import 'package:holiday_mobile/data/models/user_authentificated/user_authentificated.dart';
 import 'package:holiday_mobile/data/providers/dio/dio_instance.dart';
@@ -28,10 +30,8 @@ class AuthAPiProvider {
   AuthAPiProvider() : _dioService = DioService() {
     _dio = _dioService.dio;
 
-    readData();
-
-    // regarder si jwt est en cache lorsque l'utilisateur revient sur l'application afin
-    // de le reconnecter s'il est toujours valide
+    // Vérifier si le jwt est en cache. S'il est toujours valide, on va le reconnecter.
+    readCacheData();
   }
 
   Stream<AuthStatus> get authStatusStream => _controller.stream;
@@ -48,98 +48,99 @@ class AuthAPiProvider {
       print(response.data);
       String jwt = response.data;
 
-      // Decoder JWT
-      try {
-        _userAuthentificated = _authService.decodeJwt(jwt);
-      } on ApiException catch (e) {
-        throw ApiException(e.message, null);
-      }
-      // Bearer header
-      _dioService.setAuthorizationBearer(jwt);
-      // Secure Storage
-      _authService.secureStorage.writeSecureData(SecureStorage.jwtKey, jwt);
-
-      print('Headers in DioService: ${DioService().dio.options.headers}');
-      print(
-          'STORAGE VALUE : ${await _authService.secureStorage.readSecureData(SecureStorage.jwtKey)}');
-
-      // Avertir Bloc Authentification que l'utilisateur est connecté
-      _emitAuthStatus(AuthStatus.authentificated);
+      await loginProcedure(jwt);
     } on DioException catch (e) {
       throw ApiException(
           'Une erreur s\'est produite lors de l\'authentification', e);
-    } catch (e, stacktrace) {
+    } on HolidayAuthException catch (e) {
+      throw ApiException(e.message, null);
+    } on HolidayStorageException catch (e) {
+      throw ApiException(e.message, null);
+    }
+    (e, stacktrace) {
       throw ApiException(
           "Une erreur s'est produite lors de l'authentification", e);
-    }
-  }
-
-  void dispose() {
-    _controller.close();
-  }
-
-  void logOut() async {
-    _emitAuthStatus(AuthStatus.disconnected);
-    _dioService.setAuthorizationBearer(null);
-    await _authService.secureStorage.deleteSecureData(SecureStorage.jwtKey);
-    print(
-        'STORAGE VALUE : ${await _authService.secureStorage.readSecureData(SecureStorage.jwtKey)}');
+    };
   }
 
   Future<void> logInGoogle(String tokenId) async {
     try {
       Response response = await _dio
-          .post('v1/authentification/login', data: {'tokenId': tokenId});
+          .post('v1/authentification/googleauth', data: {'tokenId': tokenId});
       print(response.data);
       String jwt = response.data;
 
-      // Decoder JWT
-      try {
-        _userAuthentificated = _authService.decodeJwt(jwt);
-      } on ApiException catch (e) {
-        throw ApiException(e.message, null);
-      }
-      // Bearer header
-      _dioService.setAuthorizationBearer(jwt);
-      // Secure Storage
-      _authService.secureStorage.writeSecureData(SecureStorage.jwtKey, jwt);
-
-      print('Headers in DioService: ${DioService().dio.options.headers}');
-      print(
-          'STORAGE VALUE : ${await _authService.secureStorage.readSecureData(SecureStorage.jwtKey)}');
-
-      // Avertir Bloc Authentification que l'utilisateur est connecté
-      _emitAuthStatus(AuthStatus.authentificated);
+      await loginProcedure(jwt);
     } on DioException catch (e) {
       throw ApiException(
           'Une erreur s\'est produite lors de l\'authentification', e);
-    } catch (e, stacktrace) {
+    } on HolidayAuthException catch (e) {
+      throw ApiException(e.message, null);
+    } on HolidayStorageException catch (e) {
+      throw ApiException(e.message, null);
+    }
+    (e, stacktrace) {
       throw ApiException(
           "Une erreur s'est produite lors de l'authentification", e);
+    };
+  }
+
+  Future<void> loginProcedure(String jwt) async {
+    // Decoder JWT (si exception attrapée dans la méthode parente)
+    _userAuthentificated = _authService.decodeJwt(jwt);
+    // Placer le bearer dans les headers du Dio
+    _dioService.setAuthorizationBearer(jwt);
+    await _authService.secureStorage.writeSecureData(SecureStorage.jwtKey, jwt);
+
+    // Avertir Bloc Authentification que l'utilisateur est connecté
+    _emitAuthStatus(AuthStatus.authentificated);
+  }
+
+  void readCacheData() async {
+    try {
+      String? token =
+          await _authService.secureStorage.readSecureData(SecureStorage.jwtKey);
+      // Si le token est null, l'utilisateur a été deconnecté au préalable
+      if (token == null) {
+        _emitAuthStatus(AuthStatus.disconnected);
+        return;
+      }
+      int tokenExpiration = _authService.decodeJwtExp(token);
+      // Si le token en cache est expité, l'utilisateur est considéré comme déconnecté
+      if (_authService.isTokenExpired(tokenExpiration)) {
+        // on va la catch juste en dessous et il réalisera la procédure de déconnexion
+        throw HolidayAuthException("JWT expiré");
+      }
+      // Si l'utilisateur est connecté
+      _dioService.setAuthorizationBearer(token);
+      _userAuthentificated = _authService.decodeJwt(token);
+      _emitAuthStatus(AuthStatus.authentificated);
+    } on HolidayAuthException {
+      await disconnectProcedure();
+    } on HolidayStorageException {
+      await disconnectProcedure();
     }
   }
 
-  Future<void> readData() async {
-    String? token =
-        await _authService.secureStorage.readSecureData(SecureStorage.jwtKey);
-    if (token != null) {
-      int tokenExpiration;
-      try {
-        tokenExpiration = await _authService.decodeJwtExp(token);
-      } on ApiException catch (e) {
-        throw ApiException(e.message, null);
-      }
-
-      if (tokenExpiration != 0 && !_authService.isTokenExpired(tokenExpiration)) {
-        _dioService.setAuthorizationBearer(token);
-        _userAuthentificated = _authService.decodeJwt(token);
-        _controller.add(AuthStatus.authentificated);
-      } else {
-        _controller.add(AuthStatus.disconnected);
-        _authService.secureStorage.deleteSecureData(SecureStorage.jwtKey);
-      }
-    } else {
-      _controller.add(AuthStatus.disconnected);
+  Future<void> disconnectProcedure() async {
+    try {
+      await _authService.secureStorage.deleteSecureData(SecureStorage.jwtKey);
+    } catch (e) {
+      // Pas besoin d'informer l'utilisateur. Pourquoi ? Le pire des cas est que le token
+      // reste dans le cache dès qu'il va se login, ça le remplacera de toute manière
+    } finally {
+      _emitAuthStatus(AuthStatus.disconnected);
     }
+  }
+
+  void logOut() async {
+    _dioService.setAuthorizationBearer(null);
+    await disconnectProcedure();
+    print(
+        'STORAGE VALUE : ${await _authService.secureStorage.readSecureData(SecureStorage.jwtKey)}');
+  }
+
+  void dispose() {
+    _controller.close();
   }
 }

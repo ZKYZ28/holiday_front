@@ -10,9 +10,11 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i16;
 import 'package:flutter/material.dart' as _i17;
+import 'package:holiday_mobile/data/models/activity/activity.dart' as _i18;
+import 'package:holiday_mobile/data/models/holiday/holiday.dart' as _i19;
 import 'package:holiday_mobile/presentation/screens/activity/activity_screen.dart'
     as _i1;
-import 'package:holiday_mobile/presentation/screens/activity/encode_activity_screen.dart'
+import 'package:holiday_mobile/presentation/screens/activity/add_and_edit_activity_screen.dart'
     as _i3;
 import 'package:holiday_mobile/presentation/screens/authentification/login_page.dart'
     as _i9;
@@ -87,13 +89,19 @@ abstract class $AppRouter extends _i16.RootStackRouter {
         child: _i3.EncodeActivityScreen(
           key: args.key,
           holidayId: args.holidayId,
+          activity: args.activity,
         ),
       );
     },
     EncodeHoliday.name: (routeData) {
+      final args = routeData.argsAs<EncodeHolidayArgs>(
+          orElse: () => const EncodeHolidayArgs());
       return _i16.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i4.EncodeHoliday(),
+        child: _i4.EncodeHoliday(
+          key: args.key,
+          holiday: args.holiday,
+        ),
       );
     },
     EncodeParticipantActivityRoute.name: (routeData) {
@@ -310,12 +318,14 @@ class EncodeActivityRoute extends _i16.PageRouteInfo<EncodeActivityRouteArgs> {
   EncodeActivityRoute({
     _i17.Key? key,
     required String holidayId,
+    _i18.Activity? activity,
     List<_i16.PageRouteInfo>? children,
   }) : super(
           EncodeActivityRoute.name,
           args: EncodeActivityRouteArgs(
             key: key,
             holidayId: holidayId,
+            activity: activity,
           ),
           rawPathParams: {'holidayId': holidayId},
           initialChildren: children,
@@ -331,30 +341,57 @@ class EncodeActivityRouteArgs {
   const EncodeActivityRouteArgs({
     this.key,
     required this.holidayId,
+    this.activity,
   });
 
   final _i17.Key? key;
 
   final String holidayId;
 
+  final _i18.Activity? activity;
+
   @override
   String toString() {
-    return 'EncodeActivityRouteArgs{key: $key, holidayId: $holidayId}';
+    return 'EncodeActivityRouteArgs{key: $key, holidayId: $holidayId, activity: $activity}';
   }
 }
 
 /// generated route for
 /// [_i4.EncodeHoliday]
-class EncodeHoliday extends _i16.PageRouteInfo<void> {
-  const EncodeHoliday({List<_i16.PageRouteInfo>? children})
-      : super(
+class EncodeHoliday extends _i16.PageRouteInfo<EncodeHolidayArgs> {
+  EncodeHoliday({
+    _i17.Key? key,
+    _i19.Holiday? holiday,
+    List<_i16.PageRouteInfo>? children,
+  }) : super(
           EncodeHoliday.name,
+          args: EncodeHolidayArgs(
+            key: key,
+            holiday: holiday,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'EncodeHoliday';
 
-  static const _i16.PageInfo<void> page = _i16.PageInfo<void>(name);
+  static const _i16.PageInfo<EncodeHolidayArgs> page =
+      _i16.PageInfo<EncodeHolidayArgs>(name);
+}
+
+class EncodeHolidayArgs {
+  const EncodeHolidayArgs({
+    this.key,
+    this.holiday,
+  });
+
+  final _i17.Key? key;
+
+  final _i19.Holiday? holiday;
+
+  @override
+  String toString() {
+    return 'EncodeHolidayArgs{key: $key, holiday: $holiday}';
+  }
 }
 
 /// generated route for
