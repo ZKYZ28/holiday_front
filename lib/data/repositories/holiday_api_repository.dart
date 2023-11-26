@@ -20,8 +20,8 @@ class HolidayApiRepository{
     return _holidayProvider.publishHoliday(holiday);
   }
 
-  Future<void>  deleteHoliday(Holiday holiday) {
-    return _holidayProvider.deleteHoliday(holiday);
+  Future<void>  deleteHoliday(String holidayId) {
+    return _holidayProvider.deleteHoliday(holidayId);
   }
 
   Future<void> exportHolidayToIcs(String holidayId) {

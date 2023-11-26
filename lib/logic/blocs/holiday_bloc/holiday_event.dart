@@ -35,12 +35,12 @@ class PublishHoliday extends HolidayEvent {
 }
 
 class DeleteHoliday extends HolidayEvent {
-    final Holiday holiday;
+    final String holidayId;
 
-    const DeleteHoliday({required this.holiday});
+    const DeleteHoliday({required this.holidayId});
 
     @override
-    List<Object> get props => [holiday];
+    List<Object> get props => [holidayId];
 }
 
 class ExportHolidayToIcs extends HolidayEvent {

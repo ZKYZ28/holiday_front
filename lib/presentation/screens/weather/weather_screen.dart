@@ -56,18 +56,18 @@ class _WeatherScreenState extends State<WeatherScreen> {
         create: (_) => _weatherBloc,
         child: BlocListener<WeatherBloc, WeatherState>(
           listener: (context, state) {
-            if (state is WeatherError) {
+            if (state.status == WeatherStateStatus.error) {
               ScaffoldMessenger.of(context)
                 ..hideCurrentMaterialBanner()
                 ..showMaterialBanner(
-                    CustomMessage(message: state.message!).build(context));
+                    CustomMessage(message: state.errorMessage!).build(context));
             }
           },
           child: BlocBuilder<WeatherBloc, WeatherState>(
             builder: (context, state) {
-              if (state is WeatherInitial || state is WeatherLoading) {
+              if (state.status == WeatherStateStatus.initial || state.status == WeatherStateStatus.loading ) {
                 return const LoadingProgressor();
-              } else if (state is WeatherLoaded) {
+              } else if (state.status == WeatherStateStatus.loaded ) {
                 final weather = state.weather;
                 return _buildWeatherInfo(context, weather!);
               } else {

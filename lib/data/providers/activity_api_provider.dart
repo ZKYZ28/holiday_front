@@ -26,12 +26,10 @@ class ActivityApiProvider{
     }
   }
 
-  Future<void> deleteActivity(Activity activity) async {
+  Future<void> deleteActivity(String activityId) async {
     try {
-      //Conversion en JSON
-      final activityJson = activity.toJson();
+      await _dio.delete('v1/Activity/$activityId');
 
-      await _dio.post('v1/Activity/delete', data: activityJson);
     } on DioException catch (e){
       throw ApiException(e.response?.data, e);
 

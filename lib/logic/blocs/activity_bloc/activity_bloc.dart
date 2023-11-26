@@ -29,8 +29,8 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     on<DeleteActivity>((DeleteActivity event, Emitter<ActivityState> emit) async {
       try {
 
-        final activity= event.activity;
-        await activityApiRepository.deleteActivity(activity);
+        final activityId = event.activityId;
+        await activityApiRepository.deleteActivity(activityId);
 
         emit(state.copyWith(status: ActivityStateStatus.deleted));
       } on ApiException catch (e) {

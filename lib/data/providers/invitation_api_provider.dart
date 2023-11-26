@@ -29,7 +29,7 @@ class InvitationsApiProvider{
 
   Future<List<Invitation>> fetchAllInvitationsByParticipant(String participantId) async {
     try {
-      final response = await _dio.get('v1/invitation/all/$participantId');
+      final response = await _dio.get('v1/invitation/participant/$participantId');
 
       List<Invitation> invitations = (response.data as List<dynamic>).map((index) => Invitation.fromJson(index as Map<String, dynamic>)).toList();
 
@@ -47,7 +47,7 @@ class InvitationsApiProvider{
       //Conversion en JSON
       final invitationJson = invitation.toJson();
 
-      await _dio.post('v1/invitation/accept', data: invitationJson);
+      await _dio.put('v1/invitation', data: invitationJson);
     } on DioException catch (e){
       throw ApiException(e.response?.data, e);
 
@@ -56,12 +56,10 @@ class InvitationsApiProvider{
     }
   }
 
-  Future<void> refuseInvitation(Invitation invitation) async {
+  Future<void> refuseInvitation(String invitationId) async {
     try {
-      //Conversion en JSON
-      final invitationJson = invitation.toJson();
+      await _dio.delete('v1/invitation/$invitationId');
 
-      await _dio.post('v1/invitation/refuse', data: invitationJson);
     } on DioException catch (e){
       throw ApiException(e.response?.data, e);
 

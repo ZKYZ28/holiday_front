@@ -2,14 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/activity/activity.dart';
-import 'package:holiday_mobile/data/models/location/location.dart';
 import 'package:holiday_mobile/logic/blocs/activity_bloc/activity_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
+import 'package:holiday_mobile/logic/blocs/maps_bloc/maps_bloc.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
 import 'package:holiday_mobile/presentation/widgets/common/icon_with_text.dart';
 import 'package:holiday_mobile/presentation/widgets/common/progress_loading_widget.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
-import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:intl/intl.dart';
 
 @RoutePage()
@@ -25,6 +24,8 @@ class ActivityScreen extends StatefulWidget {
 
 class _ActivityState extends State<ActivityScreen> {
   final ActivityBloc _activityBloc = ActivityBloc();
+  final MapsBloc _mapsBloc = MapsBloc();
+
   late Activity _activity;
 
   @override
@@ -45,35 +46,53 @@ class _ActivityState extends State<ActivityScreen> {
   }
 
 
-  void deleteActivity(Activity activity){
-    _activityBloc.add(DeleteActivity(activity: activity));
+  void deleteActivity(Activity activity) {
+    _activityBloc.add(DeleteActivity(activityId: activity.id!));
     context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
-    context.router.popUntilRoot();
+    context.router.pop(context);
     context.router.push(MyHolidayRoute(holidayId: widget.holidayId));
   }
 
-  Widget _buildActivity(){
+  Widget _buildActivity() {
     return Container(
       margin: const EdgeInsets.all(8.0),
-      child: BlocProvider(
-        create: (_) => _activityBloc,
-        child: BlocListener<ActivityBloc, ActivityState>(
-          listener: (context, state) {
-            if (state.status == ActivityStateStatus.error) {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentMaterialBanner()
-                ..showMaterialBanner(CustomMessage(message: state.errorMessage!).build(context));
-            }
-            if (state.status == ActivityStateStatus.deleted) {
-              context.router.pop(context);
-            }
-          },
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<ActivityBloc>(
+            create: (_) => _activityBloc,
+          ),
+          BlocProvider<MapsBloc>(
+            create: (_) => _mapsBloc,
+          ),
+        ],
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<ActivityBloc, ActivityState>(
+              listener: (context, state) {
+                if (state.status == ActivityStateStatus.error) {
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentMaterialBanner()
+                    ..showMaterialBanner(CustomMessage(message: state.errorMessage!).build(context));
+                }
+                if (state.status == ActivityStateStatus.deleted) {
+                  context.router.pop(context);
+                }
+              },
+            ),
+            BlocListener<MapsBloc, MapsState>(
+              listener: (context, state) {
+                if (state.status == MapsStatus.loaded) {
+                  context.router.push(MapRoute(destinationLatitude: _mapsBloc.state.latitude, destinationLongitude: _mapsBloc.state.longitude, activityName: _activity.name));
+                }
+              },
+            ),
+          ],
           child: BlocBuilder<ActivityBloc, ActivityState>(
             builder: (context, state) {
               if (state.status == ActivityStateStatus.initial || state.status == ActivityStateStatus.loading) {
                 return const LoadingProgressor();
               } else if (state.status == ActivityStateStatus.loaded) {
-                _activity = state.activity! ;
+                _activity = state.activity!;
                 return _buildActivityInformation(context, _activity);
               } else {
                 return Container();
@@ -181,9 +200,7 @@ class _ActivityState extends State<ActivityScreen> {
                       ),
                       ElevatedButton.icon(
                         onPressed: () async {
-                          //TODO METTRE DANS UN BLOC ?
-                          List<geocoding.Location> geocodedLocations = await Location.locationsFromAddress(activity.location.getFormattedAddress());
-                          context.router.push(MapRoute(destinationLatitude: geocodedLocations[0].latitude, destinationLongitude: geocodedLocations[0].longitude, activityName: activity.name));
+                          _mapsBloc.add(GetCoordFromAddress(address: _activity.location.getFormattedAddress()));
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF1E3A8A),

@@ -22,59 +22,60 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller = Completer();
-
   LatLng get destination => LatLng(widget.destinationLatitude, widget.destinationLongitude);
-
   List<LatLng> polylineCoordinates = [];
   LocationData? currentLocation;
-
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
+  StreamSubscription<LocationData>? locationSubscription;
 
   Future<void> getCurrentLocation() async {
-    Location location = Location();
+    if (mounted) {
+      Location location = Location();
 
-    location.getLocation().then((location) {
-      currentLocation = location;
-      setState(() {});
-    });
-    // Bien le mettre après le location.getLocation()
-    GoogleMapController googleMapController = await _controller.future;
+      locationSubscription = location.onLocationChanged.listen((newLoc) {
+        if (mounted) {
+          currentLocation = newLoc;
 
-
-    location.onLocationChanged.listen((newLoc) {
-      currentLocation = newLoc;
-
-      googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-              CameraPosition(
+          _controller.future.then((googleMapController) {
+            googleMapController.animateCamera(
+              CameraUpdate.newCameraPosition(
+                CameraPosition(
                   zoom: 13.5,
                   target: LatLng(
-                      newLoc.latitude!,
-                      newLoc.longitude!))
-          )
-      );
-      getPolyPoints();
-      setState(() {});
-    });
+                    newLoc.latitude!,
+                    newLoc.longitude!,
+                  ),
+                ),
+              ),
+            );
+          });
+
+          getPolyPoints();
+          setState(() {});
+        }
+      });
+    }
   }
 
   void getPolyPoints() async {
-    PolylinePoints polylinePoints = PolylinePoints();
+    if (mounted) {
+      PolylinePoints polylinePoints = PolylinePoints();
 
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "AIzaSyDIE6IRIvdtr9OBehphohaLyT_TNQ-ltZE",
-      PointLatLng(currentLocation!.latitude! , currentLocation!.longitude!),
-      PointLatLng(destination.latitude, destination.longitude),
-    );
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        "AIzaSyDIE6IRIvdtr9OBehphohaLyT_TNQ-ltZE",
+        PointLatLng(currentLocation!.latitude! , currentLocation!.longitude!),
+        PointLatLng(destination.latitude, destination.longitude),
+      );
 
-    if (result.points.isNotEmpty) {
-      // clear les anciens points
-      polylineCoordinates.clear();
-      for (var point in result.points) {
-        (polylineCoordinates.add(LatLng(point.latitude, point.longitude)));
+      if (result.points.isNotEmpty) {
+        // clear les anciens points
+        polylineCoordinates.clear();
+        for (var point in result.points) {
+          (polylineCoordinates.add(LatLng(point.latitude, point.longitude)));
+        }
       }
+      setState(() {});
     }
-    setState(() {});
   }
 
   void setCustomMarkerIcon() {
@@ -82,7 +83,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
    Future<void> openMap(double latitude, double longitude) async {
-    String googleUrl = 'https://www.google.com/maps/search/?api=1&query=${destination!.latitude!},${destination!.longitude!}';
+    String googleUrl = 'https://www.google.com/maps/search/?api=1&query=${destination.latitude},${destination.longitude}';
     if (await canLaunchUrl(Uri.parse(googleUrl))) {
       await launchUrl(Uri.parse(googleUrl));
     } else {
@@ -96,6 +97,15 @@ class _MapScreenState extends State<MapScreen> {
     setCustomMarkerIcon();
     getPolyPoints();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    locationSubscription?.cancel();
+    _controller.future.then((controller) {
+      controller.dispose();
+    });
+    super.dispose();
   }
 
   @override
@@ -126,7 +136,7 @@ class _MapScreenState extends State<MapScreen> {
             zoom: 14),
         polylines: {
           Polyline(
-              polylineId: PolylineId("route"),
+              polylineId: const PolylineId("route"),
               points: polylineCoordinates,
               color: Colors.purpleAccent,
               width: 6),
@@ -140,7 +150,7 @@ class _MapScreenState extends State<MapScreen> {
             // position : source,
           ),
           Marker(
-              markerId: MarkerId("destination"),
+              markerId: const MarkerId("destination"),
               icon: destinationIcon,
               position: destination
           ),

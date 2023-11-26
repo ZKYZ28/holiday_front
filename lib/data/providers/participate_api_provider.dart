@@ -10,7 +10,7 @@ class ParticipateApiProvider{
 
   Future<List<Participate>> getAllParticipatesByActivity(String activityId) async {
     try {
-      final response = await _dio.get('v1/Participate/allByActivity/$activityId');
+      final response = await _dio.get('v1/Participate/activity/$activityId');
 
       List<Participate> participates = (response.data as List<dynamic>).map((index) => Participate.fromJson(index as Map<String, dynamic>)).toList();
       return participates;
@@ -42,12 +42,9 @@ class ParticipateApiProvider{
   }
 
 
-  Future<void> deleteParticipate(Participate participate) async {
+  Future<void> deleteParticipate(String participateId) async {
     try {
-      //Conversion en JSON
-      final participateJson = participate.toJson();
-
-      await _dio.post('v1/Participate/delete', data: participateJson);
+      await _dio.post('v1/Participate/$participateId');
     } on DioException catch (e){
       throw ApiException(e.response?.data, e);
 

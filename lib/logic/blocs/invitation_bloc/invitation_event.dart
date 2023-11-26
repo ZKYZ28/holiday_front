@@ -30,10 +30,10 @@ class AcceptInvitation extends InvitationEvent {
 }
 
 class RefuseInvitation extends InvitationEvent {
-  final Invitation invitation;
+  final String invitationId;
 
-  const RefuseInvitation({required this.invitation});
+  const RefuseInvitation({required this.invitationId});
 
   @override
-  List<Object> get props => [invitation];
+  List<Object> get props => [invitationId];
 }

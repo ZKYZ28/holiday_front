@@ -34,8 +34,8 @@ class _EncodeParticipantActivityScreenState extends State<EncodeParticipantActiv
     _participateBloc.add(GetAllParticipatesByActivity(activityId: widget.activityId));
     super.initState();
   }
-  List<Participate> _participates = [];
 
+  List<Participate> _participates = [];
   List<Participant> participantsBase = [];
   final List<Participant> _selectedParticipants = [];
 
@@ -54,7 +54,7 @@ class _EncodeParticipantActivityScreenState extends State<EncodeParticipantActiv
   }
 
   void _deleteParticipant(Participate participate) {
-    _participateBloc.add(DeleteParticipate(participate: participate));
+    _participateBloc.add(DeleteParticipate(participateId: participate.id!));
 
     setState(() {
       _participates.remove(participate);
@@ -189,6 +189,8 @@ class _EncodeParticipantActivityScreenState extends State<EncodeParticipantActiv
             const SizedBox(
               height: 10,
             ),
+
+
             buildParticipantAddable(
               tableHeight: tableHeight,
               cardWith: cardWith,

@@ -13,8 +13,8 @@ class ParticipateApiRepository{
     return _participateProvider.createParticipates(participants, activityId);
   }
 
-  Future<void> deleteParticipate(Participate participate) {
-    return _participateProvider.deleteParticipate(participate);
+  Future<void> deleteParticipate(String participateId) {
+    return _participateProvider.deleteParticipate(participateId);
   }
 
 }

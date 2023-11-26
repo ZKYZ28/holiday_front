@@ -12,7 +12,7 @@ class HolidayApiProvider{
 
     Future<List<Holiday>> fetchHolidayByParticipant(String participantId) async {
       try {
-        Response response = await _dio.get('v1/Holiday/allByParticipant/$participantId');
+        Response response = await _dio.get('v1/Holiday/participant/$participantId');
 
         // conversion list
         List<Holiday> holidays = (response.data as List<dynamic>).map((index) => Holiday.fromJson(index as Map<String, dynamic>)).toList();
@@ -29,7 +29,7 @@ class HolidayApiProvider{
 
     Future<List<Holiday>> fetchHolidayPublished() async {
       try {
-        Response response = await _dio.get('v1/Holiday/allPublished');
+        Response response = await _dio.get('v1/Holiday/published');
 
         // conversion list
         List<Holiday> holidays = (response.data as List<dynamic>).map((index) => Holiday.fromJson(index as Map<String, dynamic>)).toList();
@@ -63,7 +63,7 @@ class HolidayApiProvider{
       try {
         final holidayJson = holiday.toJson();
 
-        await _dio.post('v1/Holiday/publish', data: holidayJson);
+        await _dio.put('v1/Holiday/publish', data: holidayJson);
 
       } on DioException catch (e){
         throw ApiException(e.response?.data, e);
@@ -73,11 +73,9 @@ class HolidayApiProvider{
       }
     }
 
-    Future<void> deleteHoliday(Holiday holiday) async {
+    Future<void> deleteHoliday(String holidayId) async {
       try {
-        final holidayJson = holiday.toJson();
-
-        await _dio.post('v1/Holiday/delete', data: holidayJson);
+        await _dio.delete('v1/Holiday/$holidayId');
 
       } on DioException catch (e){
         throw ApiException(e.response?.data, e);
@@ -89,10 +87,10 @@ class HolidayApiProvider{
 
     Future<void> exportHolidayToIcs(String holidayId) async {
       try {
-        String filePath = '${(await getTemporaryDirectory()).path}/activity.ics';
+        String filePath = '${(await getTemporaryDirectory()).path}/holiday.ics';
 
         await _dio.download(
-          'v1/Holiday/export/$holidayId',
+          'v1/Holiday/ics/$holidayId',
           filePath,
         );
 

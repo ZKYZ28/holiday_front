@@ -10,17 +10,17 @@ part 'weather_state.dart';
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   final WeatherApiRepository weatherRepository = WeatherApiRepository();
 
-  WeatherBloc() : super(WeatherInitial()) {
+  WeatherBloc() : super(const WeatherState()) {
     on<GetWeather>((event, emit) async {
       try {
-        emit(WeatherLoading());
+        emit(state.copyWith(status: WeatherStateStatus.loading));
 
         final holidayId = event.holidayId;
         final weather = await weatherRepository.fetWeather(holidayId);
 
-        emit(WeatherLoaded(weather));
+        emit(state.copyWith(status: WeatherStateStatus.loaded, weather: weather));
       } on ApiException catch (e) {
-        emit(WeatherError(e.toString()));
+        emit(state.copyWith(status: WeatherStateStatus.error, errorMessage : e.toString()));
       }
     });
   }

@@ -16,6 +16,15 @@ class JoinRoom extends ChatEvent {
   List<Object> get props => [holidayId];
 }
 
+class LeaveRoom extends ChatEvent {
+  final String holidayId;
+
+  const LeaveRoom({required this.holidayId});
+
+  @override
+  List<Object> get props => [holidayId];
+}
+
 class UpdateMessage extends ChatEvent {
   final List<Message> messages;
 
@@ -35,11 +44,10 @@ class MessageChanged extends ChatEvent {
 
 
 class MessageSent extends ChatEvent {
-  final ConnectionHub connectionHub;
   final String holidayId;
-  const MessageSent({required this.connectionHub, required this.holidayId});
+  const MessageSent({required this.holidayId});
 
   @override
-  List<Object> get props => [connectionHub];
+  List<Object> get props => [holidayId];
 }
 

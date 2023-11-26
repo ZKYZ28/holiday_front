@@ -42,9 +42,9 @@ class ParticipateBloc extends Bloc<ParticipateEvent, ParticipateState> {
 
     on<DeleteParticipate>((DeleteParticipate event, Emitter<ParticipateState> emit) async {
       try {
-        final participate = event.participate;
+        final participateId = event.participateId;
 
-        await participateApiRepository.deleteParticipate(participate);
+        await participateApiRepository.deleteParticipate(participateId);
 
         emit(state.copyWith(status: ParticipateStateStatus.loading));
         emit(state.copyWith(status: ParticipateStateStatus.loaded));

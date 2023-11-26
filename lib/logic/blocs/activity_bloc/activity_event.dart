@@ -18,10 +18,10 @@ class GetActivity extends ActivityEvent {
 }
 
 class DeleteActivity extends ActivityEvent {
-  final Activity activity;
+  final String activityId;
 
-  const DeleteActivity({required this.activity});
+  const DeleteActivity({required this.activityId});
 
   @override
-  List<Object> get props => [activity];
+  List<Object> get props => [activityId];
 }

@@ -91,7 +91,7 @@ class HolidayCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          iconWithText(Icons.calendar_month, '${dateFormatDay.format(DateTime.parse(holiday.startDate))} - ${dateFormatDay.format(DateTime.parse(holiday.endDate))}'),
+                          iconWithText(Icons.calendar_month, dateFormatDay.format(DateTime.parse(holiday.startDate))),
                           iconWithText(Icons.people_sharp, "A CHANGER"),
                           iconWithText(Icons.location_on, holiday.location.country),
                         ],
@@ -134,7 +134,7 @@ class HolidayCard extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    context.read<HolidayBloc>().add(DeleteHoliday(holiday: holiday));
+                    context.read<HolidayBloc>().add(DeleteHoliday(holidayId: holiday.id!));
                     onRemove;
                     Navigator.of(context).pop();
                   },

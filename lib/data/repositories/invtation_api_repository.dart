@@ -17,7 +17,7 @@ class InvitationApiRepository{
     return _invitationProvider.acceptInvitation(invitation);
   }
 
-  Future<void> refuseInvitation(Invitation invitation) {
-    return _invitationProvider.refuseInvitation(invitation);
+  Future<void> refuseInvitation(String invitationId) {
+    return _invitationProvider.refuseInvitation(invitationId);
   }
 }

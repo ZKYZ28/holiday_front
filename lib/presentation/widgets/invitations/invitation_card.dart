@@ -55,7 +55,7 @@ class InvitationCard extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.close, color: Colors.red),
                 onPressed: () {
-                  context.read<InvitationBloc>().add(RefuseInvitation(invitation: invitation));
+                  context.read<InvitationBloc>().add(RefuseInvitation(invitationId: invitation.id!));
                   onClick();
                 },
               ),

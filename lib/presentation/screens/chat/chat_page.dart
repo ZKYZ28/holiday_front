@@ -24,62 +24,46 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatWidgetState extends State<ChatScreen> {
-  final ChatBloc _chatBloc = ChatBloc();
   List<Message> messages = [];
   ConnectionHub? connectionHub;
 
   final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    try{
-      connectionHub = ConnectionHub(_chatBloc);
-      connectionHub?.joinRoom(widget.holidayId);
-    }catch (e){
-      ScaffoldMessenger.of(context)
-        ..hideCurrentMaterialBanner()
-        ..showMaterialBanner(CustomMessage(message: "Erreur lors de la récupération de vos messages").build(context));
-    }
-    super.initState();
-  }
+  final TextEditingController _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.holidayName),
-        backgroundColor: const Color(0xFF1E3A8A),
-      ),
-
-      body: _buildListMessage()
-    );
+        appBar: AppBar(
+          title: Text(widget.holidayName),
+          backgroundColor: const Color(0xFF1E3A8A),
+        ),
+        body: _buildListMessage());
   }
 
-  Widget _buildListMessage(){
+  Widget _buildListMessage() {
     return Container(
       margin: const EdgeInsets.all(8.0),
-      child: BlocProvider(
-        create: (_) =>  _chatBloc,
-        child: BlocListener<ChatBloc, ChatState>(
-          listener: (context, state) {
-            if (state.status == ChatStateStatus.error) {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentMaterialBanner()
-                ..showMaterialBanner(CustomMessage(message: state.errorMessage!).build(context));
-            }
-          },
-          child: BlocBuilder<ChatBloc, ChatState>(
-            buildWhen: (previous, current) => previous.numberMessage != current.numberMessage,
-            builder: (context, state) {
-              print(state.numberMessage);
-              messages = state.messageList!;
+      child: BlocListener<ChatBloc, ChatState>(
+        listener: (context, state) {
+          if (state.status == ChatStateStatus.error) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentMaterialBanner()
+              ..showMaterialBanner(
+                  CustomMessage(message: state.errorMessage!).build(context));
+          }
+        },
+        child: BlocBuilder<ChatBloc, ChatState>(
+          buildWhen: (previous, current) =>
+              previous.numberMessage != current.numberMessage,
+          builder: (context, state) {
+            messages = state.messageList!;
 
-              WidgetsBinding.instance!.addPostFrameCallback((_) {
-                _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-              });
-              return _buildChat(context);
-            },
-          ),
+            WidgetsBinding.instance!.addPostFrameCallback((_) {
+              _scrollController
+                  .jumpTo(_scrollController.position.maxScrollExtent);
+            });
+            return _buildChat(context);
+          },
         ),
       ),
     );
@@ -93,29 +77,34 @@ class _ChatWidgetState extends State<ChatScreen> {
             controller: _scrollController,
             itemCount: messages.length,
             itemBuilder: (context, index) {
-              return ChatMessage(message: messages[index]);
+              return ChatMessage(
+                message: messages[index],
+              );
             },
           ),
         ),
-
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
               Expanded(
                 child: TextField(
+                  controller: _textEditingController,
                   decoration: const InputDecoration(
                     hintText: "Entrez votre message...",
                   ),
                   onChanged: (value) {
-                    _chatBloc.add(MessageChanged(message: value));
+                    context
+                        .read<ChatBloc>()
+                        .add(MessageChanged(message: value));
                   },
                 ),
               ),
               IconButton(
                 icon: const Icon(Icons.send),
                 onPressed: () {
-                  _chatBloc.add(MessageSent(connectionHub: connectionHub!, holidayId: widget.holidayId));
+                  context.read<ChatBloc>().add(MessageSent(holidayId: widget.holidayId));
+                  _textEditingController.clear();
                 },
               ),
             ],
@@ -125,8 +114,3 @@ class _ChatWidgetState extends State<ChatScreen> {
     );
   }
 }
-
-
-
-
-

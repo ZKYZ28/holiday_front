@@ -8,7 +8,7 @@ class ActivityApiRepository{
     return _activityProvider.fetchActivityById(activityId);
   }
 
-  Future<void> deleteActivity(Activity activity) {
+  Future<void> deleteActivity(String activity) {
     return _activityProvider.deleteActivity(activity);
   }
 }

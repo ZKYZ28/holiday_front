@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/message/message.dart';
-import 'package:holiday_mobile/data/models/user_authentificated/user_authentificated.dart';
 import 'package:holiday_mobile/logic/blocs/chat_bloc/chat_bloc.dart';
 import 'package:intl/intl.dart';
+
 
 class ChatMessage extends StatelessWidget {
   final Message message;
@@ -11,10 +12,9 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO CHANGER AVEC L'UTILISATEUR CONNECTE
-    final user = UserAuthentificated(id: "c01eb36d-d676-4878-bc3c-b9710e4a37ba", firstName: "François", lastName: "Mahy", email: "Francis@gmail.com", exp: 12345);
 
-    bool isUserMessage = message.participantId == user.id;
+
+    bool isUserMessage = message.participantId == context.read<ChatBloc>().state.userId;
 
     return Container(
       margin: const EdgeInsets.only(top: 10),

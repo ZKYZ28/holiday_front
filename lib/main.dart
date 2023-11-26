@@ -7,6 +7,7 @@ import 'package:holiday_mobile/data/providers/dio/dio_instance.dart';
 import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
 import 'package:holiday_mobile/logic/blocs/activity_bloc/activity_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/auth_bloc/auth_bloc.dart';
+import 'package:holiday_mobile/logic/blocs/chat_bloc/chat_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/invitation_bloc/invitation_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/participant_bloc/participant_bloc.dart';
@@ -61,6 +62,8 @@ class MyApp extends StatelessWidget {
                 create: (context) => InvitationBloc(repository : AuthRepository(RepositoryProvider.of<AuthAPiProvider>(context)))),
             BlocProvider<ParticipantBloc>(
                 create: (context) => ParticipantBloc(repository : AuthRepository(RepositoryProvider.of<AuthAPiProvider>(context)))),
+            BlocProvider<ChatBloc>(
+                create: (context) => ChatBloc(repository : AuthRepository(RepositoryProvider.of<AuthAPiProvider>(context)))),
           ],
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {

@@ -27,10 +27,10 @@ class CreateParticipates extends ParticipateEvent {
 }
 
 class DeleteParticipate extends ParticipateEvent {
-  final Participate participate;
+  final String participateId;
 
-  const DeleteParticipate({required this.participate});
+  const DeleteParticipate({required this.participateId});
 
   @override
-  List<Object> get props => [participate];
+  List<Object> get props => [participateId];
 }

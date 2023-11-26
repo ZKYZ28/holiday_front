@@ -67,8 +67,8 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
 
     on<DeleteHoliday>((DeleteHoliday event, Emitter<HolidayState> emit) async {
       try {
-        final holiday = event.holiday;
-        await holidayRepository.deleteHoliday(holiday);
+        final holidayId = event.holidayId;
+        await holidayRepository.deleteHoliday(holidayId);
 
       } on ApiException catch (e) {
         emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : e.toString()));
