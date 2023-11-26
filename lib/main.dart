@@ -26,9 +26,12 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
+tz.Location? globalLocation;
+
 void main() {
   tz.initializeTimeZones();
-  tz.getLocation('Europe/Paris');
+  globalLocation = tz.getLocation('Europe/Paris');
+  tz.setLocalLocation(globalLocation!);
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());

@@ -13,6 +13,7 @@ import 'package:holiday_mobile/routes/app_router.gr.dart';
 import 'package:intl/intl.dart';
 
 @RoutePage()
+// TODO : pourquoi ne pas passer l'objet Holiday depuis où on a cliqué au lieu de reload ?
 class MyHolidayPage extends StatefulWidget {
   final String holidayId;
 
@@ -31,6 +32,10 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
   void initState() {
     context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
     super.initState();
+  }
+
+  Future<void> _afterEncodeOrEdit() async {
+    context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
   }
 
   @override
@@ -150,7 +155,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentMaterialBanner()
                     ..showMaterialBanner(
-                        CustomMessage(message: state.errorMessage!)
+                        CustomMessage(message: state.errorMessage)
                             .build(context));
                 } else if (state.status == ParticipantStateStatus.left){
                   context.router.pop(context);
@@ -288,7 +293,8 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
             ActivityContainer(
                 activities: holiday.activities,
                 activityHeight: cardActivityHeight,
-                holidayId: widget.holidayId
+                holidayId: widget.holidayId,
+                afterEncodeOrEdit : _afterEncodeOrEdit
             )],
         ),
       ),

@@ -11,7 +11,7 @@ extension EmailInputErrorExtension on EmailInputError {
       case EmailInputError.invalid:
         return "Merci de respecter le format : john.doe@gmail.com";
       default:
-        return "Erreur inconnue.";
+        return "Erreur inconnue. Veuillez contacter un administrateur";
     }
   }
 }

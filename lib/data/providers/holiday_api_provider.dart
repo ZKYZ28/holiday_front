@@ -1,3 +1,4 @@
+import 'package:holiday_mobile/data/providers/data/HolidayData.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
@@ -103,6 +104,78 @@ class HolidayApiProvider{
 
       } catch (e, stacktrace) {
         throw ApiException("Une erreur s'est produite lors de l'exportation de votre vacance", stacktrace);
+      }
+    }
+
+  Future<void> createHoliday(HolidayData holidayData) async {
+      try {
+        final formDataMap = {
+          'name': holidayData.name,
+          'description': holidayData.description,
+          'startDate': holidayData.startDate.toIso8601String(),
+          'endDate': holidayData.endDate.toIso8601String(),
+          'location.street': holidayData.locationData.street,
+          'location.number': holidayData.locationData.numberBox,
+          'location.locality': holidayData.locationData.locality,
+          'location.postalCode': holidayData.locationData.postalCode,
+          'location.country': holidayData.locationData.country,
+          'creatorId': holidayData.creatorId,
+        };
+        final formData = FormData.fromMap(formDataMap);
+
+        // Ajouter le fichier seulement s'il n'est pas null (comme en web)
+        if (holidayData.file != null) {
+          formData.files.add(MapEntry(
+              'uploadedHolidayPicture',
+              await MultipartFile.fromFile(holidayData.file!.path),
+          ));
+    }
+
+        Response response = await _dio.post('v1/holiday/', data : formData);
+        print(response);
+      } on DioException catch (e){
+        throw ApiException(e.response?.data, e);
+
+      } catch (e, stacktrace) {
+        throw ApiException("Une erreur s'est produite lors de la création de votre vacance", stacktrace);
+      }
+  }
+
+    Future<void> editHoliday(HolidayData holidayData) async {
+      try {
+        final formDataMap = {
+          'name': holidayData.name,
+          'description': holidayData.description,
+          'startDate': holidayData.startDate.toIso8601String(),
+          'endDate': holidayData.endDate.toIso8601String(),
+          'location.id' : holidayData.locationData.locationId,
+          'location.street': holidayData.locationData.street,
+          'location.number': holidayData.locationData.numberBox,
+          'location.locality': holidayData.locationData.locality,
+          'location.postalCode': holidayData.locationData.postalCode,
+          'location.country': holidayData.locationData.country,
+          'creatorId': holidayData.creatorId,
+          'deleteImage' : holidayData.deleteImage,
+          'initialPath' : holidayData.initialPath!
+        };
+        final formData = FormData.fromMap(formDataMap);
+
+        // Ajouter le fichier seulement s'il n'est pas null (comme en web)
+        if (holidayData.file != null) {
+          formData.files.add(MapEntry(
+            'uploadedHolidayPicture',
+            await MultipartFile.fromFile(holidayData.file!.path),
+          ));
+        }
+
+
+        Response response = await _dio.put('v1/holiday/${holidayData.holidayId!}', data : formData);
+        print(response);
+      } on DioException catch (e){
+        throw ApiException(e.response?.data, e);
+
+      } catch (e, stacktrace) {
+        throw ApiException("Une erreur s'est produite lors de la création de votre vacance", stacktrace);
       }
     }
 }

@@ -10,12 +10,14 @@ class ActivityContainer extends StatelessWidget {
   final List<Activity> activities;
   final double activityHeight;
   final String holidayId;
+  final Future<void> Function() afterEncodeOrEdit;
 
   const ActivityContainer(
       {super.key,
         required this.activities,
         required this.activityHeight,
         required this.holidayId,
+        required this.afterEncodeOrEdit,
       });
 
   @override
@@ -54,7 +56,7 @@ class ActivityContainer extends StatelessWidget {
                         ),
                         child: IconButton(
                           onPressed: () {
-                            context.router.push(EncodeActivityRoute(holidayId: holidayId));
+                            context.router.push(EncodeActivityRoute(holidayId: holidayId)).then((value) => afterEncodeOrEdit());
                           },
                           icon: const Icon(
                             Icons.add,

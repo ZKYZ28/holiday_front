@@ -13,16 +13,16 @@ class AuthRepository{
 
   UserAuthentificated? get userConnected => _authProvider.userConnected;
 
-  Future<void> logInRequest(Login login) {
-    return _authProvider.logInSimple(login);
+  Future<void> logInRequest(Login login) async {
+    return await _authProvider.logInSimple(login);
   }
 
   Future<void> logOut() async {
     return _authProvider.logOut();
   }
 
-  Future<void> logInGoogle(String tokenId) {
-    return _authProvider.logInGoogle(tokenId);
+  Future<void> logInGoogle(String tokenId) async {
+    return await _authProvider.logInGoogle(tokenId);
   }
 
 

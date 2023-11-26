@@ -48,7 +48,7 @@ class AuthAPiProvider {
       print(response.data);
       String jwt = response.data;
 
-      loginProcedure(jwt);
+      await loginProcedure(jwt);
     } on DioException catch (e) {
       throw ApiException(
           'Une erreur s\'est produite lors de l\'authentification', e);
@@ -70,7 +70,7 @@ class AuthAPiProvider {
       print(response.data);
       String jwt = response.data;
 
-      loginProcedure(jwt);
+      await loginProcedure(jwt);
     } on DioException catch (e) {
       throw ApiException(
           'Une erreur s\'est produite lors de l\'authentification', e);
@@ -85,12 +85,12 @@ class AuthAPiProvider {
     };
   }
 
-  void loginProcedure(String jwt) {
+  Future<void> loginProcedure(String jwt) async {
     // Decoder JWT (si exception attrapée dans la méthode parente)
     _userAuthentificated = _authService.decodeJwt(jwt);
     // Placer le bearer dans les headers du Dio
     _dioService.setAuthorizationBearer(jwt);
-    _authService.secureStorage.writeSecureData(SecureStorage.jwtKey, jwt);
+    await _authService.secureStorage.writeSecureData(SecureStorage.jwtKey, jwt);
 
     // Avertir Bloc Authentification que l'utilisateur est connecté
     _emitAuthStatus(AuthStatus.authentificated);

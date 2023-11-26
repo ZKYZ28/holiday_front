@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
+import 'package:holiday_mobile/data/providers/data/HolidayData.dart';
 import 'package:holiday_mobile/data/providers/holiday_api_provider.dart';
 
 class HolidayApiRepository{
@@ -26,6 +29,14 @@ class HolidayApiRepository{
 
   Future<void> exportHolidayToIcs(String holidayId) {
     return _holidayProvider.exportHolidayToIcs(holidayId);
+  }
+
+  Future<void> createHoliday(HolidayData holidayData) async {
+    return await _holidayProvider.createHoliday(holidayData);
+  }
+
+  Future<void> updateHoliday(HolidayData holidayData) async {
+    return await _holidayProvider.editHoliday(holidayData);
   }
 
 

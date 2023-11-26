@@ -52,7 +52,7 @@ android {
         versionName flutterVersionName
     }
 
-    /*signingConfigs {
+    signingConfigs {
         debug {
             keyAlias 'uploadkeystore'
             keyPassword 'android'
@@ -60,7 +60,7 @@ android {
             storePassword 'android'
 
         }
-    }*/
+    }
 
     buildTypes {
         release {

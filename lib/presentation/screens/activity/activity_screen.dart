@@ -17,7 +17,11 @@ class ActivityScreen extends StatefulWidget {
   final String activityId;
   final String holidayId;
 
-  const ActivityScreen({super.key, @PathParam() required this.activityId, @PathParam() required this.holidayId,});
+  const ActivityScreen({
+    super.key,
+    @PathParam() required this.activityId,
+    @PathParam() required this.holidayId,
+  });
 
   @override
   State<ActivityScreen> createState() => _ActivityState();
@@ -26,178 +30,212 @@ class ActivityScreen extends StatefulWidget {
 class _ActivityState extends State<ActivityScreen> {
   final ActivityBloc _activityBloc = ActivityBloc();
   late Activity _activity;
+  bool _isActivityEdited = false;
 
   @override
   void initState() {
     _activityBloc.add(GetActivity(activityId: widget.activityId));
+    print(_isActivityEdited);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color(0xFF1E3A8A),
-          title: const Text("Activité"),
-        ),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1E3A8A),
+        title: const Text("Activité"),
+      ),
       body: _buildActivity(),
     );
   }
 
-
-  void deleteActivity(Activity activity){
+  void deleteActivity(Activity activity) {
     _activityBloc.add(DeleteActivity(activity: activity));
     context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
     context.router.popUntilRoot();
     context.router.push(MyHolidayRoute(holidayId: widget.holidayId));
   }
 
-  Widget _buildActivity(){
-    return Container(
-      margin: const EdgeInsets.all(8.0),
-      child: BlocProvider(
-        create: (_) => _activityBloc,
-        child: BlocListener<ActivityBloc, ActivityState>(
-          listener: (context, state) {
-            if (state.status == ActivityStateStatus.error) {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentMaterialBanner()
-                ..showMaterialBanner(CustomMessage(message: state.errorMessage!).build(context));
-            }
-            if (state.status == ActivityStateStatus.deleted) {
-              context.router.pop(context);
-            }
-          },
-          child: BlocBuilder<ActivityBloc, ActivityState>(
-            builder: (context, state) {
-              if (state.status == ActivityStateStatus.initial || state.status == ActivityStateStatus.loading) {
-                return const LoadingProgressor();
-              } else if (state.status == ActivityStateStatus.loaded) {
-                _activity = state.activity! ;
-                return _buildActivityInformation(context, _activity);
-              } else {
-                return Container();
+  Widget _buildActivity() {
+    return WillPopScope(
+      onWillPop: () async {
+        if (_isActivityEdited) {
+          context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
+        }
+        return true;
+      },
+      child: Container(
+        margin: const EdgeInsets.all(8.0),
+        child: BlocProvider(
+          create: (_) => _activityBloc,
+          child: BlocListener<ActivityBloc, ActivityState>(
+            listener: (context, state) {
+              if (state.status == ActivityStateStatus.error) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentMaterialBanner()
+                  ..showMaterialBanner(
+                      CustomMessage(message: state.errorMessage!)
+                          .build(context));
+              }
+              if (state.status == ActivityStateStatus.deleted) {
+                context.router.pop(context);
               }
             },
+            child: BlocBuilder<ActivityBloc, ActivityState>(
+              builder: (context, state) {
+                if (state.status == ActivityStateStatus.initial ||
+                    state.status == ActivityStateStatus.loading) {
+                  return const LoadingProgressor();
+                } else if (state.status == ActivityStateStatus.loaded) {
+                  _activity = state.activity!;
+                  return _buildActivityInformation(context, _activity);
+                } else {
+                  return Container();
+                }
+              },
+            ),
           ),
         ),
       ),
     );
   }
 
-
-  Widget _buildActivityInformation(BuildContext context, Activity activity){
+  Widget _buildActivityInformation(BuildContext context, Activity activity) {
     return Center(
-        child: IntrinsicHeight(
-          child: Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            margin: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Image.network('https://10.0.2.2:7048/${activity.activityPath}'),
-                ),
-
-                Container(
-                  margin: const EdgeInsets.fromLTRB(15, 20, 0, 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 190.0,
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown, //Ca permet d'adapater la taille du texte pour qu'il rentre dans la taille de la SizeBox
-                          child: Text(
-                            activity.name,
-                            style: const TextStyle(
-                              fontSize: 22,
-                              color: Color(0xFF1E3A8A),
-                              fontWeight: FontWeight.bold,
-                            ),
+      child: IntrinsicHeight(
+        child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          margin: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Image.network(
+                    'https://10.0.2.2:7048/${activity.activityPath}'),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(15, 20, 0, 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 190.0,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        //Ca permet d'adapater la taille du texte pour qu'il rentre dans la taille de la SizeBox
+                        child: Text(
+                          activity.name,
+                          style: const TextStyle(
+                            fontSize: 22,
+                            color: Color(0xFF1E3A8A),
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.blue,
-                            ),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            context.router
+                                .push(EncodeActivityRoute(
+                                    holidayId: widget.holidayId,
+                                    activity: _activity))
+                                .then((value) {
+                              if (value == true) {
+                                _isActivityEdited = true;
+                              }
+                              _activityBloc.add(
+                                  GetActivity(activityId: widget.activityId));
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.edit,
+                            color: Colors.blue,
                           ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            ),
-                            onPressed: () {
-                              showDeleteConfirmationDialog(context, activity);
-                            },
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(15, 20, 0, 10),
-                  // Marge pour le Text
-                  child: Text(
-                    activity.description,
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      iconWithText(Icons.calendar_month, DateFormat('dd/MM/yyyy').format(DateTime.parse(activity.startDate))),
-                      iconWithText(Icons.euro, '${activity.price}'),
-                      iconWithText(Icons.location_on, activity.location.country),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          context.router.push(EncodeParticipantActivityRoute(activityId: activity.id!));
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1E3A8A),
+                          onPressed: () {
+                            showDeleteConfirmationDialog(context, activity);
+                          },
                         ),
-                        icon: const Icon(Icons.group),
-                        label: const Text("Participants"),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(15, 20, 0, 10),
+                // Marge pour le Text
+                child: Text(
+                  activity.description,
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    iconWithText(
+                        Icons.calendar_month,
+                        DateFormat('dd/MM/yyyy')
+                            .format(DateTime.parse(activity.startDate))),
+                    iconWithText(Icons.euro, '${activity.price}'),
+                    iconWithText(Icons.location_on, activity.location.country),
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        context.router.push(EncodeParticipantActivityRoute(
+                            activityId: activity.id!));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1E3A8A),
                       ),
-                      ElevatedButton.icon(
-                        onPressed: () async {
-                          //TODO METTRE DANS UN BLOC ?
-                          List<geocoding.Location> geocodedLocations = await Location.locationsFromAddress(activity.location.getFormattedAddress());
-                          context.router.push(MapRoute(destinationLatitude: geocodedLocations[0].latitude, destinationLongitude: geocodedLocations[0].longitude, activityName: activity.name));
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1E3A8A),
-                        ),
-                        icon: const Icon(Icons.location_on),
-                        label: const Text("S'y rendre"),
+                      icon: const Icon(Icons.group),
+                      label: const Text("Participants"),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        //TODO METTRE DANS UN BLOC ?
+                        List<geocoding.Location> geocodedLocations =
+                            await Location.locationsFromAddress(
+                                activity.location.getFormattedAddress());
+                        context.router.push(MapRoute(
+                            destinationLatitude: geocodedLocations[0].latitude,
+                            destinationLongitude:
+                                geocodedLocations[0].longitude,
+                            activityName: activity.name));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1E3A8A),
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                      icon: const Icon(Icons.location_on),
+                      label: const Text("S'y rendre"),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
         ),
+      ),
     );
   }
 
@@ -207,22 +245,21 @@ class _ActivityState extends State<ActivityScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Confirmation"),
-          content: const Text("Etes-vous sûr de vouloir supprimer cette activité ?"),
+          content:
+              const Text("Etes-vous sûr de vouloir supprimer cette activité ?"),
           actions: [
             ButtonBar(
               alignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .pop(); // Fermer la popup
+                    Navigator.of(context).pop(); // Fermer la popup
                   },
                   child: const Text("Annuler"),
                 ),
                 TextButton(
                   onPressed: () async {
-                    Navigator.of(context)
-                        .pop();
+                    Navigator.of(context).pop();
                     deleteActivity(activity);
                   },
                   child: const Text("Supprimer"),

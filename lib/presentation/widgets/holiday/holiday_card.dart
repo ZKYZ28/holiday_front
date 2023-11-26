@@ -38,6 +38,7 @@ class HolidayCard extends StatelessWidget {
                   IconButton(
                     onPressed: () {
                       // Action d'édition
+                      context.router.push(EncodeHoliday(holiday: holiday)).then((value) async => await afterNavigation());
                     },
                     icon: const Icon(
                       Icons.edit,

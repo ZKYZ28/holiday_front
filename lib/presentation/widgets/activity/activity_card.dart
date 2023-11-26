@@ -60,6 +60,14 @@ class ActivityCard extends StatelessWidget {
         child: IconButton(
           onPressed: () {
             context.read<HolidayBloc>().add(WaitingActivityAction());
+            print(activity.id);
+            print(activity.description);
+            print(activity.endDate);
+            print(activity.startDate);
+            print(activity.location.id);
+            print(activity.location.postalCode);
+            print(activity.location.street);
+            print(activity.location.number);
             context.router.push(ActivityRoute(activityId: activity.id!, holidayId: holidayId));
           },
           icon: const Icon(
