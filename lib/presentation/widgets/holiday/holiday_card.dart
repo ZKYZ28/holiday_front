@@ -93,7 +93,6 @@ class HolidayCard extends StatelessWidget {
                             ),
                           ),
                           iconWithText(Icons.calendar_month, dateFormatDay.format(DateTime.parse(holiday.startDate))),
-                          iconWithText(Icons.people_sharp, "A CHANGER"),
                           iconWithText(Icons.location_on, holiday.location.country),
                         ],
                       ),

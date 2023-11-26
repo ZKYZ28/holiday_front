@@ -26,10 +26,6 @@ class BottomNavBar extends StatelessWidget {
           label: 'Vacances',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.message),
-          label: 'Chat',
-        ),
-        BottomNavigationBarItem(
           icon: Icon(Icons.account_circle_outlined),
           label: 'Se déconnecter',
         ),
