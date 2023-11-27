@@ -35,27 +35,34 @@ class HolidayCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Spacer(), // Pour mettre les éléments à droite
-                  IconButton(
-                    onPressed: () {
-                      // Action d'édition
-                      context.router.push(EncodeHoliday(holiday: holiday)).then((value) async => await afterNavigation());
-                    },
-                    icon: const Icon(
-                      Icons.edit,
-                      color: Colors.blue,
-                    ),
-                  ),
 
-                  IconButton(
-                    onPressed: () {
-                      showDeleteConfirmationDialog(context, holiday);
-                    },
+                  !holiday.isPublish
+                      ?
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          // Action d'édition
+                          context.router.push(EncodeHoliday(holiday: holiday)).then((value) async => await afterNavigation());
+                        },
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.blue,
+                        ),
+                      ),
 
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                  ),
+                      IconButton(
+                        onPressed: () {
+                          showDeleteConfirmationDialog(context, holiday);
+                        },
+
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ):  Container(),
 
                   holiday.isPublish
                       ? Container(
@@ -135,7 +142,7 @@ class HolidayCard extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     context.read<HolidayBloc>().add(DeleteHoliday(holidayId: holiday.id!));
-                    onRemove;
+                    onRemove();
                     Navigator.of(context).pop();
                   },
                   child: const Text("Supprimer"),

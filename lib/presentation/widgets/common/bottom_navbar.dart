@@ -32,10 +32,14 @@ class BottomNavBar extends StatelessWidget {
       ],
       onTap: (int index) {
         if (index == 0) {
-          appRouter.push(const HolidaysRoute());
+          if(appRouter.currentUrl != "/holidays-route"){
+            appRouter.push(const HolidaysRoute());
+          }
+
         } else if (index == 1) {
-          appRouter.push(const ProfileRoute());
-          // appRouter.push(const MapRoute());
+          if(appRouter.currentUrl != "/profile-route") {
+            appRouter.push(const ProfileRoute());
+          }
         }
       },
     );

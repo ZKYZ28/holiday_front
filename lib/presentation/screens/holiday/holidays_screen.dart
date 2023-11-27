@@ -34,7 +34,7 @@ class _HolidaysScreenState extends State<HolidaysScreen> {
   }
 
   bool isToggled = false;
-  List<Invitation> inivtationsList = [];
+  List<Invitation> invitationsList = [];
   List<Holiday> _holidays = [];
 
   void toggleSwitch(bool value) {
@@ -67,8 +67,6 @@ class _HolidaysScreenState extends State<HolidaysScreen> {
 
   @override
   Widget build(BuildContext context) {
-  HolidayBloc holidayBloc = context.read<HolidayBloc>();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF1E3A8A),
@@ -100,12 +98,12 @@ class _HolidaysScreenState extends State<HolidaysScreen> {
                         );
 
                       } else if (state.status == InvitationStateStatus.loaded || state.status == InvitationStateStatus.accepted) {
-                        inivtationsList = state.invitationsList ?? [];
+                        invitationsList = state.invitationsList ?? [];
                         return CircleAvatar(
                           backgroundColor: Colors.red,
                           radius: 15.0,
                           child: Text(
-                            inivtationsList.length.toString(),
+                            invitationsList.length.toString(),
                             style: const TextStyle(color: Colors.white),
                           ),
                         );
