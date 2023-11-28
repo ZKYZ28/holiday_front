@@ -28,8 +28,6 @@ class MyHolidayPage extends StatefulWidget {
 
 class _MyHolidayPageState extends State<MyHolidayPage> {
   late Holiday _holiday;
-
-
   @override
   void initState() {
     context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
@@ -71,7 +69,6 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                                 color: Colors.white,
                               ),
                             ),
-
                             Text(
                               state.holidayItem != null
                                   ? DateFormat('dd/MM/yyyy').format(TZDateTime.parse(globalLocation!, state.holidayItem!.startDate))
