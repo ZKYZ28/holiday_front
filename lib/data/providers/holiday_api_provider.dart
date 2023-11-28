@@ -170,7 +170,7 @@ class HolidayApiProvider{
         Response response = await _dio.put('v1/holiday/${holidayData.holidayId!}', data : formData);
         print(response);
       } on DioException catch (e){
-        throw ApiException(e.response?.data, e);
+        throw ApiException(e.response?.data ?? "Une erreur est survenue lors de l'édition de la vacance", e);
 
       } catch (e, stacktrace) {
         throw ApiException("Une erreur s'est produite lors de la création de votre vacance", stacktrace);

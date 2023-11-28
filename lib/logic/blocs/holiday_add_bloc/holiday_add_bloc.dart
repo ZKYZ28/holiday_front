@@ -60,55 +60,51 @@ class HolidayAddBloc extends Bloc<HolidayAddEvent, HolidayAddState> {
 
   void _onStartDateChanged(
       HolidayAddDateStartChanged event, Emitter<HolidayAddState> emit) {
-    final newStartDate = event.start;
-    // print('PRINT MOI CA : ${TZDateTime.from(newStartDate, globalLocation!)}');
-    // Ajout null, à vérifier
-    if(newStartDate == null) {
-      emit(state.copyWith(
-        holidayAddStatus: FormzSubmissionStatus.inProgress,
-        start: DateTimeWithStatus(dateTime: null, customStatus: CustomStatus.valid),
-      ));
-      return;
-    }
-    if(!DateService.isStartDateValid(newStartDate, false)) {
+    final newStartDate = DateService.convertDateTimeToTzDateTime(event.start, globalLocation!);
+    final endDate = state.end.dateTime;
+    if(!event.isEditMode && !DateService.isStartDateValid(newStartDate, false)) {
       emit(state.copyWith(
           holidayAddStatus: FormzSubmissionStatus.inProgress,
-          start: DateTimeWithStatus(dateTime: TZDateTime(globalLocation!, newStartDate.year, newStartDate.month, newStartDate.day), customStatus: CustomStatus.invalid),
+          start: DateTimeWithStatus(dateTime: newStartDate, customStatus: CustomStatus.invalid),
+          end: DateTimeWithStatus(dateTime: endDate, customStatus: CustomStatus.invalid),
           errorMessage: "La date de début doit être supérieure ou égale à la date actuelle")
+      );
+      return;
+    }
+    if(!DateService.isEndDateValid(newStartDate, DateService.convertTzDateTimeToDateTime(endDate), false)) {
+      emit(state.copyWith(
+          holidayAddStatus: FormzSubmissionStatus.inProgress,
+          start: DateTimeWithStatus(dateTime: newStartDate, customStatus: CustomStatus.invalid),
+          end : DateTimeWithStatus(dateTime: endDate, customStatus: CustomStatus.invalid),
+          errorMessage: "La date de fin doit être supérieure à la date de début.")
       );
       return;
     }
     emit(state.copyWith(
         holidayAddStatus: FormzSubmissionStatus.inProgress,
-        start: DateTimeWithStatus(dateTime: TZDateTime(globalLocation!, newStartDate.year, newStartDate.month, newStartDate.day), customStatus: CustomStatus.valid),
+        start: DateTimeWithStatus(dateTime: newStartDate, customStatus: CustomStatus.valid),
+        end: DateTimeWithStatus(dateTime: endDate, customStatus: CustomStatus.valid),
         errorMessage: null,
     ));
   }
 
   void _onEndDateChanged(
       HolidayAddDateEndChanged event, Emitter<HolidayAddState> emit) {
-    final newEndDate = event.end;
+    final newEndDate = DateService.convertDateTimeToTzDateTime(event.end, globalLocation!);
     final startDate = state.start.dateTime;
-    // TODO : changer
-    // Ajout null, à vérifier
-    if(newEndDate == null) {
-      emit(state.copyWith(
-        holidayAddStatus: FormzSubmissionStatus.inProgress,
-        start: DateTimeWithStatus(dateTime: null, customStatus: CustomStatus.valid),
-      ));
-      return;
-    }
-    if(!DateService.isEndDateValid(DateTime(startDate!.year, startDate!.month, startDate!.day), newEndDate, false)) {
+    if(!DateService.isEndDateValid(DateService.convertTzDateTimeToDateTime(startDate), newEndDate, false)) {
       emit(state.copyWith(
           holidayAddStatus: FormzSubmissionStatus.inProgress,
-          end : DateTimeWithStatus(dateTime: TZDateTime(globalLocation!, newEndDate.year, newEndDate.month, newEndDate.day), customStatus: CustomStatus.invalid),
+          start: DateTimeWithStatus(dateTime: startDate, customStatus: CustomStatus.invalid),
+          end : DateTimeWithStatus(dateTime: newEndDate, customStatus: CustomStatus.invalid),
           errorMessage: "La date de fin doit être supérieure à la date de début.")
       );
       return;
     }
     emit(state.copyWith(
       holidayAddStatus: FormzSubmissionStatus.inProgress,
-      end: DateTimeWithStatus(dateTime: TZDateTime(globalLocation!, newEndDate.year, newEndDate.month, newEndDate.day), customStatus: CustomStatus.valid),
+      start: DateTimeWithStatus(dateTime: startDate, customStatus: CustomStatus.valid),
+      end: DateTimeWithStatus(dateTime: newEndDate, customStatus: CustomStatus.valid),
       errorMessage: null,
     ));
   }
@@ -167,13 +163,14 @@ class HolidayAddBloc extends Bloc<HolidayAddEvent, HolidayAddState> {
     if(state.formIsValid && _locationState.formIsValid) {
       final startDate = state.start.dateTime;
       final endDate = state.end.dateTime;
+      print('LOCATION DATA BLOC : ${_locationState.street.value}');
       try {
         await _holidayRepository.createHoliday(
           HolidayData(
           name:  state.name.value,
           description:  state.description.value,
-          startDate: DateTime(startDate!.year, startDate!.month, startDate!.day),
-          endDate: DateTime(endDate!.year, endDate!.month, endDate!.day),
+          startDate: DateTime(startDate.year, startDate.month, startDate.day),
+          endDate: DateTime(endDate.year, endDate.month, endDate.day),
           file:  state.fileWithStatus.file,
           locationData: LocationData(
               country: _locationState.country.value,
@@ -190,7 +187,7 @@ class HolidayAddBloc extends Bloc<HolidayAddEvent, HolidayAddState> {
         emit(state.copyWith(holidayAddStatus: FormzSubmissionStatus.failure, errorMessage: e.toString()));
       }
     } else {
-      emit(state.copyWith(holidayAddStatus: FormzSubmissionStatus.failure, errorMessage: "Tous les champs de ne sont pas valides ! Merci de lire les messages d'erreur sous chaque champ"));
+      emit(state.copyWith(holidayAddStatus: FormzSubmissionStatus.failure, errorMessage: "Tous les champs de ne sont pas valides ! Veillez à compléter tous les champs obligatoires (*) ou lire les messages d'erreur sous chaque champ."));
     }
   }
 
@@ -200,13 +197,14 @@ class HolidayAddBloc extends Bloc<HolidayAddEvent, HolidayAddState> {
     if(state.formIsValid && _locationState.formIsValid) {
       final startDate = state.start.dateTime;
       final endDate = state.end.dateTime;
+      print(_locationState.street.value);
       try {
         await _holidayRepository.updateHoliday(
             HolidayData(
                 name:  state.name.value,
                 description:  state.description.value,
-                startDate: DateTime(startDate!.year, startDate.month, startDate.day),
-                endDate: DateTime(endDate!.year, endDate.month, endDate.day),
+                startDate: DateTime(startDate.year, startDate.month, startDate.day),
+                endDate: DateTime(endDate.year, endDate.month, endDate.day),
                 file:  state.fileWithStatus.file,
                 locationData: LocationData(
                   locationId: event.locationId,
@@ -227,8 +225,14 @@ class HolidayAddBloc extends Bloc<HolidayAddEvent, HolidayAddState> {
         emit(state.copyWith(holidayAddStatus: FormzSubmissionStatus.failure, errorMessage: e.toString()));
       }
     } else {
-      emit(state.copyWith(holidayAddStatus: FormzSubmissionStatus.failure, errorMessage: "Tous les champs de ne sont pas valides ! Merci de lire les messages d'erreur sous chaque champ"));
+      emit(state.copyWith(holidayAddStatus: FormzSubmissionStatus.failure, errorMessage: "Tous les champs de ne sont pas valides ! Veillez à compléter tous les champs obligatoires (*) ou lire les messages d'erreur sous chaque champ."));
     }
+  }
+
+  @override
+  Future<void> close() {
+    locationSubscription?.cancel();
+    return super.close();
   }
 
 }

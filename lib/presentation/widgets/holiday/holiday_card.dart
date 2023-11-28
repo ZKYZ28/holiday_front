@@ -114,7 +114,7 @@ class HolidayCard extends StatelessWidget {
                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                 // Marge pour le Text
                 child: Text(
-                  holiday.description,
+                  holiday.description ?? '',
                   textAlign: TextAlign.left,
                   overflow: TextOverflow.ellipsis,
                 ),

@@ -6,7 +6,6 @@ class HolidayData {
   final String? holidayId; // edit
   final bool deleteImage; //edit
   final String? initialPath; // edit
-  final String? locationId; // edit
   final String name;
   final String description;
   final DateTime startDate;
@@ -19,7 +18,6 @@ class HolidayData {
     this.holidayId,
     this.deleteImage = false,
     this.initialPath,
-    this.locationId,
     required this.name,
     required this.description,
     required this.startDate,

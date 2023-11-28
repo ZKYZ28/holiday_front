@@ -6,8 +6,8 @@ part 'location.g.dart';
 @JsonSerializable()
 class Location {
   final String? id;
-  final String number;
-  final String street;
+  final String? number;
+  final String? street;
   final String locality;
   final String postalCode;
   final String country;

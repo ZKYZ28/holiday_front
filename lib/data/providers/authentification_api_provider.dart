@@ -51,7 +51,7 @@ class AuthAPiProvider {
       await loginProcedure(jwt);
     } on DioException catch (e) {
       throw ApiException(
-          'Une erreur s\'est produite lors de l\'authentification', e);
+          e.response?.data ?? "Une erreur s'est produite lors de l'authentification", e);
     } on HolidayAuthException catch (e) {
       throw ApiException(e.message, null);
     } on HolidayStorageException catch (e) {
@@ -73,7 +73,7 @@ class AuthAPiProvider {
       await loginProcedure(jwt);
     } on DioException catch (e) {
       throw ApiException(
-          'Une erreur s\'est produite lors de l\'authentification', e);
+          e.response?.data ?? "Une erreur s'est produite lors de l'authentification", e);
     } on HolidayAuthException catch (e) {
       throw ApiException(e.message, null);
     } on HolidayStorageException catch (e) {

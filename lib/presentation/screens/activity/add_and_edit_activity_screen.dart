@@ -193,7 +193,7 @@ class _EncodeActivityScreenState extends State<EncodeActivityScreen> {
                                           TextStyle(color: Colors.redAccent),
                                       border: OutlineInputBorder(),
                                       suffixIcon: Icon(Icons.event_note),
-                                      labelText: 'Date de début',
+                                      labelText: 'Date de début *',
                                     ),
                                     dateFormat: DateFormat('dd/MM/yyyy HH:mm'),
                                     initialValue: state.start.dateTime,
@@ -222,7 +222,7 @@ class _EncodeActivityScreenState extends State<EncodeActivityScreen> {
                                       TextStyle(color: Colors.redAccent),
                                       border: OutlineInputBorder(),
                                       suffixIcon: Icon(Icons.event_note),
-                                      labelText: 'Date de fin',
+                                      labelText: 'Date de fin *',
                                     ),
                                     dateFormat: DateFormat('dd/MM/yyyy HH:mm'),
                                     initialValue: state.end.dateTime,
@@ -265,7 +265,7 @@ class _EncodeActivityScreenState extends State<EncodeActivityScreen> {
                           initialValue: widget.activity != null
                               ? widget.activity!.description
                               : '',
-                          labelText: 'Description *',
+                          labelText: 'Description ',
                           hintText: 'Le lundi au soleil',
                           onChanged: (description) => context
                               .read<ActivityAddEditBloc>()

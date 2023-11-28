@@ -10,7 +10,7 @@ part 'holiday.g.dart';
 class Holiday {
   final String? id;
   final String name;
-  final String description;
+  final String? description;
   final String startDate;
   final String endDate;
   final Location location;

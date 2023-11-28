@@ -9,7 +9,7 @@ part of 'activity.dart';
 Activity _$ActivityFromJson(Map<String, dynamic> json) => Activity(
       id: json['id'] as String?,
       name: json['name'] as String,
-      description: json['description'] as String,
+      description: json['description'] as String?,
       price: (json['price'] as num).toDouble(),
       startDate: json['startDate'] as String,
       endDate: json['endDate'] as String,

@@ -3,6 +3,9 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 class DateService {
 
+  ///
+  /// Vérifie si la date courante est supérieure à celle fournie en paramètre
+  ///
   static bool isStartDateValid(DateTime startDate, bool includeTime) {
     tz.TZDateTime now = tz.TZDateTime.now(globalLocation!);
     // Pour ne pas prendre en compte les heures
@@ -14,10 +17,16 @@ class DateService {
 
   }
 
+  ///
+  /// Vérifie si la date de fin est supérieure à celle de début en prenant en compte ou non les heures, minutes, secondes
+  ///
   static bool isEndDateValid(DateTime startDate, DateTime endDate, bool includeTime) {
     if (!includeTime) {
       startDate = DateTime(startDate.year, startDate.month, startDate.day);
       endDate = DateTime(endDate.year, endDate.month, endDate.day);
+    } else {
+      startDate = DateTime(startDate.year, startDate.month, startDate.day, startDate.hour, startDate.minute);
+      endDate = DateTime(endDate.year, endDate.month, endDate.day, endDate.hour, endDate.minute);
     }
     return endDate.isAfter(startDate);
   }
@@ -35,8 +44,14 @@ class DateService {
     return tz.TZDateTime(location, dateTime.year, dateTime.month, dateTime.day);
   }
 
-  static DateTime convertTzDateTimeToDateTime(tz.TZDateTime tzDateTime) {
-    return DateTime(tzDateTime.year, tzDateTime.month, tzDateTime.day, tzDateTime.hour, tzDateTime.minute, tzDateTime.second);
+  ///
+  /// Convertir un objet TzDateTime en DateTime en prenant en compte ou non les heures, minutes, secondes.
+  ///
+  static DateTime convertTzDateTimeToDateTime(tz.TZDateTime tzDateTime, {bool considerTime = false}) {
+    if(considerTime) {
+      return DateTime(tzDateTime.year, tzDateTime.month, tzDateTime.day, tzDateTime.hour, tzDateTime.minute);
+    }
+    return DateTime(tzDateTime.year, tzDateTime.month, tzDateTime.day);
   }
 
 

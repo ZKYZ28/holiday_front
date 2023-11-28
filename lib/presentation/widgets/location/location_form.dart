@@ -30,7 +30,7 @@ class LocationForm extends StatelessWidget {
               buildWhen: (previous, current) =>
               previous.country != current.country,
               initialValue: location != null ? location!.country : '',
-              labelText: 'Pays*',
+              labelText: 'Pays *',
               hintText:
               'Belgique',
               onChanged: (pays) => context
@@ -100,7 +100,7 @@ class LocationForm extends StatelessWidget {
                     buildWhen: (previous, current) =>
                     previous.postalCode != current.postalCode,
                     initialValue: location != null ? location!.postalCode : '',
-                    labelText: 'Code postal ',
+                    labelText: 'Code postal *',
                     hintText:
                     '4000',
                     onChanged: (postalCode) => context
@@ -121,7 +121,7 @@ class LocationForm extends StatelessWidget {
                     buildWhen: (previous, current) =>
                     previous.locality != current.locality,
                     initialValue: location != null ? location!.locality : '',
-                    labelText: 'Ville ',
+                    labelText: 'Ville *',
                     hintText:
                     'Liège',
                     onChanged: (locality) => context

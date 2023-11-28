@@ -6,7 +6,7 @@ extension DescriptionHolidayInputErrorExtension on DescriptionHolidayInputError 
   String get message {
     switch (this) {
       case DescriptionHolidayInputError.invalid:
-        return "Le description peut contenir de 0 et 500 caractères et peut inclure des lettres, des chiffres, des apostrophes, des tirets et des espaces et certains caractères spéciaux.";
+        return "Champ faculatif. Autrement, la description doit contenir de 0 et 500 caractères et peut inclure des lettres, des chiffres, des apostrophes, des tirets et des espaces et certains caractères spéciaux.";
       default:
         return "Erreur inconnue. Veuillez contacter un administrateur";
     }

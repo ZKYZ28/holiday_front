@@ -9,7 +9,7 @@ part of 'holiday.dart';
 Holiday _$HolidayFromJson(Map<String, dynamic> json) => Holiday(
       id: json['id'] as String?,
       name: json['name'] as String,
-      description: json['description'] as String,
+      description: json['description'] as String?,
       startDate: json['startDate'] as String,
       endDate: json['endDate'] as String,
       location: Location.fromJson(json['location'] as Map<String, dynamic>),

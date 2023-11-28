@@ -7,7 +7,7 @@ part 'activity.g.dart';
 class Activity {
   final String? id;
   final String name;
-  final String description;
+  final String? description;
   final double price;
   final String startDate;
   final String endDate;

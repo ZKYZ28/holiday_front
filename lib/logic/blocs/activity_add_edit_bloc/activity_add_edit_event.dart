@@ -25,19 +25,19 @@ class ActivityPriceChanged extends ActivityAddEditEvent {
 }
 
 class ActivityDateStartChanged extends ActivityAddEditEvent {
-  final DateTime? start;
+  final DateTime start;
   const ActivityDateStartChanged({required this.start});
 
   @override
-  List<Object> get props => [start ?? DateTime.now()];
+  List<Object> get props => [start];
 }
 
 class ActivityDateEndChanged extends ActivityAddEditEvent {
-  final DateTime? end;
+  final DateTime end;
   const ActivityDateEndChanged({required this.end});
 
   @override
-  List<Object> get props => [end ?? DateTime.now()];
+  List<Object> get props => [end];
 }
 
 class ActivityDescriptionChanged extends ActivityAddEditEvent {

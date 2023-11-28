@@ -21,8 +21,8 @@ class ActivityAddEditState extends Equatable {
     this.price = const ActivityPriceInput.pure(),
     this.errorMessage = "",
   }) {
-    this.start = start ?? DateTimeWithStatus(customStatus: CustomStatus.init);
-    this.end = end ?? DateTimeWithStatus(customStatus: CustomStatus.init);
+    this.start = start ?? DateTimeWithStatus(dateTime: TZDateTime.now(globalLocation!).add(const Duration(minutes: 30)),customStatus: CustomStatus.init);
+    this.end = end ?? DateTimeWithStatus(dateTime: TZDateTime.now(globalLocation!).add(const Duration(minutes: 30, days: 7)), customStatus: CustomStatus.init);
     this.fileWithStatus = fileWithStatus ?? FileWithStatus();
   }
 
@@ -33,7 +33,7 @@ class ActivityAddEditState extends Equatable {
     return ActivityAddEditState(
       activityAddEditStatus: FormzSubmissionStatus.initial,
       name: ActivityNameInput.dirty(value: activity.name),
-      description: ActivityDescriptionInput.dirty(value: activity.description),
+      description: ActivityDescriptionInput.dirty(value: activity.description ?? ''),
       price: ActivityPriceInput.dirty(value: activity.price.toString()),
       fileWithStatus: FileWithStatus(file: null, customStatus: CustomStatus.valid, deleteImage: false),
       start: DateTimeWithStatus(dateTime: startDate, customStatus: CustomStatus.valid),

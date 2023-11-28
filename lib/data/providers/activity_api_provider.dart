@@ -44,7 +44,7 @@ class ActivityApiProvider{
       final formDataMap = {
         'name': activityData.name,
         'description': activityData.description,
-        'price' : activityData.price,
+        'price' : activityData.price.toString().replaceAll('.', ','),
         'startDate': activityData.startDate.toIso8601String(),
         'endDate': activityData.endDate.toIso8601String(),
         'location.street': activityData.locationData.street,

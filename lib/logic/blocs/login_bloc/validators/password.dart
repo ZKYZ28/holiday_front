@@ -30,8 +30,8 @@ class PasswordInput extends FormzInput<String, PasswordInputError> {
     if(value.length < 8) return PasswordInputError.tooShort;
     if (!value.contains(RegExp(r'\d'))) return PasswordInputError.noDigit;
     if (!value.contains(RegExp(r'[A-Z]'))) return PasswordInputError.noUppercase;
-    if (!value.contains(RegExp(r'[a-]'))) return PasswordInputError.noDigit;
-    if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|=+;<>/\\~_-]'))) return PasswordInputError.noSpecialChars;
+    if (!value.contains(RegExp(r'[a-z]'))) return PasswordInputError.noDigit;
+    if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|=+;<>/\\~_-çÇ]'))) return PasswordInputError.noSpecialChars;
     return null;
   }
 }

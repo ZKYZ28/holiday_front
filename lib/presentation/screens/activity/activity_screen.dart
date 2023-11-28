@@ -189,7 +189,7 @@ class _ActivityState extends State<ActivityScreen> {
                 margin: const EdgeInsets.fromLTRB(15, 20, 0, 10),
                 // Marge pour le Text
                 child: Text(
-                  activity.description,
+                  activity.description ?? '',
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -201,9 +201,8 @@ class _ActivityState extends State<ActivityScreen> {
                   children: [
                     iconWithText(
                         Icons.calendar_month,
-                        // TODO : champ activity date nullable, alors faire cette vérif :
-                        activity.startDate != null ? DateFormat('dd/MM/yyyy HH:mm').format(TZDateTime.parse(globalLocation!, activity.startDate)) : "Non défini"),
-                    iconWithText(Icons.euro, '${activity.price}'),
+                        DateFormat('dd/MM/yyyy HH:mm').format(TZDateTime.parse(globalLocation!, activity.startDate))),
+                    iconWithText(Icons.euro, activity.price.toStringAsFixed(2)),
                     iconWithText(Icons.location_on, activity.location.country),
                   ],
                 ),

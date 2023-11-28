@@ -51,7 +51,7 @@ class ActivityCard extends StatelessWidget {
           color: Colors.black,
         ),
       ),
-          Text('${activity.price} €'),
+          Text('${activity.price.toStringAsFixed(2)} €'),
         ],
       ),
       trailing: Container(

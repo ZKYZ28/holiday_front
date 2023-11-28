@@ -46,10 +46,6 @@ class ActivityAddEditBloc extends Bloc<ActivityAddEditEvent, ActivityAddEditStat
 
     locationSubscription = locationBloc.stream.listen((locationState) {
       _locationState = locationState;
-      print(locationState.country);
-      print(locationState.postalCode);
-      print(locationState.street);
-      print(locationState.numberBox);
     });
   }
 
@@ -73,21 +69,14 @@ class ActivityAddEditBloc extends Bloc<ActivityAddEditEvent, ActivityAddEditStat
   }
 
   void _onStartDateChanged(ActivityDateStartChanged event, Emitter<ActivityAddEditState> emit) {
-    final newStartDate = event.start;
-    final endDate = state.end.dateTime != null ? DateService.convertTzDateTimeToDateTime(state.end.dateTime!) : null;
-    if (newStartDate == null) {
+    final newStartDate = DateService.convertDateTimeToTzDateTime(event.start, globalLocation!, considerTime: true);
+    final endDate = state.end.dateTime;
+
+    if(!DateService.isEndDateValid(newStartDate, DateService.convertTzDateTimeToDateTime(endDate, considerTime: true), true)) {
       emit(state.copyWith(
         activityAddEditStatus: FormzSubmissionStatus.inProgress,
-        start: DateTimeWithStatus(dateTime: null, customStatus: CustomStatus.valid),
-      ));
-      return;
-    }
-    // si enDate est défini
-    if(endDate != null && !DateService.isEndDateValid(newStartDate, endDate, true)) {
-      emit(state.copyWith(
-        activityAddEditStatus: FormzSubmissionStatus.inProgress,
-        start: DateTimeWithStatus(dateTime: DateService.convertDateTimeToTzDateTime(newStartDate, globalLocation!, considerTime: true), customStatus: CustomStatus.invalid),
-        end: DateTimeWithStatus(dateTime: state.end.dateTime, customStatus: CustomStatus.invalid),
+        start: DateTimeWithStatus(dateTime: newStartDate, customStatus: CustomStatus.invalid),
+        end: DateTimeWithStatus(dateTime: endDate, customStatus: CustomStatus.invalid),
         errorMessage: "La date de fin doit être supérieure à la date de début."
       ));
       return;
@@ -95,36 +84,29 @@ class ActivityAddEditBloc extends Bloc<ActivityAddEditEvent, ActivityAddEditStat
     // Date valide
     emit(state.copyWith(
     activityAddEditStatus: FormzSubmissionStatus.inProgress,
-      start: DateTimeWithStatus(dateTime: DateService.convertDateTimeToTzDateTime(newStartDate, globalLocation!, considerTime: true), customStatus: CustomStatus.valid),
-      end: DateTimeWithStatus(dateTime: state.end.dateTime, customStatus: CustomStatus.valid),
+      start: DateTimeWithStatus(dateTime: newStartDate, customStatus: CustomStatus.valid),
+      end: DateTimeWithStatus(dateTime: endDate, customStatus: CustomStatus.valid),
     errorMessage: null,
     ));
   }
 
   void _onEndDateChanged(ActivityDateEndChanged event, Emitter<ActivityAddEditState> emit) {
-    final startDate = state.start.dateTime != null ? DateService.convertTzDateTimeToDateTime(state.start.dateTime!) : null;
-    final newEndDate = event.end;
+    final startDate = state.start.dateTime;
+    final newEndDate = DateService.convertDateTimeToTzDateTime(event.end, globalLocation!, considerTime: true);
 
-    if (newEndDate == null) {
-      emit(state.copyWith(
-        activityAddEditStatus: FormzSubmissionStatus.inProgress,
-        end: DateTimeWithStatus(dateTime: null, customStatus: CustomStatus.valid),
-      ));
-      return;
-    }
-    if (startDate != null && !DateService.isEndDateValid(startDate, newEndDate, true)) {
+    if (!DateService.isEndDateValid(DateService.convertTzDateTimeToDateTime(startDate, considerTime : true), newEndDate, true)) {
       emit(state.copyWith(
           activityAddEditStatus: FormzSubmissionStatus.inProgress,
-          start: DateTimeWithStatus(dateTime: state.start.dateTime, customStatus: CustomStatus.invalid),
-          end: DateTimeWithStatus(dateTime: DateService.convertDateTimeToTzDateTime(newEndDate, globalLocation!, considerTime: true), customStatus: CustomStatus.invalid),
+          start: DateTimeWithStatus(dateTime: startDate, customStatus: CustomStatus.invalid),
+          end: DateTimeWithStatus(dateTime: newEndDate, customStatus: CustomStatus.invalid),
           errorMessage: "La date de fin doit être supérieure à la date de début."
       ));
       return;
     }
     emit(state.copyWith(
       activityAddEditStatus: FormzSubmissionStatus.inProgress,
-      start: DateTimeWithStatus(dateTime: state.start.dateTime, customStatus: CustomStatus.valid),
-      end: DateTimeWithStatus(dateTime: DateService.convertDateTimeToTzDateTime(newEndDate, globalLocation!, considerTime: true), customStatus: CustomStatus.valid),
+      start: DateTimeWithStatus(dateTime: startDate, customStatus: CustomStatus.valid),
+      end: DateTimeWithStatus(dateTime: newEndDate, customStatus: CustomStatus.valid),
       errorMessage: null,
     ));
   }
@@ -165,14 +147,12 @@ class ActivityAddEditBloc extends Bloc<ActivityAddEditEvent, ActivityAddEditStat
             errorMessage: "La taille du fichier dépasse la limite de 5 Mo");
         return;
       }
-      print('NEW FILE VALUE : ${file.path}');
       emit(state.copyWith(
           activityAddEditStatus: FormzSubmissionStatus.inProgress,
           fileWithStatus: FileWithStatus(file: file, customStatus: CustomStatus.valid, deleteImage: event.deleteFile),
           errorMessage: null));
     } catch (e) {
-      state.copyWith(
-          activityAddEditStatus: FormzSubmissionStatus.inProgress,
+      state.copyWith(activityAddEditStatus: FormzSubmissionStatus.inProgress,
           fileWithStatus: FileWithStatus(file: file, customStatus: CustomStatus.invalid, deleteImage: event.deleteFile),
           errorMessage: "Un problème est survenu avec la gestion des images");
     }
@@ -184,21 +164,20 @@ class ActivityAddEditBloc extends Bloc<ActivityAddEditEvent, ActivityAddEditStat
     emit(state.copyWith(activityAddEditStatus: FormzSubmissionStatus.inProgress));
 
     if(state.formIsValid && _locationState.formIsValid) {
-      print(state.fileWithStatus.file);
       try {
         await _activityRepository.createActivity(
           ActivityData(
             name: state.name.value,
             description: state.description.value,
-            price: double.parse(state.price.value), // le prix sera correctement formaté par les valiateurs
-            startDate: DateService.convertTzDateTimeToDateTime(state.start.dateTime!), // il sera défini à ce moment-là car il aura passé la condition state.formIsValid
-            endDate: DateService.convertTzDateTimeToDateTime(state.end.dateTime!),
+            price: double.parse(state.price.value),
+            startDate: DateService.convertTzDateTimeToDateTime(state.start.dateTime, considerTime: true),
+            endDate: DateService.convertTzDateTimeToDateTime(state.end.dateTime, considerTime: true),
             file: state.fileWithStatus.file,
             holidayId: event.holidayId,
             locationData: LocationData(
               country: _locationState.country.value,
               locality: _locationState.locality.value,
-              street: _locationState.locality.value,
+              street: _locationState.street.value,
               postalCode: _locationState.postalCode.value,
               numberBox: _locationState.numberBox.value
             )
@@ -209,7 +188,7 @@ class ActivityAddEditBloc extends Bloc<ActivityAddEditEvent, ActivityAddEditStat
         emit(state.copyWith(activityAddEditStatus: FormzSubmissionStatus.failure, errorMessage: e.toString()));
       }
     } else {
-      emit(state.copyWith(activityAddEditStatus: FormzSubmissionStatus.failure, errorMessage: "Tous les champs de ne sont pas valides ! Merci de lire les messages d'erreur sous chaque champ"));
+      emit(state.copyWith(activityAddEditStatus: FormzSubmissionStatus.failure, errorMessage: "Tous les champs de ne sont pas valides ! Veillez à compléter tous les champs obligatoires (*) ou lire les messages d'erreur sous chaque champ. "));
     }
 
   }
@@ -227,8 +206,8 @@ class ActivityAddEditBloc extends Bloc<ActivityAddEditEvent, ActivityAddEditStat
                 name: state.name.value,
                 description: state.description.value,
                 price: double.parse(state.price.value),
-                startDate: DateService.convertTzDateTimeToDateTime(state.start.dateTime!),
-                endDate: DateService.convertTzDateTimeToDateTime(state.end.dateTime!),
+                startDate: DateService.convertTzDateTimeToDateTime(state.start.dateTime, considerTime: true),
+                endDate: DateService.convertTzDateTimeToDateTime(state.end.dateTime, considerTime: true),
                 file: state.fileWithStatus.file,
                 holidayId: event.holidayId,
                 locationData: LocationData(
@@ -250,7 +229,14 @@ class ActivityAddEditBloc extends Bloc<ActivityAddEditEvent, ActivityAddEditStat
         emit(state.copyWith(activityAddEditStatus: FormzSubmissionStatus.failure, errorMessage: e.toString()));
       }
     } else {
-      emit(state.copyWith(activityAddEditStatus: FormzSubmissionStatus.failure, errorMessage: "Tous les champs de ne sont pas valides ! Merci de lire les messages d'erreur sous chaque champ"));
+      emit(state.copyWith(activityAddEditStatus: FormzSubmissionStatus.failure, errorMessage: "Tous les champs de ne sont pas valides ! Veillez à compléter tous les champs obligatoires (*) ou lire les messages d'erreur sous chaque champ."));
     }
   }
+
+  @override
+  Future<void> close() {
+    locationSubscription?.cancel();
+    return super.close();
+  }
+
 }

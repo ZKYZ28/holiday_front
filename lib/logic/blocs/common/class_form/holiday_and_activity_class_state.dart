@@ -5,10 +5,10 @@ import 'package:timezone/timezone.dart';
 enum CustomStatus { init, valid, invalid }
 
 class DateTimeWithStatus {
-  final TZDateTime? dateTime;
+  final TZDateTime dateTime;
   final CustomStatus customStatus;
 
-  DateTimeWithStatus({this.dateTime, this.customStatus = CustomStatus.init});
+  DateTimeWithStatus({required this.dateTime, this.customStatus = CustomStatus.init});
 }
 
 class FileWithStatus {

@@ -33,7 +33,7 @@ class HolidayAddState extends Equatable {
       return HolidayAddState(
        // isEditMode: true,
         holidayAddStatus: FormzSubmissionStatus.initial,
-        description: DescriptionHolidayInput.dirty(value: holiday.description),
+        description: DescriptionHolidayInput.dirty(value: holiday.description ?? ''),
         name: HolidayNameInput.dirty(value: holiday.name),
         fileWithStatus: FileWithStatus(file: null, customStatus: CustomStatus.valid, deleteImage: false),
         start: DateTimeWithStatus(dateTime: startDate, customStatus: CustomStatus.valid),

@@ -17,15 +17,16 @@ class HolidayAddNameChanged extends HolidayAddEvent {
 }
 
 class HolidayAddDateStartChanged extends HolidayAddEvent {
-  final DateTime? start;
-  const HolidayAddDateStartChanged({required this.start});
+  final DateTime start;
+  final bool isEditMode;
+  const HolidayAddDateStartChanged({required this.start, this.isEditMode = false});
 
   @override
   List<Object> get props => [start ?? DateTime.now()];
 }
 
 class HolidayAddDateEndChanged extends HolidayAddEvent {
-  final DateTime? end;
+  final DateTime end;
   const HolidayAddDateEndChanged({required this.end});
 
   @override

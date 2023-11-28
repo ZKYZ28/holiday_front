@@ -21,7 +21,7 @@ import 'package:holiday_mobile/presentation/screens/authentification/login_page.
 import 'package:holiday_mobile/presentation/screens/authentification/register_page.dart'
     as _i13;
 import 'package:holiday_mobile/presentation/screens/chat/chat_page.dart' as _i2;
-import 'package:holiday_mobile/presentation/screens/holiday/encode_holiday.dart'
+import 'package:holiday_mobile/presentation/screens/holiday/add_and_edit_holiday_screen.dart'
     as _i4;
 import 'package:holiday_mobile/presentation/screens/holiday/holidays_screen.dart'
     as _i7;

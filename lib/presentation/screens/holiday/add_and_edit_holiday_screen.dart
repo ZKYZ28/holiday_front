@@ -130,7 +130,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                       child: Container(
                           margin: const EdgeInsets.only(right: 10, bottom: 10),
                           child: BlocBuilder<HolidayAddBloc, HolidayAddState>(
-                            buildWhen: (previous, current) => previous.start.dateTime != current.start.dateTime || previous.start.customStatus != current.start.customStatus,
+                            buildWhen: (previous, current) => previous.start.dateTime != current.start.dateTime,
                             builder: (context, state) {
                               return DateTimeFormField(
                                   decoration: InputDecoration(
@@ -139,17 +139,14 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                                         TextStyle(color: Colors.redAccent),
                                     border: OutlineInputBorder(),
                                     suffixIcon: Icon(Icons.event_note),
-                                    labelText: 'Date de début',
-                                    errorText: state.start.customStatus == CustomStatus.invalid && state.errorMessage!.isNotEmpty ? state.errorMessage! : null,
-                                    errorMaxLines: 3,
+                                    labelText: 'Date de début *',
                                   ),
                                   mode: DateTimeFieldPickerMode.date,
                                   dateFormat: DateFormat('dd/MM/yyyy'),
                                   initialValue: state.start.dateTime,
                                   onDateSelected: (value) {
                                     print(state.start.dateTime);
-                                    context.read<HolidayAddBloc>().add(HolidayAddDateStartChanged(start: value));
-                                    context.read<HolidayAddBloc>().add(HolidayAddDateEndChanged(end: state.end.dateTime));
+                                    context.read<HolidayAddBloc>().add(HolidayAddDateStartChanged(start: value, isEditMode: widget.holiday != null));
                                   });
                             },
                           )),
@@ -158,7 +155,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, bottom: 10),
                         child: BlocBuilder<HolidayAddBloc, HolidayAddState>(
-                          buildWhen: (previous, current) => previous.end.dateTime != current.end.dateTime || previous.end.customStatus != current.end.customStatus,
+                          buildWhen: (previous, current) => previous.end.dateTime != current.end.dateTime,
                           builder: (context, state) {
                             return DateTimeFormField(
                                 decoration:  InputDecoration(
@@ -167,16 +164,12 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                                       TextStyle(color: Colors.redAccent),
                                   border: OutlineInputBorder(),
                                   suffixIcon: Icon(Icons.event_note),
-                                  labelText: 'Date de fin',
-                                  errorText: state.end.customStatus == CustomStatus.invalid && state.errorMessage!.isNotEmpty ? state.errorMessage! : null,
-                                  errorMaxLines: 3,
+                                  labelText: 'Date de fin *',
                                 ),
                                 dateFormat: DateFormat('dd/MM/yyyy'),
                                 mode: DateTimeFieldPickerMode.date,
                                 initialValue: state.end.dateTime,
                                 onDateSelected: (value) {
-                                  print(value);
-                                  context.read<HolidayAddBloc>().add(HolidayAddDateStartChanged(start: state.start.dateTime));
                                   context.read<HolidayAddBloc>().add(HolidayAddDateEndChanged(end: value));
                                 });
                           },
@@ -184,6 +177,23 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                       ),
                     ),
                   ],
+                ),
+                BlocBuilder<HolidayAddBloc, HolidayAddState>(
+                  buildWhen: (previous, current) => previous.start.dateTime != current.start.dateTime || previous.start.customStatus != current.start.customStatus || previous.end.dateTime != current.end.dateTime || previous.end.customStatus != current.end.customStatus,
+                  builder: (context, state) {
+                    if ((state.start.customStatus ==
+                        CustomStatus.invalid && state.end.customStatus == CustomStatus.invalid) &&
+                        state.errorMessage!.isNotEmpty) {
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 10.0),
+                        child: Text(
+                          state.errorMessage ?? '',
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      );
+                    }
+                    return Container();
+                  },
                 ),
                 Container(
                     margin: const EdgeInsets.only(bottom: 10),

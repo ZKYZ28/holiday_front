@@ -27,8 +27,8 @@ class LocationState extends Equatable {
       country: CountryInput.dirty(value: location.country),
       locality: LocalityInput.dirty(value: location.locality),
       postalCode: PostalCodeInput.dirty(value: location.postalCode),
-      street: StreetInput.dirty(value: location.street),
-      numberBox: NumberBoxInput.dirty(value: location.number),
+      street: StreetInput.dirty(value: location.street ?? ''),
+      numberBox: NumberBoxInput.dirty(value: location.number ?? ''),
       errorMessage: ""
     );
   }
