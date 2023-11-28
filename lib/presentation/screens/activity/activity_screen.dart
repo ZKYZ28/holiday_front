@@ -53,13 +53,6 @@ class _ActivityState extends State<ActivityScreen> {
   }
 
 
-  void deleteActivity(Activity activity) {
-    _activityBloc.add(DeleteActivity(activityId: activity.id!));
-    context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
-    context.router.pop(context);
-    context.router.push(MyHolidayRoute(holidayId: widget.holidayId));
-  }
-
   Widget _buildActivity(){
     return WillPopScope(
         onWillPop: () async {
@@ -273,7 +266,9 @@ class _ActivityState extends State<ActivityScreen> {
                 TextButton(
                   onPressed: () async {
                     Navigator.of(context).pop();
-                    deleteActivity(activity);
+                    _activityBloc.add(DeleteActivity(activityId: activity.id!));
+                    context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
+                    context.router.pop();
                   },
                   child: const Text("Supprimer"),
                 ),

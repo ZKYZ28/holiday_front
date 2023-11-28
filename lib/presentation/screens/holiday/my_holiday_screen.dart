@@ -53,15 +53,20 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   BlocBuilder<HolidayBloc, HolidayState>(
+                    buildWhen: (previousState, currentState) {
+                      return currentState.status == HolidayStateStatus.loaded;
+                    },
                     builder: (context, state) {
                       if (state.status == HolidayStateStatus.loaded ||
                           state.status ==
                               HolidayStateStatus.waitingActivityAction) {
+                        _holiday = state.holidayItem!;
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              state.holidayItem?.name ?? "",
+                              _holiday != null ? _holiday.name : "",
                               style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
@@ -70,8 +75,8 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                               ),
                             ),
                             Text(
-                              state.holidayItem != null
-                                  ? DateFormat('dd/MM/yyyy').format(TZDateTime.parse(globalLocation!, state.holidayItem!.startDate))
+                              _holiday != null
+                                  ? DateFormat('dd/MM/yyyy').format(TZDateTime.parse(globalLocation!, _holiday.startDate))
                                   : "",
                               style: const TextStyle(
                                 fontSize: 15,
