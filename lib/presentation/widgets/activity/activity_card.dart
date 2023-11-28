@@ -36,6 +36,7 @@ class ActivityCard extends StatelessWidget {
               color: Color(0xFF1E3A8A),
               fontWeight: FontWeight.bold,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
 
       subtitle: Column(

@@ -197,6 +197,7 @@ class _ActivityState extends State<ActivityScreen> {
                 // Marge pour le Text
                 child: Text(
                   activity.description,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               Container(
