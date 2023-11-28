@@ -16,7 +16,7 @@ class Holiday {
   final Location location;
   final String creatorId;
   final List<Participant> participants;
-  final bool isPublish;
+  bool isPublish;
   final List<Activity> activities;
   final String holidayPath;
 

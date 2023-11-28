@@ -63,7 +63,10 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
 
         await holidayRepository.publishHoliday(holiday);
 
-        emit(state.copyWith(status: HolidayStateStatus.published));
+        final holidayPublish = state.holidayItem;
+        holidayPublish?.isPublish = true;
+
+        emit(state.copyWith(status: HolidayStateStatus.published, holidayItem: holidayPublish));
       } on ApiException catch (e) {
         emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : e.toString()));
       }

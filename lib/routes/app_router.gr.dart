@@ -53,6 +53,7 @@ abstract class $AppRouter extends _i16.RootStackRouter {
           orElse: () => ActivityRouteArgs(
                 activityId: pathParams.getString('activityId'),
                 holidayId: pathParams.getString('holidayId'),
+                isPublish: pathParams.getBool('isPublish'),
               ));
       return _i16.AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -60,6 +61,7 @@ abstract class $AppRouter extends _i16.RootStackRouter {
           key: args.key,
           activityId: args.activityId,
           holidayId: args.holidayId,
+          isPublish: args.isPublish,
         ),
       );
     },
@@ -225,6 +227,7 @@ class ActivityRoute extends _i16.PageRouteInfo<ActivityRouteArgs> {
     _i17.Key? key,
     required String activityId,
     required String holidayId,
+    required bool isPublish,
     List<_i16.PageRouteInfo>? children,
   }) : super(
           ActivityRoute.name,
@@ -232,10 +235,12 @@ class ActivityRoute extends _i16.PageRouteInfo<ActivityRouteArgs> {
             key: key,
             activityId: activityId,
             holidayId: holidayId,
+            isPublish: isPublish,
           ),
           rawPathParams: {
             'activityId': activityId,
             'holidayId': holidayId,
+            'isPublish': isPublish,
           },
           initialChildren: children,
         );
@@ -251,6 +256,7 @@ class ActivityRouteArgs {
     this.key,
     required this.activityId,
     required this.holidayId,
+    required this.isPublish,
   });
 
   final _i17.Key? key;
@@ -259,9 +265,11 @@ class ActivityRouteArgs {
 
   final String holidayId;
 
+  final bool isPublish;
+
   @override
   String toString() {
-    return 'ActivityRouteArgs{key: $key, activityId: $activityId, holidayId: $holidayId}';
+    return 'ActivityRouteArgs{key: $key, activityId: $activityId, holidayId: $holidayId, isPublish: $isPublish}';
   }
 }
 

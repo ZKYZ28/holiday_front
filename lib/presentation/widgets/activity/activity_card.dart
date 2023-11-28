@@ -13,11 +13,13 @@ import '../../../logic/blocs/holiday_bloc/holiday_bloc.dart';
 class ActivityCard extends StatelessWidget {
   final Activity activity;
   final String holidayId;
+  final bool isPublish;
 
   const ActivityCard({
     super.key,
     required this.activity,
     required this.holidayId,
+    required this.isPublish,
   });
 
 
@@ -63,7 +65,7 @@ class ActivityCard extends StatelessWidget {
         ),
         child: IconButton(
           onPressed: () {
-            context.router.push(ActivityRoute(activityId: activity.id!, holidayId: holidayId));
+            context.router.push(ActivityRoute(activityId: activity.id!, holidayId: holidayId, isPublish: isPublish));
           },
           icon: const Icon(
             Icons.remove_red_eye,

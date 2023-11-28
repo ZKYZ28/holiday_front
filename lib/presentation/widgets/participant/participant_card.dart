@@ -15,6 +15,7 @@ class ParticipantCard extends StatefulWidget {
   final List<Participate>? participates;
   final String elementId;
   final void Function(Participate)? onDeleteParticipate;
+  final bool isPublish;
 
   const ParticipantCard({
     super.key,
@@ -27,7 +28,8 @@ class ParticipantCard extends StatefulWidget {
     this.participants,
     this.participates,
     required this.elementId,
-    this.onDeleteParticipate
+    this.onDeleteParticipate,
+    required this.isPublish
   });
 
   @override
@@ -45,8 +47,6 @@ class _ParticipantCardState extends State<ParticipantCard> {
         elevation: 5,
         child: Column(
           children: [
-            // Header
-            // TODO : propre
             if (widget.title != '' && widget.icon != null)
             Container(
               margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -60,7 +60,7 @@ class _ParticipantCardState extends State<ParticipantCard> {
                         fontSize: 20,
                         color: Color(0xFF1E3A8A)),
                   ),
-                  if (widget.icon != null && widget.participants != null)
+                  if (widget.icon != null && widget.participants != null &&  widget.isPublish == false)
                     Container(
                       alignment: Alignment.center,
                       width: 35,

@@ -11,6 +11,7 @@ class ActivityContainer extends StatelessWidget {
   final double activityHeight;
   final String holidayId;
   final Future<void> Function() afterEncodeOrEdit;
+  final bool isPublish;
 
   const ActivityContainer(
       {super.key,
@@ -18,6 +19,7 @@ class ActivityContainer extends StatelessWidget {
         required this.activityHeight,
         required this.holidayId,
         required this.afterEncodeOrEdit,
+        required this.isPublish,
       });
 
   @override
@@ -47,6 +49,8 @@ class ActivityContainer extends StatelessWidget {
                       const SizedBox(
                         width: 10,
                       ),
+
+                      if(isPublish == false)
                       Container(
                         width: 35,
                         height: 35,
@@ -82,7 +86,7 @@ class ActivityContainer extends StatelessWidget {
                   itemCount: activities.length,
                   itemBuilder: (context, index) {
                     final activity = activities[index];
-                    return ActivityCard(activity: activity, holidayId: holidayId);
+                    return ActivityCard(activity: activity, holidayId: holidayId, isPublish: isPublish);
                   }),
             )
 
