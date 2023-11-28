@@ -5,7 +5,7 @@ extension ActivityDescriptionInputErrorExtension on ActivityDescriptionInputErro
   String get message {
     switch (this) {
       case ActivityDescriptionInputError.invalid:
-        return "Le description peut contenir de 0 et 500 caractères et peut inclure des lettres, des chiffres, des apostrophes, des tirets et des espaces et certains caractères spéciaux.";
+        return "La description peut contenir de 0 et 500 caractères et peut inclure des lettres, des chiffres, des apostrophes, des tirets et des espaces et certains caractères spéciaux.";
       default:
         return "Erreur inconnue. Veuillez contacter un administrateur";
     }
@@ -17,7 +17,7 @@ class ActivityDescriptionInput extends FormzInput<String, ActivityDescriptionInp
   const ActivityDescriptionInput.dirty({String value = ''}) : super.dirty(value);
 
   static final activityDescriptionRegExp = RegExp(
-      r'''^[A-Za-z\dÀ-ÿ\s,.!?;:\"\(\)\-\+\&\'@\[\]\#\{\}\~\$\%\ù\çÇ\=\*]{0,500}$'''
+      r'''^[A-Za-z\dÀ-ÿ\s,.!?;:\"\(\)<>\-\+\&\'@\[\]\#\{\}\~\$\%\ù\çÇ\=\*]{0,500}$'''
   );
 
 

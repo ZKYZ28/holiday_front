@@ -5,6 +5,7 @@ import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:holiday_mobile/logic/blocs/chat_bloc/chat_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/participant_bloc/participant_bloc.dart';
+import 'package:holiday_mobile/main.dart';
 import 'package:holiday_mobile/presentation/widgets/activity/activity_container.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
 import 'package:holiday_mobile/presentation/widgets/common/progress_loading_widget.dart';
@@ -12,6 +13,7 @@ import 'package:holiday_mobile/presentation/widgets/holiday/holiday_published_bu
 import 'package:holiday_mobile/presentation/widgets/participant/participant_card.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
 import 'package:intl/intl.dart';
+import 'package:timezone/timezone.dart';
 
 @RoutePage()
 class MyHolidayPage extends StatefulWidget {
@@ -72,9 +74,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
 
                             Text(
                               state.holidayItem != null
-                                  ? DateFormat('dd/MM/yyyy').format(
-                                      DateTime.parse(
-                                          state.holidayItem!.startDate))
+                                  ? DateFormat('dd/MM/yyyy').format(TZDateTime.parse(globalLocation!, state.holidayItem!.startDate))
                                   : "",
                               style: const TextStyle(
                                 fontSize: 15,
@@ -172,7 +172,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentMaterialBanner()
                   ..showMaterialBanner(
-                      CustomMessage(message: state.errorMessage!)
+                      CustomMessage(message: state.errorMessage)
                           .build(context));
               } else if (state.status == ParticipantStateStatus.left) {
                 context.router.pop(context);
@@ -193,7 +193,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                   _holiday = state.holidayItem!;
                 }
               }
-              return _buildHoliday(context, _holiday!);
+              return _buildHoliday(context, _holiday);
             } else {
               return Container();
             }

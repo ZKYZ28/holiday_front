@@ -235,7 +235,7 @@ class ActivityAddEditBloc extends Bloc<ActivityAddEditEvent, ActivityAddEditStat
                   locationId: event.locationId,
                     country: _locationState.country.value,
                     locality: _locationState.locality.value,
-                    street: _locationState.locality.value,
+                    street: _locationState.street.value,
                     postalCode: _locationState.postalCode.value,
                     numberBox: _locationState.numberBox.value),
                 deleteImage: state.fileWithStatus.deleteImage,

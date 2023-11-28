@@ -89,7 +89,7 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
       }
     });
 
-    on<WaitingActivityAction>((WaitingActivityAction event, Emitter<HolidayState> emit) async {
+    on<WaitingActivityAction>((WaitingActivityAction event, Emitter<HolidayState> emit)  {
       emit(state.copyWith(status: HolidayStateStatus.waitingActivityAction));
     });
 

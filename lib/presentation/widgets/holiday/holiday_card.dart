@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
+import 'package:holiday_mobile/main.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
 import 'package:intl/intl.dart';
+import 'package:timezone/timezone.dart';
 
 import '../common/icon_with_text.dart';
 
@@ -92,7 +94,7 @@ class HolidayCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          iconWithText(Icons.calendar_month, dateFormatDay.format(DateTime.parse(holiday.startDate))),
+                          iconWithText(Icons.calendar_month, '${dateFormatDay.format(TZDateTime.parse(globalLocation!, holiday.startDate))} - ${dateFormatDay.format(TZDateTime.parse(globalLocation!, holiday.endDate))}'),
                           iconWithText(Icons.location_on, holiday.location.country),
                         ],
                       ),

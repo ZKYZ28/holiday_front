@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/activity/activity.dart';
 import 'package:holiday_mobile/logic/blocs/activity_bloc/activity_bloc.dart';
+import 'package:holiday_mobile/main.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
 import 'package:intl/intl.dart';
+import 'package:timezone/timezone.dart';
 
 import '../../../logic/blocs/holiday_bloc/holiday_bloc.dart';
 
@@ -41,7 +43,8 @@ class ActivityCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
         Text(
-        DateFormat('dd/MM/yyyy à HH:mm').format(DateTime.parse(activity.startDate)),
+          // TODO : champ activity date nullable, alors faire cette vérif :
+          activity.startDate != null ? DateFormat('dd/MM/yyyy HH:mm').format(TZDateTime.parse(globalLocation!, activity.startDate)) : "Non défini",
         style: const TextStyle(
           fontSize: 14,
           color: Colors.black,
@@ -59,15 +62,6 @@ class ActivityCard extends StatelessWidget {
         ),
         child: IconButton(
           onPressed: () {
-            context.read<HolidayBloc>().add(WaitingActivityAction());
-            print(activity.id);
-            print(activity.description);
-            print(activity.endDate);
-            print(activity.startDate);
-            print(activity.location.id);
-            print(activity.location.postalCode);
-            print(activity.location.street);
-            print(activity.location.number);
             context.router.push(ActivityRoute(activityId: activity.id!, holidayId: holidayId));
           },
           icon: const Icon(

@@ -63,8 +63,7 @@ class ActivityApiProvider{
             await MultipartFile.fromFile(activityData.file!.path),
         ));
     }
-    // TODO : enelver le create mais peut-être déjà fait dans le refactor ?
-    Response response = await _dio.post('v1/activity/create', data : formData);
+    Response response = await _dio.post('v1/activity/', data : formData);
     print(response);
     } on DioException catch (e){
     throw ApiException(e.response?.data, e);

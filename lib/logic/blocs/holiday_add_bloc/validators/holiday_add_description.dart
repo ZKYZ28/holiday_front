@@ -18,7 +18,7 @@ class DescriptionHolidayInput extends FormzInput<String, DescriptionHolidayInput
   const DescriptionHolidayInput.dirty({String value = ''}) : super.dirty(value);
 
   static final holidayNameRegExp = RegExp(
-      r'''^[A-Za-z\dÀ-ÿ\s,.!?;:\"\(\)\-\+\&\'@\[\]\#\{\}\~\$\%\ù\çÇ\=\*]{0,500}$'''
+      r'''^[A-Za-z\dÀ-ÿ\s,.!?;:\"\(\)<>\-\+\&\'@\[\]\#\{\}\~\$\%\ù\çÇ\=\*]{0,500}$'''
   );
 
 

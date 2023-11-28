@@ -5,11 +5,13 @@ import 'package:holiday_mobile/data/models/activity/activity.dart';
 import 'package:holiday_mobile/logic/blocs/activity_bloc/activity_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/maps_bloc/maps_bloc.dart';
+import 'package:holiday_mobile/main.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
 import 'package:holiday_mobile/presentation/widgets/common/icon_with_text.dart';
 import 'package:holiday_mobile/presentation/widgets/common/progress_loading_widget.dart';
 import 'package:holiday_mobile/routes/app_router.gr.dart';
 import 'package:intl/intl.dart';
+import 'package:timezone/timezone.dart';
 
 @RoutePage()
 class ActivityScreen extends StatefulWidget {
@@ -64,6 +66,7 @@ class _ActivityState extends State<ActivityScreen> {
       if (_isActivityEdited) {
         context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
       }
+      context.read<HolidayBloc>().add(WaitingActivityAction());
       return true;
     },
     child: Container(
@@ -204,8 +207,8 @@ class _ActivityState extends State<ActivityScreen> {
                   children: [
                     iconWithText(
                         Icons.calendar_month,
-                        DateFormat('dd/MM/yyyy')
-                            .format(DateTime.parse(activity.startDate))),
+                        // TODO : champ activity date nullable, alors faire cette vérif :
+                        activity.startDate != null ? DateFormat('dd/MM/yyyy HH:mm').format(TZDateTime.parse(globalLocation!, activity.startDate)) : "Non défini"),
                     iconWithText(Icons.euro, '${activity.price}'),
                     iconWithText(Icons.location_on, activity.location.country),
                   ],

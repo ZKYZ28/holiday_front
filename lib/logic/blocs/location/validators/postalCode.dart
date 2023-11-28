@@ -1,13 +1,15 @@
 import 'package:formz/formz.dart';
 import 'package:holiday_mobile/logic/blocs/login_bloc/validators/email.dart';
 
-enum PostalCodeInputError  { invalid }
+enum PostalCodeInputError  { empty, invalid }
 
 extension PostalCodeInputErrorExtension on PostalCodeInputError {
   String get message {
     switch (this) {
+      case PostalCodeInputError.empty:
+        return "Merci de spécifier le code postal !";
       case PostalCodeInputError.invalid:
-        return 'Champ faculatif. Si vous choisissez de le remplir, veuillez saisir un code postal valide entre 1 à 15 caractères. Exemples : 4000 (Belgique), 75000 (France)';
+        return 'Veuillez saisir un code postal valide entre 1 à 15 caractères. Exemples : 4000 (Belgique), 75000 (France)';
       default:
         return 'Erreur inconnue. Veuillez contacter un administrateur';
     }
@@ -24,6 +26,6 @@ class PostalCodeInput extends FormzInput <String, PostalCodeInputError> {
 
   @override
   PostalCodeInputError? validator(String value) {
-    return value.isEmpty ?  null : _postalCodeRegExp.hasMatch(value) ? null : PostalCodeInputError.invalid;
+    return value.isEmpty ?  PostalCodeInputError.empty : _postalCodeRegExp.hasMatch(value) ? null : PostalCodeInputError.invalid;
   }
 }

@@ -118,9 +118,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                       initialValue: widget.holiday != null ? widget.holiday!.name : '',
                       labelText: 'Nom *',
                       hintText: 'Monaco Juillet 2023',
-                      onChanged: (name) => context
-                          .read<HolidayAddBloc>()
-                          .add(HolidayAddNameChanged(name: name)),
+                      onChanged: (name) => context.read<HolidayAddBloc>().add(HolidayAddNameChanged(name: name)),
                       errorText: (state) =>
                           !state.name.isPure && state.name.isNotValid
                               ? state.errorMessage

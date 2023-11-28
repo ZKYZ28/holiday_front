@@ -24,7 +24,7 @@ class HolidayState extends Equatable {
     return HolidayState(
         status : status ?? this.status,
         holidaysList: holidaysList ?? this.holidaysList,
-        holidayItem: holidayItem ?? holidayItem,
+        holidayItem: holidayItem ?? this.holidayItem,
         errorMessage : errorMessage ?? this.errorMessage
     );
   }
