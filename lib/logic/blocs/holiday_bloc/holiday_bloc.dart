@@ -2,8 +2,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
+import 'package:holiday_mobile/data/providers/data/HolidayData.dart';
+import 'package:holiday_mobile/data/providers/data/LocationData.dart';
 import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
 import 'package:holiday_mobile/data/repositories/holiday_api_repository.dart';
+import 'package:holiday_mobile/main.dart';
+import 'package:timezone/timezone.dart';
 
 part 'holiday_event.dart';
 part 'holiday_state.dart';
@@ -19,13 +23,13 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
       try {
         emit(state.copyWith(status: HolidayStateStatus.loading));
 
-        // TODO : tester si ça survient à nouveau (impossible de reproduire le bug)
-        final participantId = _repository.userConnected?.id ?? 'UNKNOW';
-        if (participantId == 'UNKNOW') {
-          emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : "Utilisateur non authentifié. Merci de vous reconnecter ! "));
-          return;
-        }
-        final holidaysByParticipant = await holidayRepository.fetchHolidayByParticipant(participantId);
+        // // TODO : tester si ça survient à nouveau (impossible de reproduire le bug)
+        // final participantId = _repository.userConnected?.id ?? 'UNKNOW';
+        // if (participantId == 'UNKNOW') {
+        //   emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : "Utilisateur non authentifié. Merci de vous reconnecter ! "));
+        //   return;
+        // }
+        final holidaysByParticipant = await holidayRepository.fetchHolidayByParticipant(false);
         emit(state.copyWith(status: HolidayStateStatus.loaded, holidaysList: holidaysByParticipant));
       } on ApiException catch (e) {
         emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : e.toString()));
@@ -36,7 +40,7 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
       try {
         emit(state.copyWith(status: HolidayStateStatus.loading));
 
-        final holidaysPublished = await holidayRepository.fetchHolidayPublished();
+        final holidaysPublished = await holidayRepository.fetchHolidayPublished(true);
 
         emit(state.copyWith(status: HolidayStateStatus.loaded, holidaysList: holidaysPublished));
       } on ApiException catch (e) {
@@ -60,8 +64,32 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
     on<PublishHoliday>((PublishHoliday event, Emitter<HolidayState> emit) async {
       try {
         final holiday = event.holiday;
+        final location = event.holiday.location;
+        print(holiday.endDate);
+        print(holiday.startDate);
 
-        await holidayRepository.publishHoliday(holiday);
+        await holidayRepository.updateHoliday(
+            HolidayData(
+              name:  holiday.name,
+              description:  holiday.description ?? '',
+              startDate: TZDateTime.parse(globalLocation!, holiday.startDate),
+              endDate: TZDateTime.parse(globalLocation!, holiday.endDate),
+              locationData: LocationData(
+                locationId: location.id,
+                country:  location.country,
+                locality: location.locality,
+                street:  location.street ?? '',
+                postalCode: location.postalCode,
+                numberBox:  location.number ?? '',
+              ),
+              file: null,
+              isPublish: true,
+              creatorId: repository.userConnected!.id,
+              deleteImage: false,
+              initialPath: holiday.holidayPath,
+              holidayId: holiday.id,
+            )
+        );
 
         emit(state.copyWith(status: HolidayStateStatus.published));
       } on ApiException catch (e) {

@@ -18,10 +18,9 @@ class ParticipantBloc extends Bloc<ParticipantEvent, ParticipantState> {
 
     on<LeaveHoliday>((LeaveHoliday event, Emitter<ParticipantState> emit) async {
       try {
-        final participantId = _repository.userConnected!.id;
         final holiday = event.holiday;
 
-        await participantApiRepository.leaveHoliday(participantId, holiday);
+        await participantApiRepository.leaveHoliday(holiday.id!);
 
         emit(state.copyWith(status: ParticipantStateStatus.left));
       } on ApiException catch (e) {
@@ -34,7 +33,7 @@ class ParticipantBloc extends Bloc<ParticipantEvent, ParticipantState> {
         emit(state.copyWith(status: ParticipantStateStatus.loading));
 
         final String holidayId = event.holidayId;
-        final participants = await participantApiRepository.getAllParticipantNotYetInHoliday(holidayId);
+        final participants = await participantApiRepository.getAllParticipantNotYetInHoliday(holidayId, false);
 
         emit(state.copyWith(status: ParticipantStateStatus.loaded, participantsList: participants));
       } on ApiException catch (e) {

@@ -9,8 +9,8 @@ class InvitationApiRepository{
     return _invitationProvider.createInvitations(participants, holidayIdy);
   }
 
-  Future<List<Invitation>> getAllInvitationsByParticipant(String participantId) {
-    return _invitationProvider.fetchAllInvitationsByParticipant(participantId);
+  Future<List<Invitation>> getAllInvitationsByParticipant() {
+    return _invitationProvider.fetchAllInvitationsByParticipant();
   }
 
   Future<void> acceptInvitation(Invitation invitation) {

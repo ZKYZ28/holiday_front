@@ -8,11 +8,10 @@ class ParticipantApiProvider{
   final Dio _dio = DioService().dio;
 
 
-  Future<void> leaveHoliday(String participantId, Holiday holiday) async {
+  Future<void> leaveHoliday(String holidayId) async {
     try {
-      final holidayJson = holiday.toJson();
 
-      await _dio.post('v1/Participant/leave/$participantId', data: holidayJson);
+      await _dio.delete('v1/holiday/$holidayId/leave');
 
     } on DioException catch (e){
       throw ApiException(e.response?.data, e);
@@ -22,9 +21,12 @@ class ParticipantApiProvider{
     }
   }
 
-  Future<List<Participant>> getAllParticipantNotYetInHoliday(String holidayId) async {
+  Future<List<Participant>> getAllParticipantNotYetInHoliday(String holidayId, bool isParticipated) async {
     try {
-      final response = await _dio.get('v1/Participant/all/$holidayId');
+      final response = await _dio.get('v1/invitation/participant/holiday/$holidayId',
+      queryParameters: {
+        'isParticipated' : isParticipated
+      });
 
       List<Participant> participants = (response.data as List<dynamic>).map((index) => Participant.fromJson(index as Map<String, dynamic>)).toList();
       return participants;

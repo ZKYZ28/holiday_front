@@ -7,12 +7,12 @@ import 'package:holiday_mobile/data/providers/holiday_api_provider.dart';
 class HolidayApiRepository{
   final _holidayProvider = HolidayApiProvider();
 
-  Future<List<Holiday>> fetchHolidayPublished() {
-    return _holidayProvider.fetchHolidayPublished();
+  Future<List<Holiday>> fetchHolidayPublished(bool isPublished) {
+    return _holidayProvider.fetchHolidayPublished(isPublished);
   }
 
-  Future<List<Holiday>> fetchHolidayByParticipant(String participantId) {
-    return _holidayProvider.fetchHolidayByParticipant(participantId);
+  Future<List<Holiday>> fetchHolidayByParticipant(bool isPublished) {
+    return _holidayProvider.fetchHolidayByParticipant(isPublished);
   }
 
   Future<Holiday> fetchHoliday(String holidayId) {

@@ -5,12 +5,12 @@ import 'package:holiday_mobile/data/providers/participant_api_provider.dart';
 class ParticipantApiRepository{
   final _participantProvider= ParticipantApiProvider();
 
-  Future<void> leaveHoliday(String participantId, Holiday holiday) {
-    return _participantProvider.leaveHoliday(participantId, holiday);
+  Future<void> leaveHoliday(String holidayId) {
+    return _participantProvider.leaveHoliday(holidayId);
   }
 
-  Future<List<Participant>> getAllParticipantNotYetInHoliday(String holidayId) {
-    return _participantProvider.getAllParticipantNotYetInHoliday(holidayId);
+  Future<List<Participant>> getAllParticipantNotYetInHoliday(String holidayId, bool isParticipated) {
+    return _participantProvider.getAllParticipantNotYetInHoliday(holidayId, isParticipated);
   }
 
   Future<List<Participant>> getAllParticipantNotYetInActivity(String activityId) {

@@ -11,9 +11,12 @@ class HolidayApiProvider{
     final Dio _dio = DioService().dio;
 
 
-    Future<List<Holiday>> fetchHolidayByParticipant(String participantId) async {
+    Future<List<Holiday>> fetchHolidayByParticipant(bool isPublished) async {
       try {
-        Response response = await _dio.get('v1/Holiday/participant/$participantId');
+        Response response = await _dio.get('v1/Holiday/',
+            queryParameters: {
+              'isPublished': isPublished
+        });
 
         // conversion list
         List<Holiday> holidays = (response.data as List<dynamic>).map((index) => Holiday.fromJson(index as Map<String, dynamic>)).toList();
@@ -28,9 +31,12 @@ class HolidayApiProvider{
       }
     }
 
-    Future<List<Holiday>> fetchHolidayPublished() async {
+    Future<List<Holiday>> fetchHolidayPublished(bool isPublished) async {
       try {
-        Response response = await _dio.get('v1/Holiday/published');
+        Response response = await _dio.get('v1/Holiday/',
+        queryParameters: {
+          'isPublished' : isPublished
+        });
 
         // conversion list
         List<Holiday> holidays = (response.data as List<dynamic>).map((index) => Holiday.fromJson(index as Map<String, dynamic>)).toList();
@@ -91,7 +97,7 @@ class HolidayApiProvider{
         String filePath = '${(await getTemporaryDirectory()).path}/holiday.ics';
 
         await _dio.download(
-          'v1/Holiday/ics/$holidayId',
+          'v1/Holiday/$holidayId/ics',
           filePath,
         );
 
@@ -154,7 +160,8 @@ class HolidayApiProvider{
           'location.country': holidayData.locationData.country,
           'creatorId': holidayData.creatorId,
           'deleteImage' : holidayData.deleteImage,
-          'initialPath' : holidayData.initialPath!
+          'initialPath' : holidayData.initialPath!,
+          'isPublish' : holidayData.isPublish
         };
         final formData = FormData.fromMap(formDataMap);
 
