@@ -17,11 +17,13 @@ import 'package:timezone/timezone.dart';
 class ActivityScreen extends StatefulWidget {
   final String activityId;
   final String holidayId;
+  final bool isPublish;
 
   const ActivityScreen({
     super.key,
     @PathParam() required this.activityId,
     @PathParam() required this.holidayId,
+    @PathParam() required this.isPublish,
   });
 
   @override
@@ -133,15 +135,16 @@ class _ActivityState extends State<ActivityScreen> {
               Container(
                 margin: const EdgeInsets.fromLTRB(15, 20, 0, 10),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // Pour espacer les widgets à l'extrémité
                   children: [
                     SizedBox(
                       width: 190.0,
                       child: FittedBox(
+                        alignment: Alignment.centerLeft,
                         fit: BoxFit.scaleDown,
-                        //Ca permet d'adapater la taille du texte pour qu'il rentre dans la taille de la SizeBox
                         child: Text(
                           activity.name,
+                          textAlign: TextAlign.left,
                           style: const TextStyle(
                             fontSize: 22,
                             color: Color(0xFF1E3A8A),
@@ -150,38 +153,38 @@ class _ActivityState extends State<ActivityScreen> {
                         ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            context.router
-                                .push(EncodeActivityRoute(
-                                    holidayId: widget.holidayId,
-                                    activity: _activity))
-                                .then((value) {
-                              if (value == true) {
-                                _isActivityEdited = true;
-                              }
-                              _activityBloc.add(
-                                  GetActivity(activityId: widget.activityId));
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.edit,
-                            color: Colors.blue,
+                    if (!widget.isPublish)
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              context.router
+                                  .push(EncodeActivityRoute(
+                                  holidayId: widget.holidayId, activity: _activity))
+                                  .then((value) {
+                                if (value == true) {
+                                  _isActivityEdited = true;
+                                }
+                                _activityBloc
+                                    .add(GetActivity(activityId: widget.activityId));
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.edit,
+                              color: Colors.blue,
+                            ),
                           ),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.delete,
-                            color: Colors.red,
+                          IconButton(
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              showDeleteConfirmationDialog(context, activity);
+                            },
                           ),
-                          onPressed: () {
-                            showDeleteConfirmationDialog(context, activity);
-                          },
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                   ],
                 ),
               ),

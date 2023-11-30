@@ -190,7 +190,7 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
             } else if (state.status == HolidayStateStatus.loaded ||
                 state.status == HolidayStateStatus.published ||
                 state.status == HolidayStateStatus.waitingActivityAction) {
-              if (state.status == HolidayStateStatus.loaded) {
+              if (state.status == HolidayStateStatus.loaded || state.status == HolidayStateStatus.published) {
                 if (state.holidayItem != null) {
                   _holiday = state.holidayItem!;
                 }
@@ -225,76 +225,69 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
-                    child: ElevatedButton.icon(
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all(
-                            const EdgeInsets.symmetric(horizontal: 10)),
-                        backgroundColor:
-                            MaterialStateProperty.all(const Color(0xFF1E3A8A)),
-                      ),
-                      icon: const Icon(Icons.cloud),
-                      label: const Text('Météo'),
-                      onPressed: () {
-                        context.router.push(WeatherRoute(
-                            holidayId: holiday.id!, holidayName: holiday.name));
-                      },
+                Padding(
+                  padding: const EdgeInsets.only(right: 4.0),
+                  child: ElevatedButton.icon(
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(horizontal: 10)),
+                      backgroundColor:
+                      MaterialStateProperty.all(const Color(0xFF1E3A8A)),
                     ),
+                    icon: const Icon(Icons.cloud),
+                    label: const Text('Météo'),
+                    onPressed: () {
+                      context.router.push(WeatherRoute(
+                          holidayId: holiday.id!, holidayName: holiday.name));
+                    },
                   ),
                 ),
+
                 Expanded(
                   child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: holiday.isPublish
+                        ? const PublishedButton()
+                        : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.symmetric(horizontal: 10)),
+                              backgroundColor:
+                              MaterialStateProperty.all(const Color(0xFF1E3A8A)),
+                            ),
+                            icon: const Icon(Icons.publish),
+                            label: const Text('Publier'),
+                            onPressed: () {
+                              context
+                                  .read<HolidayBloc>()
+                                  .add(PublishHoliday(holiday: holiday));
+                            },
+                          ),
+                        ),
 
-                      //SI VACANCES PUBLIEE
-                      child: holiday.isPublish
-                          ? const PublishedButton()
+                        const SizedBox(width: 4.0),
 
-                          //SI VACANCES NON PUBLIEE
-                          : BlocBuilder<HolidayBloc, HolidayState>(
-                              builder: (context, state) {
-                                if (state.status ==
-                                    HolidayStateStatus.published) {
-                                  return const PublishedButton();
-                                } else {
-                                  return ElevatedButton.icon(
-                                    style: ButtonStyle(
-                                      padding: MaterialStateProperty.all(
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 10)),
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              const Color(0xFF1E3A8A)),
-                                    ),
-                                    icon: const Icon(Icons.publish),
-                                    label: const Text('Publier'),
-                                    onPressed: () {
-                                      context.read<HolidayBloc>().add(
-                                          PublishHoliday(holiday: holiday));
-                                    },
-                                  );
-                                }
-                              },
-                            )),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: ElevatedButton.icon(
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all(
-                            const EdgeInsets.symmetric(horizontal: 10)),
-                        backgroundColor: MaterialStateProperty.all(Colors.red),
-                      ),
-                      icon: const Icon(Icons.exit_to_app),
-                      label: const Text('Quitter'),
-                      onPressed: () {
-                        context
-                            .read<ParticipantBloc>()
-                            .add(LeaveHoliday(holiday: holiday));
-                      },
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.symmetric(horizontal: 10)),
+                              backgroundColor: MaterialStateProperty.all(Colors.red),
+                            ),
+                            icon: const Icon(Icons.exit_to_app),
+                            label: const Text('Quitter'),
+                            onPressed: () {
+                              context
+                                  .read<ParticipantBloc>()
+                                  .add(LeaveHoliday(holiday: holiday));
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -311,13 +304,15 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
               icon: Icons.add,
               participants: holiday.participants,
               elementId: widget.holidayId,
+              isPublish: _holiday.isPublish
             ),
 
             ActivityContainer(
                 activities: holiday.activities,
                 activityHeight: cardActivityHeight,
                 holidayId: widget.holidayId,
-                afterEncodeOrEdit : _afterEncodeOrEdit
+                afterEncodeOrEdit : _afterEncodeOrEdit,
+                isPublish: _holiday.isPublish
             )],
         ),
       ),

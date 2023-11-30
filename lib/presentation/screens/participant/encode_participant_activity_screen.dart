@@ -177,6 +177,7 @@ class _EncodeParticipantActivityScreenState extends State<EncodeParticipantActiv
                       participates: _participates,
                       elementId: widget.activityId,
                       onDeleteParticipate: _deleteParticipant,
+                      isPublish: false,
                     ),
                   );
                 } else {
