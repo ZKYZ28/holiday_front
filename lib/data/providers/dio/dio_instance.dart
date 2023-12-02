@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:holiday_mobile/configuration.dart';
 import 'package:holiday_mobile/data/providers/dio/TokenInterceptor.dart';
 
 class DioService {
-  // On appelle le constructeur privé
   static DioService? _instance;
   late final Dio _dio;
 
@@ -17,14 +17,10 @@ class DioService {
   // Constructeur privé
   DioService._internal({String? baseUrl}) {
     _dio = Dio(BaseOptions(
-      baseUrl: baseUrl ?? 'https://10.0.2.2:7048/',
-      connectTimeout: const Duration(seconds: 5),
-      receiveTimeout: const Duration(seconds: 5)
-      // TODO : ajouter les interceptor ici pour le JWT
+      baseUrl: baseUrl ?? Configuration().baseUrl,
+      connectTimeout: const Duration(seconds: 7),
+      receiveTimeout: const Duration(seconds: 7)
     ));
-    // if(notAuthorizedCallback != null) {
-    //   dio.interceptors.add(TokenInterceptor(notAuthorizedCallback: notAuthorizedCallback));
-    // }
   }
 
   void setAuthorizationBearer(String? jwt) {

@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:holiday_mobile/configuration.dart';
+import 'package:holiday_mobile/main.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerForm extends StatefulWidget {
@@ -51,7 +53,7 @@ class _ImagePickerFormState extends State<ImagePickerForm> {
           else if (_currentImagePath != null)
             ImageSection(
                 image: Image.network(
-                  'https://10.0.2.2:7048/${_currentImagePath}',
+                  '${Configuration().baseUrl}$_currentImagePath',
                 ),
                 onDelete: handleDeleteImage
             )

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:holiday_mobile/configuration.dart';
 import 'package:holiday_mobile/data/models/activity/activity.dart';
 import 'package:holiday_mobile/logic/blocs/activity_bloc/activity_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
@@ -130,7 +131,7 @@ class _ActivityState extends State<ActivityScreen> {
               AspectRatio(
                 aspectRatio: 16 / 9,
                 child: Image.network(
-                    'https://10.0.2.2:7048/${activity.activityPath}'),
+                    '${Configuration().baseUrl}${activity.activityPath}'),
               ),
               Container(
                 margin: const EdgeInsets.fromLTRB(15, 20, 0, 10),

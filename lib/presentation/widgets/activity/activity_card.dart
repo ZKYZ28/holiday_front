@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:holiday_mobile/configuration.dart';
 import 'package:holiday_mobile/data/models/activity/activity.dart';
 import 'package:holiday_mobile/logic/blocs/activity_bloc/activity_bloc.dart';
 import 'package:holiday_mobile/main.dart';
@@ -29,7 +30,7 @@ class ActivityCard extends StatelessWidget {
     return Card(
       color: Colors.grey[100],
       child :ListTile(
-      leading: Image.network('https://10.0.2.2:7048/${activity.activityPath}'),
+      leading: Image.network('${Configuration().baseUrl}${activity.activityPath}'),
       title:
           Text(
             activity.name,

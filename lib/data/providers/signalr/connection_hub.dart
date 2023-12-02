@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:holiday_mobile/configuration.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/exceptions/signlar_exception.dart';
 import 'package:holiday_mobile/data/models/user_authentificated/user_authentificated.dart';
@@ -7,7 +8,7 @@ import '../../../logic/blocs/chat_bloc/chat_bloc.dart';
 import '../../models/message/message.dart';
 
 class ConnectionHub {
-  final serverUrl = "https://10.0.2.2:7048/chat";
+  final serverUrl = Configuration().discussionHubUrl;
   HubConnection? hubConnection;
   List<Message> messagesList = [];
   ChatBloc? chatBloc;

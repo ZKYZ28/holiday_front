@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:holiday_mobile/configuration.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/main.dart';
@@ -81,7 +82,7 @@ class HolidayCard extends StatelessWidget {
                   Flexible(
                     flex: 2, // La partie image occupe 2 parts sur 5 (40%)
                     child: Image.network(
-                        'https://10.0.2.2:7048/${holiday.holidayPath}'),
+                        '${Configuration().baseUrl}${holiday.holidayPath}'),
                   ),
                   Flexible(
                     flex: 3, // La colonne occupe 3 parts sur 5 (60%)

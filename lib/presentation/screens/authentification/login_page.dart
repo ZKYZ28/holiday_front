@@ -128,23 +128,6 @@ class _LoginPageState extends State<LoginPage> {
                           margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
                           child: GoogleButton(),
                         ),
-                        const Text(
-                          'Vous n\'avez pas encore de compte ?',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color(0xFF1E3A8A),
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 15),
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF1E3A8A),
-                            ),
-                            child: const Text("S'inscrire"),
-                          ),
-                        ),
                       ],
                     ),
                   )
@@ -167,7 +150,7 @@ class LoginButton extends StatelessWidget {
           margin: const EdgeInsets.only(top: 20),
           // child: state.status.isInProgress ?
           // const CircularProgressIndicator() :
-          child: ElevatedButton(
+          child: state.isConnectionInProgress ? const CircularProgressIndicator() : ElevatedButton(
             onPressed: () {
               context.read<LoginBloc>().add(const LoginSubmit());
             },
@@ -193,7 +176,7 @@ class GoogleButton extends StatelessWidget {
             margin: const EdgeInsets.only(top: 20),
             // child: state.status.isInProgress ?
             // const CircularProgressIndicator() :
-            child: SignInButton(
+            child: state.isConnectionInProgress ? const CircularProgressIndicator() : SignInButton(
                 Buttons.googleDark,
                 text: 'Se connecter avec Google',
                 onPressed: () => context.read<LoginBloc>().add(GoogleLoginSubmit())));

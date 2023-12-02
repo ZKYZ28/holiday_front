@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:holiday_mobile/configuration.dart';
 import 'package:holiday_mobile/data/providers/authentification_api_provider.dart';
 import 'package:holiday_mobile/data/providers/dio/dio_instance.dart';
 import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
@@ -29,6 +30,7 @@ class MyHttpOverrides extends HttpOverrides {
 tz.Location? globalLocation;
 
 void main() {
+  Configuration(isProduction: true);
   tz.initializeTimeZones();
   globalLocation = tz.getLocation('Europe/Paris');
   tz.setLocalLocation(globalLocation!);
