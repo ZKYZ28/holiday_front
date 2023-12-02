@@ -13,8 +13,8 @@ class InvitationApiRepository{
     return _invitationProvider.fetchAllInvitationsByParticipant();
   }
 
-  Future<void> acceptInvitation(Invitation invitation) {
-    return _invitationProvider.acceptInvitation(invitation);
+  Future<void> acceptInvitation(String invitationId) {
+    return _invitationProvider.acceptInvitation(invitationId);
   }
 
   Future<void> refuseInvitation(String invitationId) {

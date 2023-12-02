@@ -51,20 +51,18 @@ class InvitationsApiProvider{
     }
   }
 
-  Future<void> acceptInvitation(Invitation invitation) async {
+  Future<void> acceptInvitation(String invitationId) async {
     try {
-      //Conversion en JSON
-      final invitationJson = invitation.toJson();
 
-      await _dio.put('v1/invitation/${invitation.id}', data: invitationJson);
-      logger.i("Acceptation de l'invitation ${invitation.id} réalisée avec succès.");
+      await _dio.put('v1/invitation/$invitationId');
+      logger.i("Acceptation de l'invitation $invitationId réalisée avec succès.");
 
     } on DioException catch (e){
-      logger.e("Erreur lors de l'acceptation de l'invitation ${invitation.id}.");
+      logger.e("Erreur lors de l'acceptation de l'invitation $invitationId.");
       throw ApiException(e.response?.data, e);
 
     } catch (e, stacktrace) {
-      logger.e("Erreur lors de l'acceptation de l'invitation ${invitation.id}.");
+      logger.e("Erreur lors de l'acceptation de l'invitation $invitationId.");
       throw ApiException("Une erreur s'est produite lors de l'acceptation de l'invitation.'", stacktrace);
     }
   }

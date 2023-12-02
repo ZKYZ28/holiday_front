@@ -54,9 +54,9 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
 
     on<AcceptInvitation>((AcceptInvitation event, Emitter<InvitationState> emit) async {
       try {
-        final invitation = event.invitation;
+        final invitationId = event.invitationId;
 
-        await invitationApiRepository.acceptInvitation(invitation);
+        await invitationApiRepository.acceptInvitation(invitationId);
 
         emit(state.copyWith(status: InvitationStateStatus.accepted));
       } on ApiException catch (e) {

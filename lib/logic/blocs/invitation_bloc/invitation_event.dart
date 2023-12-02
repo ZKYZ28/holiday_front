@@ -21,12 +21,12 @@ class CreateInvitations extends InvitationEvent {
 class GetAllInvitationsByParticipant extends InvitationEvent {}
 
 class AcceptInvitation extends InvitationEvent {
-  final Invitation invitation;
+  final String invitationId;
 
-  const AcceptInvitation({required this.invitation});
+  const AcceptInvitation({required this.invitationId});
 
   @override
-  List<Object> get props => [invitation];
+  List<Object> get props => [invitationId];
 }
 
 class RefuseInvitation extends InvitationEvent {

@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/invitation/invitation.dart';
@@ -47,7 +46,7 @@ class InvitationCard extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.check, color: Colors.green),
                 onPressed: () {
-                  context.read<InvitationBloc>().add(AcceptInvitation(invitation: invitation));
+                  context.read<InvitationBloc>().add(AcceptInvitation(invitationId: invitation.id!));
                   onClick();
                 },
               ),
