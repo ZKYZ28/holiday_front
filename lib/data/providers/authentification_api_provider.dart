@@ -9,20 +9,18 @@ import 'package:holiday_mobile/data/models/user_authentificated/user_authentific
 import 'package:holiday_mobile/data/providers/dio/dio_instance.dart';
 import 'package:holiday_mobile/data/secure_storage/secure_storage.dart';
 import 'package:holiday_mobile/logic/blocs/auth_bloc/auth_bloc.dart';
-
+import 'package:logger/logger.dart';
 import '../services/authentification/authentification_service.dart';
 
 class AuthAPiProvider {
   final DioService _dioService;
   late final Dio _dio;
+  var logger = Logger();
 
   // TODO : passer dans le constructeur
   final AuthService _authService = AuthService();
-
   final _controller = StreamController<AuthStatus>();
-
   UserAuthentificated? _userAuthentificated;
-
   UserAuthentificated? get userConnected => _userAuthentificated;
 
   // Syntaxe dart qui me permet de donner une liste
@@ -37,7 +35,6 @@ class AuthAPiProvider {
   Stream<AuthStatus> get authStatusStream => _controller.stream;
 
   void _emitAuthStatus(AuthStatus status) {
-    print(_controller.hasListener);
     _controller.add(status);
   }
 
@@ -45,21 +42,24 @@ class AuthAPiProvider {
     try {
       Response response = await _dio.post('v1/authentification/login',
           data: {'email': login.email, 'password': login.password});
-      print(response.data);
       String jwt = response.data;
 
       await loginProcedure(jwt);
+      logger.i("Authentification réalisée avec succès.");
+
     } on DioException catch (e) {
-      throw ApiException(
-          e.response?.data ?? "Une erreur s'est produite lors de l'authentification", e);
+      logger.e("Erreur lors de l'authentification.");
+      throw ApiException(e.response?.data ?? "Une erreur s'est produite lors de l'authentification", e);
     } on HolidayAuthException catch (e) {
+      logger.e("Erreur lors de l'authentification.");
       throw ApiException(e.message, null);
     } on HolidayStorageException catch (e) {
+      logger.e("Erreur lors de l'authentification.");
       throw ApiException(e.message, null);
     }
     (e, stacktrace) {
-      throw ApiException(
-          "Une erreur s'est produite lors de l'authentification", e);
+      logger.e("Erreur lors de l'authentification.");
+      throw ApiException("Une erreur s'est produite lors de l'authentification", e);
     };
   }
 
@@ -67,21 +67,24 @@ class AuthAPiProvider {
     try {
       Response response = await _dio
           .post('v1/authentification/googleauth', data: {'tokenId': tokenId});
-      print(response.data);
       String jwt = response.data;
 
       await loginProcedure(jwt);
+      logger.i("Authentification avec Google réalisée avec succès.");
+
     } on DioException catch (e) {
-      throw ApiException(
-          e.response?.data ?? "Une erreur s'est produite lors de l'authentification", e);
+      logger.e("Erreur lors de l'authentification avec Google.");
+      throw ApiException(e.response?.data ?? "Une erreur s'est produite lors de l'authentification", e);
     } on HolidayAuthException catch (e) {
+      logger.e("Erreur lors de l'authentification avec Google.");
       throw ApiException(e.message, null);
     } on HolidayStorageException catch (e) {
+      logger.e("Erreur lors de l'authentification avec Google.");
       throw ApiException(e.message, null);
     }
     (e, stacktrace) {
-      throw ApiException(
-          "Une erreur s'est produite lors de l'authentification", e);
+      logger.e("Erreur lors de l'authentification avec Google.");
+      throw ApiException("Une erreur s'est produite lors de l'authentification", e);
     };
   }
 
@@ -136,8 +139,6 @@ class AuthAPiProvider {
   void logOut() async {
     _dioService.setAuthorizationBearer(null);
     await disconnectProcedure();
-    print(
-        'STORAGE VALUE : ${await _authService.secureStorage.readSecureData(SecureStorage.jwtKey)}');
   }
 
   void dispose() {

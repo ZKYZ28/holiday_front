@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
+import 'package:holiday_mobile/data/models/participant/participant.dart';
 import 'package:holiday_mobile/data/providers/data/HolidayData.dart';
 import 'package:holiday_mobile/data/providers/data/LocationData.dart';
 import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
@@ -100,6 +101,19 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
       }
     });
 
+    on<GetAllParticipantNotYetInHoliday>((GetAllParticipantNotYetInHoliday event, Emitter<HolidayState> emit) async {
+      try {
+        emit(state.copyWith(status: HolidayStateStatus.loading));
+
+        final String holidayId = event.holidayId;
+        final participants = await holidayRepository.getAllParticipantNotYetInHoliday(holidayId, false);
+
+        emit(state.copyWith(status: HolidayStateStatus.loaded, participantsList: participants));
+      } on ApiException catch (e) {
+        emit(state.copyWith(status: HolidayStateStatus.error, errorMessage: e.toString()));
+      }
+    });
+
     on<DeleteHoliday>((DeleteHoliday event, Emitter<HolidayState> emit) async {
       try {
         final holidayId = event.holidayId;
@@ -126,6 +140,18 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
 
     on<ResetHolidayStatus>((ResetHolidayStatus event, Emitter<HolidayState> emit) async {
       emit(state.copyWith(status: HolidayStateStatus.loading));
+    });
+
+    on<LeaveHoliday>((LeaveHoliday event, Emitter<HolidayState> emit) async {
+      try {
+        final holidayId = event.holidayId;
+        await holidayRepository.leaveHoliday(holidayId);
+
+        emit(state.copyWith(status: HolidayStateStatus.left));
+
+      } on ApiException catch (e) {
+        emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : e.toString()));
+      }
     });
 
   }

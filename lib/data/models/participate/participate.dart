@@ -24,26 +24,4 @@ class Participate {
 
   factory Participate.fromJson(Map<String, dynamic> json) => _$ParticipateFromJson(json);
   Map<String, dynamic> toJson() => _$ParticipateToJson(this);
-
-  static List<Participate> createParticipates (List<Participant> participants, String holidayId){
-    List<Participate> participates = [];
-
-    for (var participant in participants) {
-      var invitation = Participate(
-        activityId: holidayId,
-        participantId: participant.id!,
-      );
-      participates.add(invitation);
-    }
-
-    return participates;
-  }
-
-  static List<Map<String, dynamic>> participatesToJsonList(List<Participate> participates) {
-    List<Map<String, dynamic>> jsonList = [];
-    for (var participate in participates) {
-      jsonList.add(participate.toJson());
-    }
-    return jsonList;
-  }
 }

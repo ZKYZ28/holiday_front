@@ -240,8 +240,6 @@ class _EncodeActivityScreenState extends State<EncodeActivityScreen> {
                       BlocBuilder<ActivityAddEditBloc, ActivityAddEditState>(
                         buildWhen: (previous, current) => previous.start.dateTime != current.start.dateTime || previous.start.customStatus != current.start.customStatus || previous.end.dateTime != current.end.dateTime || previous.end.customStatus != current.end.customStatus,
                         builder: (context, state) {
-                          print(state.start.customStatus);
-                          print(state.end.customStatus);
                           if ((state.start.customStatus ==
                               CustomStatus.invalid && state.end.customStatus == CustomStatus.invalid) &&
                               state.errorMessage!.isNotEmpty) {

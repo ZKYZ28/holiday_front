@@ -34,10 +34,28 @@ class PublishHoliday extends HolidayEvent {
     List<Object> get props => [holiday];
 }
 
+class GetAllParticipantNotYetInHoliday extends HolidayEvent {
+    final String holidayId;
+
+    const GetAllParticipantNotYetInHoliday({required this.holidayId});
+
+    @override
+    List<Object> get props => [holidayId];
+}
+
 class DeleteHoliday extends HolidayEvent {
     final String holidayId;
 
     const DeleteHoliday({required this.holidayId});
+
+    @override
+    List<Object> get props => [holidayId];
+}
+
+class LeaveHoliday extends HolidayEvent {
+    final String holidayId;
+
+    const LeaveHoliday({required this.holidayId});
 
     @override
     List<Object> get props => [holidayId];

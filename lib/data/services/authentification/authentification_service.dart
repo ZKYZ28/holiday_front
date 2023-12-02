@@ -20,7 +20,6 @@ class AuthService {
     try {
       final jwt = JWT.decode(jwtFromApi);
       return UserAuthentificated(id: jwt.payload['nameid'], firstName: jwt.payload['given_name'], lastName: jwt.payload['family_name'], email: jwt.payload['email']);
-    //  print('Payload ${jwt.payload}');
     } on JWTUndefinedException catch (e) {
       throw HolidayAuthException("Impossible de décoder le JWT");
     };
@@ -30,7 +29,6 @@ class AuthService {
     try {
       final jwt = JWT.decode(jwtFromApi);
       return jwt.payload['exp'];
-      //  print('Payload ${jwt.payload}');
     } on JWTUndefinedException catch (e) {
       throw HolidayAuthException("Impossible de décoder le JWT");
     };

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:holiday_mobile/logic/blocs/chat_bloc/chat_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
-import 'package:holiday_mobile/logic/blocs/participant_bloc/participant_bloc.dart';
 import 'package:holiday_mobile/main.dart';
 import 'package:holiday_mobile/presentation/widgets/activity/activity_container.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
@@ -165,23 +164,13 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                   ..showMaterialBanner(
                       CustomMessage(message: state.errorMessage!)
                           .build(context));
-              }
-            },
-          ),
-          BlocListener<ParticipantBloc, ParticipantState>(
-            listener: (context, state) {
-              if (state.status == ParticipantStateStatus.error) {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentMaterialBanner()
-                  ..showMaterialBanner(
-                      CustomMessage(message: state.errorMessage)
-                          .build(context));
-              } else if (state.status == ParticipantStateStatus.left) {
+              } else if (state.status == HolidayStateStatus.left) {
                 context.router.pop(context);
               }
             },
           ),
         ],
+
         child: BlocBuilder<HolidayBloc, HolidayState>(
           builder: (context, state) {
             if (state.status == HolidayStateStatus.initial ||
@@ -282,8 +271,8 @@ class _MyHolidayPageState extends State<MyHolidayPage> {
                             label: const Text('Quitter'),
                             onPressed: () {
                               context
-                                  .read<ParticipantBloc>()
-                                  .add(LeaveHoliday(holiday: holiday));
+                                  .read<HolidayBloc>()
+                                  .add(LeaveHoliday(holidayId: widget.holidayId!));
                             },
                           ),
                         ),

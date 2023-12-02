@@ -59,7 +59,7 @@ class ConnectionHub {
     try{
       await hubConnection!.invoke('SendMessage', args: <Object>[user, holidayId, message]);
     }catch (e, stacktrace){
-      throw SignalRException("Une erreur s'est produite lorsque vous avez rejoint le chat", stacktrace);
+      throw SignalRException("Une erreur s'est produite lorsque vous avez envoyé un message", stacktrace);
     }
   }
 

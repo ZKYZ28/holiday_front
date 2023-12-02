@@ -199,7 +199,6 @@ class ActivityAddEditBloc extends Bloc<ActivityAddEditEvent, ActivityAddEditStat
     emit(state.copyWith(activityAddEditStatus: FormzSubmissionStatus.inProgress));
 
     if(state.formIsValid && _locationState.formIsValid) {
-      print(state.price);
       try {
         await _activityRepository.updateActivity(
             ActivityData(

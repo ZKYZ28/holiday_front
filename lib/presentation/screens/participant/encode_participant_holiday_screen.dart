@@ -2,8 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/data/models/participant/participant.dart';
+import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/invitation_bloc/invitation_bloc.dart';
-import 'package:holiday_mobile/logic/blocs/participant_bloc/participant_bloc.dart';
 import 'package:holiday_mobile/presentation/widgets/participant/addable_participant.dart';
 import 'package:holiday_mobile/presentation/widgets/participant/my_search.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
@@ -25,7 +25,7 @@ class _EncodeParticipantHolidayScreenState extends State<EncodeParticipantHolida
 
   @override
   void initState() {
-    context.read<ParticipantBloc>().add(GetAllParticipantNotYetInHoliday(holidayId: widget.holidayId));
+    context.read<HolidayBloc>().add(GetAllParticipantNotYetInHoliday(holidayId: widget.holidayId));
     super.initState();
   }
 
@@ -78,12 +78,12 @@ class _EncodeParticipantHolidayScreenState extends State<EncodeParticipantHolida
       margin: const EdgeInsets.all(8.0),
         child: MultiBlocListener(
           listeners: [
-            BlocListener<ParticipantBloc, ParticipantState>(
+            BlocListener<HolidayBloc, HolidayState>(
               listener: (context, state) {
-                if (state.status == ParticipantStateStatus.error) {
+                if (state.status == HolidayStateStatus.error) {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentMaterialBanner()
-                    ..showMaterialBanner(CustomMessage(message: state.errorMessage).build(context));
+                    ..showMaterialBanner(CustomMessage(message: state.errorMessage!).build(context));
                 }
               },
             ),
@@ -100,11 +100,11 @@ class _EncodeParticipantHolidayScreenState extends State<EncodeParticipantHolida
               },
             ),
           ],
-          child: BlocBuilder<ParticipantBloc, ParticipantState>(
+          child: BlocBuilder<HolidayBloc, HolidayState>(
                 builder: (context, state) {
-                  if (state.status == ParticipantStateStatus.initial || state.status == ParticipantStateStatus.loading) {
+                  if (state.status == HolidayStateStatus.initial || state.status == HolidayStateStatus.loading) {
                     return const LoadingProgressor();
-                  } else if (state.status == ParticipantStateStatus.loaded) {
+                  } else if (state.status == HolidayStateStatus.loaded) {
                     final participants = state.participantsList ?? [];
                     participantsBase = participants;
                     return _buildEncodeParticipantInfo(context, participants);

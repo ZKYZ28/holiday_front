@@ -3,13 +3,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
+import 'package:holiday_mobile/data/models/participant/participant.dart';
 import 'package:holiday_mobile/data/providers/dio/dio_instance.dart';
 import 'package:open_file/open_file.dart';
+import 'package:logger/logger.dart';
 
 class HolidayApiProvider{
 
     final Dio _dio = DioService().dio;
-
+    var logger = Logger();
 
     Future<List<Holiday>> fetchHolidayByParticipant(bool isPublished) async {
       try {
@@ -21,13 +23,16 @@ class HolidayApiProvider{
         // conversion list
         List<Holiday> holidays = (response.data as List<dynamic>).map((index) => Holiday.fromJson(index as Map<String, dynamic>)).toList();
 
+        logger.i("Récupération de toutes les vacances d'un participant réalisée avec succsè.");
         return holidays;
 
       } on DioException catch (e){
+        logger.e("Erreur lors de la récupération de toutes les vacances d'un participant.");
         throw ApiException(e.response?.data, e);
 
       } catch (e, stacktrace) {
-        throw ApiException("Une erreur s'est produite lors de la récupération des vacances publiées", stacktrace);
+        logger.e("Erreur lors de la récupération de toutes les vacances d'un participant.");
+        throw ApiException("Une erreur s'est produite lors de la récupération de vos vacances.", stacktrace);
       }
     }
 
@@ -41,13 +46,38 @@ class HolidayApiProvider{
         // conversion list
         List<Holiday> holidays = (response.data as List<dynamic>).map((index) => Holiday.fromJson(index as Map<String, dynamic>)).toList();
 
+        logger.i("Récupération de toutes les vacances publiées réalisée avec succsè.");
         return holidays;
 
       } on DioException catch (e){
+        logger.e("Erreur lors de la récupération de toutes les vacances publiées.");
         throw ApiException(e.response?.data, e);
 
       } catch (e, stacktrace) {
-        throw ApiException("Une erreur s'est produite lors de la récupération de vos vacances", stacktrace);
+        logger.e("Erreur lors de la récupération de toutes les vacances publiées.");
+        throw ApiException("Une erreur s'est produite lors de la récupération des vacances publiées", stacktrace);
+      }
+    }
+
+    Future<List<Participant>> getAllParticipantNotYetInHoliday(String holidayId, bool isParticipated) async {
+      try {
+        final response = await _dio.get('v1/holiday/$holidayId/participant',
+            queryParameters: {
+              'isParticipated' : isParticipated
+            });
+
+        List<Participant> participants = (response.data as List<dynamic>).map((index) => Participant.fromJson(index as Map<String, dynamic>)).toList();
+        logger.i("Récupération de tous les participants qui ne sont pas encore dans la vacances $holidayId réalisée avec succès.");
+
+        return participants;
+
+      } on DioException catch (e){
+        logger.e("Erreur lors de la récupération de tous les participants qui ne sont pas encore dans la vacances $holidayId .");
+        throw ApiException(e.response?.data, e);
+
+      } catch (e, stacktrace) {
+        logger.e("Erreur lors de la récupération de tous les participants qui ne sont pas encore dans la vacances $holidayId .");
+        throw ApiException("Une erreur s'est produite lors de la récupération des utilisateurs ajoutables à la vacances.", stacktrace);
       }
     }
 
@@ -56,13 +86,16 @@ class HolidayApiProvider{
         Response response = await _dio.get('v1/Holiday/$holidayId');
         Holiday holiday = Holiday.fromJson(response.data);
 
+        logger.i("Récupération de la vacances $holidayId réalisée avec succsè.");
         return holiday;
 
       } on DioException catch (e){
+        logger.e("Erreur lors de la récupération de la vacances $holidayId.");
         throw ApiException(e.response?.data, e);
 
       } catch (e, stacktrace) {
-        throw ApiException("Une erreur s'est produite lors de la récupération de vos vacances", stacktrace);
+        logger.e("Erreur lors de la récupération de la vacances $holidayId.");
+        throw ApiException("Une erreur s'est produite lors de la récupération de votre vacance", stacktrace);
       }
     }
 
@@ -71,11 +104,14 @@ class HolidayApiProvider{
         final holidayJson = holiday.toJson();
 
         await _dio.put('v1/Holiday/publish', data: holidayJson);
+        logger.i("Publication de la vacances ${holiday.id} réalisée avec succsè.");
 
       } on DioException catch (e){
+        logger.e("Erreur lors de la publication de la vacances ${holiday.id}.");
         throw ApiException(e.response?.data, e);
 
       } catch (e, stacktrace) {
+        logger.e("Erreur lors de la publication de la vacances ${holiday.id}.");
         throw ApiException("Une erreur s'est produite lors de la publication de votre vacances", stacktrace);
       }
     }
@@ -83,11 +119,14 @@ class HolidayApiProvider{
     Future<void> deleteHoliday(String holidayId) async {
       try {
         await _dio.delete('v1/Holiday/$holidayId');
+        logger.i("Suppression de la vacances $holidayId réalisée avec succsè.");
 
       } on DioException catch (e){
+        logger.e("Erreur lors de la suppresion de la vacances $holidayId.");
         throw ApiException(e.response?.data, e);
 
       } catch (e, stacktrace) {
+        logger.e("Erreur lors de la suppresion de la vacances $holidayId.");
         throw ApiException("Une erreur s'est produite lors de la suppression de votre vacances", stacktrace);
       }
     }
@@ -102,11 +141,14 @@ class HolidayApiProvider{
         );
 
         OpenFile.open(filePath);
+        logger.i("Exportation de la vacances $holidayId réalisée avec succès.");
 
       } on DioException catch (e){
+        logger.i("Erreur lors de l'exportation de la vacances $holidayId.");
         throw ApiException(e.response?.data, e);
 
       } catch (e, stacktrace) {
+        logger.i("Erreur lors de l'exportation de la vacances $holidayId.");
         throw ApiException("Une erreur s'est produite lors de l'exportation de votre vacance", stacktrace);
       }
     }
@@ -135,13 +177,16 @@ class HolidayApiProvider{
           ));
     }
 
-        Response response = await _dio.post('v1/holiday/', data : formData);
-        print(response);
+        await _dio.post('v1/holiday/', data : formData);
+        logger.i("Création de la vacances effectuée avec succès.");
+
       } on DioException catch (e){
+        logger.e("Erreur lors de la création de la vacances");
         throw ApiException(e.response?.data, e);
 
       } catch (e, stacktrace) {
-        throw ApiException("Une erreur s'est produite lors de la création de votre vacance", stacktrace);
+        logger.e("Erreur lors de la création de la vacances");
+        throw ApiException("Une erreur s'est produite lors de la création de votre vacances", stacktrace);
       }
   }
 
@@ -173,14 +218,31 @@ class HolidayApiProvider{
           ));
         }
 
+        await _dio.put('v1/holiday/${holidayData.holidayId!}', data : formData);
+        logger.i("Mise à jour de la vacances ${holidayData.holidayId} effectuée avec succès.");
 
-        Response response = await _dio.put('v1/holiday/${holidayData.holidayId!}', data : formData);
-        print(response);
       } on DioException catch (e){
+        logger.e("Erreur lors de la mise à jour de la vacances ${holidayData.holidayId}.");
         throw ApiException(e.response?.data ?? "Une erreur est survenue lors de l'édition de la vacance", e);
 
       } catch (e, stacktrace) {
-        throw ApiException("Une erreur s'est produite lors de la création de votre vacance", stacktrace);
+        logger.e("Erreur lors de la mise à jour de la vacances ${holidayData.holidayId}.");
+        throw ApiException("Une erreur s'est produite lors de la l'édition de votre vacance", stacktrace);
+      }
+    }
+
+    Future<void> leaveHoliday(String holidayId) async {
+      try {
+        await _dio.delete('v1/Holiday/$holidayId/leave');
+        logger.i("Vacances $holidayId quittée avec succès par un participant.");
+
+      } on DioException catch (e){
+        logger.e("Une erreur est survenue lorsqu'un utilisateur a essayé de quitté la vacances $holidayId.");
+        throw ApiException(e.response?.data, e);
+
+      } catch (e, stacktrace) {
+        logger.e("Une erreur est survenue lorsqu'un utilisateur a essayé de quitté la vacances $holidayId.");
+        throw ApiException("Une erreur s'est produite lors de la suppression de votre vacances", stacktrace);
       }
     }
 }

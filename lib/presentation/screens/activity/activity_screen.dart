@@ -216,6 +216,8 @@ class _ActivityState extends State<ActivityScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+
+                    if (!widget.isPublish)
                     ElevatedButton.icon(
                       onPressed: () {
                         context.router.push(EncodeParticipantActivityRoute(

@@ -21,7 +21,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // Ecouter les changements d'états émis par le repository qui fait les appels
     _authStatusSubscription = _repository.authStatusStream.listen((AuthStatus status) {
       add(AuthentificationStatusChanged(status: status));
-      print('[BLOC] Authentification -> Statut reçu : $status ');
     });
 
     on<AuthentificationStatusChanged>(_onAuthentificationStatusChanged);

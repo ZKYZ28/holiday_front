@@ -3,10 +3,11 @@ import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/models/invitation/invitation.dart';
 import 'package:holiday_mobile/data/models/participant/participant.dart';
 import 'package:holiday_mobile/data/providers/dio/dio_instance.dart';
+import 'package:logger/logger.dart';
 
 class InvitationsApiProvider{
   final Dio _dio = DioService().dio;
-
+  var logger = Logger();
 
   Future<void> createInvitations(List<Participant> participants, String holidayId) async {
     try {
@@ -18,11 +19,15 @@ class InvitationsApiProvider{
       List<Map<String, dynamic>> invitationsJsonList = Invitation.invitationsToJsonList(invitations);
 
       await _dio.post('v1/invitation', data: invitationsJsonList);
+      logger.i("Création d'une invitation effectuée avec succès.");
+
     } on DioException catch (e){
+      logger.e("Erreur lors de la création d'une invitation");
       throw ApiException(e.response?.data, e);
 
     } catch (e, stacktrace) {
-      throw ApiException("Une erreur s'est produite lors de la récupération des vacances publiées", stacktrace);
+      logger.e("Erreur lors de la création d'une invitation");
+      throw ApiException("Une erreur s'est produite lors de la création des invitations", stacktrace);
     }
   }
 
@@ -33,12 +38,16 @@ class InvitationsApiProvider{
 
       List<Invitation> invitations = (response.data as List<dynamic>).map((index) => Invitation.fromJson(index as Map<String, dynamic>)).toList();
 
+      logger.i("Récupération de toutes les invitations d'un participant effectuée avec succès.");
       return invitations;
+
     } on DioException catch (e){
+      logger.e("Erreur lors de la récupération de toutes les invitations d'un participant.");
       throw ApiException(e.response?.data, e);
 
     } catch (e, stacktrace) {
-      throw ApiException("Une erreur s'est produite lors de la récupération des vacances publiées", stacktrace);
+      logger.e("Erreur lors de la récupération de toutes les invitations d'un participant.");
+      throw ApiException("Une erreur s'est produite lors de la récupération de vos invitations", stacktrace);
     }
   }
 
@@ -48,23 +57,30 @@ class InvitationsApiProvider{
       final invitationJson = invitation.toJson();
 
       await _dio.put('v1/invitation/${invitation.id}', data: invitationJson);
+      logger.i("Acceptation de l'invitation ${invitation.id} réalisée avec succès.");
+
     } on DioException catch (e){
+      logger.e("Erreur lors de l'acceptation de l'invitation ${invitation.id}.");
       throw ApiException(e.response?.data, e);
 
     } catch (e, stacktrace) {
-      throw ApiException("Une erreur s'est produite lors de la récupération des vacances publiées", stacktrace);
+      logger.e("Erreur lors de l'acceptation de l'invitation ${invitation.id}.");
+      throw ApiException("Une erreur s'est produite lors de l'acceptation de l'invitation.'", stacktrace);
     }
   }
 
   Future<void> refuseInvitation(String invitationId) async {
     try {
       await _dio.delete('v1/invitation/$invitationId');
+      logger.i("Refus de l'invitation $invitationId réalisée avec succès.");
 
     } on DioException catch (e){
+      logger.e("Erreur lors du refus de l'invitation $invitationId .");
       throw ApiException(e.response?.data, e);
 
     } catch (e, stacktrace) {
-      throw ApiException("Une erreur s'est produite lors de la récupération des vacances publiées", stacktrace);
+      logger.e("Erreur lors du refus de l'invitation $invitationId .");
+      throw ApiException("Une erreur s'est produite lors du refus de l'invitation.", stacktrace);
     }
   }
 }

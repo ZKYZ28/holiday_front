@@ -85,8 +85,6 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                 ImagePickerForm(
                   initialPath: widget.holiday != null ? widget.holiday!.holidayPath : null,
                   onImagePicked: (pickedImage, deleteImage) {
-                    // _image = pickedImage;
-                   // print(pickedImage);
                     context
                         .read<HolidayAddBloc>()
                         .add(HolidayAddFileChanged(file: pickedImage, deleteFile: deleteImage));
@@ -133,7 +131,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                             buildWhen: (previous, current) => previous.start.dateTime != current.start.dateTime,
                             builder: (context, state) {
                               return DateTimeFormField(
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     hintStyle: TextStyle(color: Colors.black45),
                                     errorStyle:
                                         TextStyle(color: Colors.redAccent),
@@ -145,7 +143,6 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                                   dateFormat: DateFormat('dd/MM/yyyy'),
                                   initialValue: state.start.dateTime,
                                   onDateSelected: (value) {
-                                    print(state.start.dateTime);
                                     context.read<HolidayAddBloc>().add(HolidayAddDateStartChanged(start: value, isEditMode: widget.holiday != null));
                                   });
                             },
@@ -158,7 +155,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                           buildWhen: (previous, current) => previous.end.dateTime != current.end.dateTime,
                           builder: (context, state) {
                             return DateTimeFormField(
-                                decoration:  InputDecoration(
+                                decoration:  const InputDecoration(
                                   hintStyle: TextStyle(color: Colors.black45),
                                   errorStyle:
                                       TextStyle(color: Colors.redAccent),
@@ -185,7 +182,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                         CustomStatus.invalid && state.end.customStatus == CustomStatus.invalid) &&
                         state.errorMessage!.isNotEmpty) {
                       return Container(
-                        margin: EdgeInsets.only(bottom: 10.0),
+                        margin: const EdgeInsets.only(bottom: 10.0),
                         child: Text(
                           state.errorMessage ?? '',
                           style: const TextStyle(color: Colors.red),
@@ -218,7 +215,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                   margin: const EdgeInsets.only(top: 20),
                   child: ElevatedButton(
                     onPressed: () {
-                      widget.holiday != null ? context.read<HolidayAddBloc>().add(HolidayEditSubmit( holidayId: widget.holiday!.id ?? '', holidayPath: widget.holiday!.holidayPath, locationId : widget.holiday!.location.id ?? '')) : context.read<HolidayAddBloc>().add(HolidayAddSubmit());
+                      widget.holiday != null ? context.read<HolidayAddBloc>().add(HolidayEditSubmit( holidayId: widget.holiday!.id ?? '', holidayPath: widget.holiday!.holidayPath, locationId : widget.holiday!.location.id ?? '')) : context.read<HolidayAddBloc>().add(const HolidayAddSubmit());
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF1E3A8A),

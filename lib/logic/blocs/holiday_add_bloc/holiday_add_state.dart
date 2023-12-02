@@ -27,9 +27,7 @@ class HolidayAddState extends Equatable {
 
     factory HolidayAddState.initialData(Holiday holiday) {
       TZDateTime startDate = TZDateTime.parse(globalLocation!, holiday.startDate);
-      print(startDate);
       TZDateTime endDate = TZDateTime.parse(globalLocation!, holiday.endDate);
-      print(endDate);
       return HolidayAddState(
        // isEditMode: true,
         holidayAddStatus: FormzSubmissionStatus.initial,

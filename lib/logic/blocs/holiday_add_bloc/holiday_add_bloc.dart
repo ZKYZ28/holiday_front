@@ -43,8 +43,6 @@ class HolidayAddBloc extends Bloc<HolidayAddEvent, HolidayAddState> {
 
     locationSubscription = locationBloc.stream.listen((locationState) {
       _locationState = locationState;
-      print(locationState.country);
-      print(locationState.postalCode);
     });
   }
 
@@ -144,7 +142,7 @@ class HolidayAddBloc extends Bloc<HolidayAddEvent, HolidayAddState> {
             errorMessage: "La taille du fichier dépasse la limite de 5 Mo");
         return;
       }
-      print('NEW FILE VALUE : ${file.path}');
+
       emit(state.copyWith(
           holidayAddStatus: FormzSubmissionStatus.inProgress,
           fileWithStatus: FileWithStatus(file: file, customStatus: CustomStatus.valid, deleteImage: event.deleteFile),
@@ -163,7 +161,6 @@ class HolidayAddBloc extends Bloc<HolidayAddEvent, HolidayAddState> {
     if(state.formIsValid && _locationState.formIsValid) {
       final startDate = state.start.dateTime;
       final endDate = state.end.dateTime;
-      print('LOCATION DATA BLOC : ${_locationState.street.value}');
       try {
         await _holidayRepository.createHoliday(
           HolidayData(
@@ -197,7 +194,6 @@ class HolidayAddBloc extends Bloc<HolidayAddEvent, HolidayAddState> {
     if(state.formIsValid && _locationState.formIsValid) {
       final startDate = state.start.dateTime;
       final endDate = state.end.dateTime;
-      print(_locationState.street.value);
       try {
         await _holidayRepository.updateHoliday(
             HolidayData(

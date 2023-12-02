@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
+import 'package:holiday_mobile/data/models/participant/participant.dart';
 import 'package:holiday_mobile/data/providers/data/HolidayData.dart';
 import 'package:holiday_mobile/data/providers/holiday_api_provider.dart';
 
@@ -39,7 +40,12 @@ class HolidayApiRepository{
     return await _holidayProvider.editHoliday(holidayData);
   }
 
+  Future<void> leaveHoliday(String holidayId) async {
+    return await _holidayProvider.leaveHoliday(holidayId);
+  }
 
-
+  Future<List<Participant>> getAllParticipantNotYetInHoliday(String holidayId, bool isParticipated) {
+    return _holidayProvider.getAllParticipantNotYetInHoliday(holidayId, isParticipated);
+  }
 
 }

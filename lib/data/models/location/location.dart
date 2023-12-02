@@ -31,7 +31,6 @@ class Location {
 
   static Future<List<geocoding.Location>> locationsFromAddress(String address) async {
     try {
-      print(address);
       List<geocoding.Location> geocodedLocations = await geocoding.locationFromAddress(address);
 
       return geocodedLocations;

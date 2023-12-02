@@ -64,7 +64,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         // String token = await authRepository.logInRequest(Login(email: state.email.value, password: state.password.value));
         await authRepository.logInRequest(
             Login(email: state.email.value, password: state.password.value));
-        // print(token);
         emit(state.copyWith(status: FormzSubmissionStatus.success));
       } catch (e) {
         emit(state.copyWith(
@@ -117,7 +116,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       // Call API
       await authRepository.logInGoogle(tokenId);
       emit(state.copyWith(status: FormzSubmissionStatus.success));
-      print("SKIP TOKEN BIEN ENVOE");
     } catch (e) {
       emit(state.copyWith(
           status: FormzSubmissionStatus.failure, errorMessage: e.toString()));

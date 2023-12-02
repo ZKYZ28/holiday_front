@@ -12,9 +12,9 @@ class ParticipantCard extends StatefulWidget {
   final String title;
   final IconData? icon;
   final List<Participant>? participants;
-  final List<Participate>? participates;
+  final List<Participant>? participantInActivity;
   final String elementId;
-  final void Function(Participate)? onDeleteParticipate;
+  final void Function(Participant)? onDeleteParticipant;
   final bool isPublish;
 
   const ParticipantCard({
@@ -26,9 +26,9 @@ class ParticipantCard extends StatefulWidget {
     required this.title,
     this.icon,
     this.participants,
-    this.participates,
+    this.participantInActivity,
     required this.elementId,
-    this.onDeleteParticipate,
+    this.onDeleteParticipant,
     required this.isPublish
   });
 
@@ -41,6 +41,7 @@ class _ParticipantCardState extends State<ParticipantCard> {
 
   @override
   Widget build(BuildContext context) {
+    print("ICI");
     return Container(
       constraints: BoxConstraints(maxHeight: widget.tableParticipantsHeight),
       child: Card(
@@ -101,7 +102,7 @@ class _ParticipantCardState extends State<ParticipantCard> {
                         child: const Text('Email'),
                       ),
                     ),
-                    if (widget.participates != null)
+                    if (widget.participantInActivity != null)
                       const DataColumn(
                         label: SizedBox(
                           child: Text(''),
@@ -110,7 +111,7 @@ class _ParticipantCardState extends State<ParticipantCard> {
                   ],
                   rows: widget.participants != null
                       ? buildParticipantsList(widget.participants!)
-                      : buildParticipatesList(widget.participates!),
+                      : buildParticipatesList(widget.participantInActivity!),
                 ),
               ),
             ),
@@ -144,15 +145,15 @@ class _ParticipantCardState extends State<ParticipantCard> {
     );
   }
 
-  List<DataRow> buildParticipatesList(List<Participate> participates) {
+  List<DataRow> buildParticipatesList(List<Participant> participantInActivity) {
     return List<DataRow>.generate(
-      widget.participates!.length,
+      widget.participantInActivity!.length,
           (index) => DataRow(cells: [
         DataCell(
           SizedBox(
             width: widget.nameColumnWidth,
             child: Text(
-              "${widget.participates?[index].participant?.firstName}  ${widget.participates?[index].participant?.lastName}"  ?? '',
+              "${widget.participantInActivity?[index].firstName}  ${widget.participantInActivity?[index].lastName}"  ?? '',
             ),
           ),
         ),
@@ -160,7 +161,7 @@ class _ParticipantCardState extends State<ParticipantCard> {
           SizedBox(
             width: widget.emailColumnWidth,
             child: Text(
-              widget.participates?[index].participant?.email ?? '',
+              widget.participantInActivity?[index].email ?? '',
             ),
           ),
         ),
@@ -172,7 +173,7 @@ class _ParticipantCardState extends State<ParticipantCard> {
                 color: Colors.red,
               ),
               onPressed: () {
-                widget.onDeleteParticipate?.call(widget.participates![index]);
+                widget.onDeleteParticipant?.call(widget.participantInActivity![index]);
               },
             ),
           ),
