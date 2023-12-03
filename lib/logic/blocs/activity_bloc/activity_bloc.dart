@@ -13,6 +13,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
 
   ActivityBloc() : super(const ActivityState()) {
 
+    //ACTIVITY
     on<GetActivity>((GetActivity event, Emitter<ActivityState> emit) async {
       try {
         emit(state.copyWith(status: ActivityStateStatus.loading));
@@ -38,18 +39,8 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       }
     });
 
-    on<DeleteParticipate>((DeleteParticipate event, Emitter<ActivityState> emit) async {
-      try {
-        final activityId = event.activityId;
-        final participantId = event.participantId;
 
-        await activityApiRepository.deleteParticipate(activityId, participantId);
-
-      } on ApiException catch (e) {
-        emit(state.copyWith(status: ActivityStateStatus.error,errorMessage : e.toString()));
-      }
-    });
-
+    //PARTICIPATE
     on<InitParticipates>((InitParticipates event, Emitter<ActivityState> emit) async {
       try {
         emit(state.copyWith(status: ActivityStateStatus.loading));
@@ -76,6 +67,18 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
         }
 
         emit(state.copyWith(status: ActivityStateStatus.sent));
+      } on ApiException catch (e) {
+        emit(state.copyWith(status: ActivityStateStatus.error,errorMessage : e.toString()));
+      }
+    });
+
+    on<DeleteParticipate>((DeleteParticipate event, Emitter<ActivityState> emit) async {
+      try {
+        final activityId = event.activityId;
+        final participantId = event.participantId;
+
+        await activityApiRepository.deleteParticipate(activityId, participantId);
+
       } on ApiException catch (e) {
         emit(state.copyWith(status: ActivityStateStatus.error,errorMessage : e.toString()));
       }

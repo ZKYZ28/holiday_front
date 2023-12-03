@@ -6,8 +6,7 @@ class DioService {
   static DioService? _instance;
   late final Dio _dio;
 
-  // Un constructeur factory permet de créer une nouvelle instance d'une classe
-  // ou retourner une instance existante -> parfait pour notre singleton
+  //Factory pour le singleton de Dio
   factory DioService({String? baseUrl}) {
     return _instance ??= DioService._internal(baseUrl: baseUrl);
   }

@@ -3,15 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:holiday_mobile/data/models/login/login.dart';
 import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
-import 'package:holiday_mobile/logic/blocs/auth_bloc/auth_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/login_bloc/login_bloc.dart';
-import 'package:holiday_mobile/logic/blocs/login_bloc/validators/email.dart';
 import 'package:holiday_mobile/presentation/widgets/common/GenericInputField.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
-import 'package:holiday_mobile/routes/app_router.gr.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
 import '../../../data/providers/authentification_api_provider.dart';
@@ -126,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         Container(
                           margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-                          child: GoogleButton(),
+                          child: const GoogleButton(),
                         ),
                       ],
                     ),
@@ -148,8 +143,6 @@ class LoginButton extends StatelessWidget {
       builder: (context, state) {
         return Container(
           margin: const EdgeInsets.only(top: 20),
-          // child: state.status.isInProgress ?
-          // const CircularProgressIndicator() :
           child: ElevatedButton(
             onPressed: () {
               context.read<LoginBloc>().add(const LoginSubmit());
@@ -174,8 +167,6 @@ class GoogleButton extends StatelessWidget {
       builder: (context, state) {
         return Container(
             margin: const EdgeInsets.only(top: 20),
-            // child: state.status.isInProgress ?
-            // const CircularProgressIndicator() :
             child: SignInButton(
                 Buttons.googleDark,
                 text: 'Se connecter avec Google',

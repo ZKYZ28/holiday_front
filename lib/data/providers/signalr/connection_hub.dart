@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:holiday_mobile/configuration.dart';
-import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/exceptions/signlar_exception.dart';
 import 'package:holiday_mobile/data/models/user_authentificated/user_authentificated.dart';
 import 'package:signalr_netcore/signalr_client.dart';
@@ -47,7 +46,7 @@ class ConnectionHub {
       });
 
       await hubConnection!.start();
-      final result = await hubConnection!.invoke("JoinRoom", args: <Object>[holidayId, user]);
+      await hubConnection!.invoke("JoinRoom", args: <Object>[holidayId, user]);
 
     }catch (e, stacktrace){
       throw SignalRException("Une erreur s'est produite lorsque vous avez rejoint le chat", stacktrace);

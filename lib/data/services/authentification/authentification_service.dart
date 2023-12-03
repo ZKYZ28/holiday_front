@@ -21,7 +21,7 @@ class AuthService {
       final jwt = JWT.decode(jwtFromApi);
       return UserAuthentificated(id: jwt.payload['nameid'], firstName: jwt.payload['given_name'], lastName: jwt.payload['family_name'], email: jwt.payload['email']);
     } on JWTUndefinedException catch (e) {
-      throw HolidayAuthException("Impossible de décoder le JWT");
+      throw HolidayAuthException("Impossible de décoder le JWT.");
     };
   }
 
@@ -30,7 +30,7 @@ class AuthService {
       final jwt = JWT.decode(jwtFromApi);
       return jwt.payload['exp'];
     } on JWTUndefinedException catch (e) {
-      throw HolidayAuthException("Impossible de décoder le JWT");
+      throw HolidayAuthException("Impossible de décoder le JWT.");
     };
   }
 
@@ -42,8 +42,4 @@ class AuthService {
   }
 
   SecureStorage get secureStorage => _secureStorage;
-
-
-
-
 }

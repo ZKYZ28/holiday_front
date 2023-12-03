@@ -12,18 +12,17 @@ class WeatherApiProvider{
     try {
       Response response = await _dio.get('v1/Weather/$holidayId');
 
-      // conversion list
       Weather weather = Weather.fromJson(response.data);
 
       logger.i("Récupération des données météo pour la vacances $holidayId réalisée avec succès.");
       return weather;
 
     } on DioException catch (e){
-      logger.i("Erreur lors de la récupération des données météo pour la vacances $holidayId .");
+      logger.i("Erreur lors de la récupération des données météo pour la vacances $holidayId.");
       throw ApiException(e.response?.data, e);
 
     } catch (e, stacktrace) {
-      logger.i("Erreur lors de la récupération des données météo pour la vacances $holidayId .");
+      logger.i("Erreur lors de la récupération des données météo pour la vacances $holidayId.");
       throw ApiException("Une erreur s'est produite lors de la récupération des données météo.", stacktrace);
     }
   }

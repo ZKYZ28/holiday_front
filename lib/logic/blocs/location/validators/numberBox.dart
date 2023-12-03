@@ -1,5 +1,4 @@
 import 'package:formz/formz.dart';
-import 'package:holiday_mobile/logic/blocs/login_bloc/validators/email.dart';
 
 enum NumberBoxInputError  { invalid }
 
@@ -9,7 +8,7 @@ extension NumberBoxInputErrorExtension on NumberBoxInputError {
       case NumberBoxInputError.invalid:
         return 'Champ faculatif. Si vous choisissez de le remplir, veuillez entrer un numéro de boîte valide entre 1 à 10 caractères. Exemples : 77, 77A, PO Box 123, PMB 456B.';
       default:
-        return 'Erreur inconnue. Veuillez contacter un administrateur';
+        return 'Erreur inconnue. Veuillez contacter un administrateur.';
     }
   }
 }

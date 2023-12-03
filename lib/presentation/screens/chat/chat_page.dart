@@ -5,7 +5,6 @@ import 'package:holiday_mobile/data/providers/signalr/connection_hub.dart';
 import 'package:holiday_mobile/presentation/widgets/chat/message_chat.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
-
 import '../../../logic/blocs/chat_bloc/chat_bloc.dart';
 
 @RoutePage()

@@ -8,7 +8,6 @@ class HolidayAddState extends Equatable {
     late final FileWithStatus fileWithStatus;
     final DescriptionHolidayInput description;
     final String? errorMessage;
-    //final bool isEditMode;
 
     HolidayAddState({
       this.holidayAddStatus = FormzSubmissionStatus.initial,
@@ -18,7 +17,6 @@ class HolidayAddState extends Equatable {
       FileWithStatus? fileWithStatus,
       this.description = const DescriptionHolidayInput.pure(),
       this.errorMessage = "",
-     // this.isEditMode = false,
   }) {
       this.start = start ?? DateTimeWithStatus(dateTime: TZDateTime.now(globalLocation!));
       this.end = end ?? DateTimeWithStatus(dateTime: TZDateTime.now(globalLocation!).add(const Duration(days: 7)));
@@ -29,7 +27,6 @@ class HolidayAddState extends Equatable {
       TZDateTime startDate = TZDateTime.parse(globalLocation!, holiday.startDate);
       TZDateTime endDate = TZDateTime.parse(globalLocation!, holiday.endDate);
       return HolidayAddState(
-       // isEditMode: true,
         holidayAddStatus: FormzSubmissionStatus.initial,
         description: DescriptionHolidayInput.dirty(value: holiday.description ?? ''),
         name: HolidayNameInput.dirty(value: holiday.name),

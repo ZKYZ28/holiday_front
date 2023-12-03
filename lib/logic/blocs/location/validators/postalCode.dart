@@ -1,5 +1,4 @@
 import 'package:formz/formz.dart';
-import 'package:holiday_mobile/logic/blocs/login_bloc/validators/email.dart';
 
 enum PostalCodeInputError  { empty, invalid }
 
@@ -9,9 +8,9 @@ extension PostalCodeInputErrorExtension on PostalCodeInputError {
       case PostalCodeInputError.empty:
         return "Merci de spécifier le code postal !";
       case PostalCodeInputError.invalid:
-        return 'Veuillez saisir un code postal valide entre 1 à 15 caractères. Exemples : 4000 (Belgique), 75000 (France)';
+        return 'Veuillez saisir un code postal valide entre 1 à 15 caractères. Exemples : 4000, 75000';
       default:
-        return 'Erreur inconnue. Veuillez contacter un administrateur';
+        return 'Erreur inconnue. Veuillez contacter un administrateur.';
     }
   }
 }

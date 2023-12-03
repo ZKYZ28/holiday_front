@@ -35,7 +35,7 @@ class LocationForm extends StatelessWidget {
               'Belgique',
               onChanged: (pays) => context
                   .read<LocationBloc>()
-                  .add(LocationCountryChanged(coutry: pays)),
+                  .add(LocationCountryChanged(country: pays)),
               errorText: (state) => !state.country.isPure &&
                   state.country.isNotValid
                   ? state.errorMessage
@@ -53,7 +53,7 @@ class LocationForm extends StatelessWidget {
                     buildWhen: (previous, current) =>
                     previous.numberBox != current.numberBox,
                     initialValue: location != null ? location!.number : '',
-                    labelText: 'Numéro de boîte ',
+                    labelText: 'Numéro de boîte',
                     hintText:
                     '7',
                     onChanged: (numberBox) => context
@@ -74,7 +74,7 @@ class LocationForm extends StatelessWidget {
                     buildWhen: (previous, current) =>
                     previous.street != current.street,
                     initialValue: location != null ? location!.street : '',
-                    labelText: 'Rue ',
+                    labelText: 'Rue',
                     hintText:
                     'Rue de Harlez',
                     onChanged: (street) => context

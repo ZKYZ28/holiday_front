@@ -47,7 +47,7 @@ class InvitationsApiProvider{
 
     } catch (e, stacktrace) {
       logger.e("Erreur lors de la récupération de toutes les invitations d'un participant.");
-      throw ApiException("Une erreur s'est produite lors de la récupération de vos invitations", stacktrace);
+      throw ApiException("Une erreur s'est produite lors de la récupération de vos invitations.", stacktrace);
     }
   }
 
@@ -73,7 +73,7 @@ class InvitationsApiProvider{
       logger.i("Refus de l'invitation $invitationId réalisée avec succès.");
 
     } on DioException catch (e){
-      logger.e("Erreur lors du refus de l'invitation $invitationId .");
+      logger.e("Erreur lors du refus de l'invitation $invitationId.");
       throw ApiException(e.response?.data, e);
 
     } catch (e, stacktrace) {

@@ -23,6 +23,7 @@ class ActivityApiProvider{
       return activity;
 
     } on DioException catch (e){
+      logger.e("Erreur lors de la récupération de l'activité $activityId.");
       throw ApiException(e.response?.data, e);
 
     } catch (e, stacktrace) {
@@ -70,16 +71,17 @@ class ActivityApiProvider{
             await MultipartFile.fromFile(activityData.file!.path),
         ));
       }
+
       await _dio.post('v1/activity/', data : formData);
       logger.i("Activité créée avec succès.");
 
     } on DioException catch (e){
-      logger.i("Erreur lors de la création de l'activité");
+      logger.i("Erreur lors de la création de l'activité.");
       throw ApiException(e.response?.data, e);
 
     } catch (e, stacktrace) {
-      logger.i("Erreur lors de la création de l'activité");
-      throw ApiException("Une erreur s'est produite lors de la création de votre activité", stacktrace);
+      logger.i("Erreur lors de la création de l'activité.");
+      throw ApiException("Une erreur s'est produite lors de la création de votre activité.", stacktrace);
     }
   }
 
@@ -110,16 +112,16 @@ class ActivityApiProvider{
           await MultipartFile.fromFile(activityData.file!.path),
         ));
       }
-      // TODO : enelver le create mais peut-être déjà fait dans le refactor ?
+
       await _dio.put('v1/activity/${activityData.activityId}', data : formData);
       logger.i("Activité ${activityData.activityId} mise à jour avec succès.");
 
     } on DioException catch (e){
-      logger.i("Errur lors de la mise à jour de l'activité ${activityData.activityId}.");
+      logger.i("Erreur lors de la mise à jour de l'activité ${activityData.activityId}.");
       throw ApiException(e.response?.data, e);
 
     } catch (e, stacktrace) {
-      logger.i("Errur lors de la mise à jour de l'activité ${activityData.activityId}.");
+      logger.i("Erreur lors de la mise à jour de l'activité ${activityData.activityId}.");
       throw ApiException("Une erreur s'est produite lors de la mise à jour de votre activité.", stacktrace);
     }
   }
@@ -152,11 +154,11 @@ class ActivityApiProvider{
       return participants;
 
     } on DioException catch (e){
-      logger.i("Erreur lors de la récupération de tous les participations de l'activité $activityId.");
+      logger.i("Erreur lors de la récupération de tous les participants de l'activité $activityId.");
       throw ApiException(e.response?.data, e);
 
     } catch (e, stacktrace) {
-      logger.i("Erreur lors de la récupération de tous les participations de l'activité $activityId.");
+      logger.i("Erreur lors de la récupération de tous les participants de l'activité $activityId.");
       throw ApiException("Une erreur s'est produite lors de la récupération des participants de l'activité.", stacktrace);
     }
   }
@@ -165,14 +167,14 @@ class ActivityApiProvider{
     try {
 
       await _dio.post('v1/activity/$activityId/participant/$participantId');
-      logger.i("Création de participations à une activité réalisée avec succès.");
+      logger.i("Création d'une participation à une activité réalisée avec succès.");
 
     } on DioException catch (e){
-      logger.e("Erreur lors de la création de participations à une activité.");
+      logger.e("Erreur lors de la création d'une participation à une activité.");
       throw ApiException(e.response?.data, e);
 
     } catch (e, stacktrace) {
-      logger.e("Erreur lors de la création de participations à une activité.");
+      logger.e("Erreur lors de la création d'une participation à une activité.");
       throw ApiException("Une erreur s'est produite lors de la création d'une participation à l'activité.", stacktrace);
     }
   }

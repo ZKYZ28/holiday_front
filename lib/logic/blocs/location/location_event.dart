@@ -9,10 +9,10 @@ abstract class LocationEvent extends Equatable {
 }
 
 class LocationCountryChanged extends LocationEvent {
-  final String coutry;
-  const LocationCountryChanged({required this.coutry});
+  final String country;
+  const LocationCountryChanged({required this.country});
   @override
-  List<Object> get props => [coutry];
+  List<Object> get props => [country];
 }
 
 class LocationNumberBoxChanged extends LocationEvent {

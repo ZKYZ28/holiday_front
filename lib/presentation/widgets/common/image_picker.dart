@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:holiday_mobile/configuration.dart';
-import 'package:holiday_mobile/main.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerForm extends StatefulWidget {

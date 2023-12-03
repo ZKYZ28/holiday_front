@@ -9,9 +9,9 @@ extension EmailInputErrorExtension on EmailInputError {
       case EmailInputError.empty:
         return "Vous ne pouvez pas avoir une adresse mail vide.";
       case EmailInputError.invalid:
-        return "Merci de respecter le format : john.doe@gmail.com";
+        return "Merci de respecter le format : john.doe@gmail.com.";
       default:
-        return "Erreur inconnue. Veuillez contacter un administrateur";
+        return "Erreur inconnue. Veuillez contacter un administrateur.";
     }
   }
 }

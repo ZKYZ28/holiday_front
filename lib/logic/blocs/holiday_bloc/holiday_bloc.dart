@@ -24,12 +24,6 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
       try {
         emit(state.copyWith(status: HolidayStateStatus.loading));
 
-        // // TODO : tester si ça survient à nouveau (impossible de reproduire le bug)
-        // final participantId = _repository.userConnected?.id ?? 'UNKNOW';
-        // if (participantId == 'UNKNOW') {
-        //   emit(state.copyWith(status: HolidayStateStatus.error, errorMessage : "Utilisateur non authentifié. Merci de vous reconnecter ! "));
-        //   return;
-        // }
         final holidaysByParticipant = await holidayRepository.fetchHolidayByParticipant(false);
         emit(state.copyWith(status: HolidayStateStatus.loaded, holidaysList: holidaysByParticipant));
       } on ApiException catch (e) {
@@ -66,8 +60,6 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
       try {
         final holiday = event.holiday;
         final location = event.holiday.location;
-        print(holiday.endDate);
-        print(holiday.startDate);
 
         await holidayRepository.updateHoliday(
             HolidayData(
@@ -85,7 +77,7 @@ class HolidayBloc extends Bloc<HolidayEvent, HolidayState> {
               ),
               file: null,
               isPublish: true,
-              creatorId: repository.userConnected!.id,
+              creatorId: _repository.userConnected!.id,
               deleteImage: false,
               initialPath: holiday.holidayPath,
               holidayId: holiday.id,

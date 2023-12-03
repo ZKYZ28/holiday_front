@@ -10,7 +10,7 @@ extension LocalityInputErrorExtension on LocalityInputError {
       case LocalityInputError.invalid:
         return 'Veuillez saisir une localité valide contenant entre 3 et 100 caractères. Seules les lettres, chiffres, espaces, apostrophes, points, virgules et tirets sont autorisés.';
       default:
-        return 'Erreur inconnue. Veuillez contacter un administrateur';
+        return 'Erreur inconnue. Veuillez contacter un administrateur.';
     }
   }
 }

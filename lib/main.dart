@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holiday_mobile/configuration.dart';
@@ -62,7 +61,7 @@ class MyApp extends StatelessWidget {
             BlocProvider<HolidayBloc>(
                 create: (context) => HolidayBloc(repository : AuthRepository(RepositoryProvider.of<AuthAPiProvider>(context)))),
             BlocProvider<InvitationBloc>(
-                create: (context) => InvitationBloc(repository : AuthRepository(RepositoryProvider.of<AuthAPiProvider>(context)))),
+                create: (context) => InvitationBloc()),
             BlocProvider<ChatBloc>(
                 create: (context) => ChatBloc(repository : AuthRepository(RepositoryProvider.of<AuthAPiProvider>(context)))),
             BlocProvider<ActivityBloc>(

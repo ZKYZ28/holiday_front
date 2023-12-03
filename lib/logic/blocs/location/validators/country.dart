@@ -10,7 +10,7 @@ extension CountryInputErrorExtension on CountryInputError {
       case CountryInputError.invalid:
         return 'Veuillez entrer un nom de pays valide entre 3 et 50 caractères. Les lettres, chiffres, apostrophes, tirets et espaces sont autorisés.';
       default:
-        return 'Erreur inconnue. Veuillez contacter un administrateur';
+        return 'Erreur inconnue. Veuillez contacter un administrateur.';
     }
   }
 }

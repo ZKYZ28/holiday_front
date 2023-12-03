@@ -35,6 +35,7 @@ class _EncodeParticipantActivityScreenState extends State<EncodeParticipantActiv
   List<Participant> participantsNotYetInActivity = [];
   final List<Participant> _selectedParticipants = [];
 
+  //Gestion en interne des participants
   void _selectParticipant(Participant participant) {
     setState(() {
       participantsNotYetInActivity.remove(participant);
@@ -56,7 +57,7 @@ class _EncodeParticipantActivityScreenState extends State<EncodeParticipantActiv
       _participantsInActivity.remove(participant);
 
       if (participant != null) {
-        participantsNotYetInActivity.add(participant!);
+        participantsNotYetInActivity.add(participant);
       }
     });
   }
@@ -113,7 +114,6 @@ class _EncodeParticipantActivityScreenState extends State<EncodeParticipantActiv
             } else if (state.status == ActivityStateStatus.loaded) {
               participantsNotYetInActivity = state.participantsNotYetInActivity ?? [];
               _participantsInActivity = state.participantsInActivity ?? [];
-              print("LAL");
               return _buildEncodeParticipantInfo(context);
             } else {
               return Container();
@@ -144,70 +144,66 @@ class _EncodeParticipantActivityScreenState extends State<EncodeParticipantActiv
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-         Container(
-          margin: const EdgeInsets.only(top: 15),
-          child: ParticipantCard(
-            nameColumnWidth: nameColumnWidth,
-            emailColumnWidth: emailColumnWidth,
-            buttonColumnWidth: buttonColumnWidth,
-            tableParticipantsHeight: tableParticipantHeight,
-            title: 'Participant(s) déjà ajouté(s)',
-            icon: Icons.add,
-            participantInActivity: _participantsInActivity,
-            elementId: widget.activityId,
-            onDeleteParticipant: _deleteParticipant,
-            isPublish: false,
-          ),
-        ),
-
-
-
-
-            const SizedBox(
-              height: 10,
-            ),
-
-
-            buildParticipantAddable(
-              tableHeight: tableHeight,
-              cardWith: cardWith,
-              participantsBase: participantsNotYetInActivity,
-              onParticipantSelected: _selectParticipant,
-            ),
-
-            buildParticipantBeingAdded(
-              tableHeight: tableHeight,
-              cardWith: cardWith,
-              selectedParticipants: _selectedParticipants,
-              onDeselectParticipant: _deselectParticipant,
-            ),
-
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-              child: Center(
-                child: ElevatedButton.icon(
-                  style: ButtonStyle(
-                    padding: MaterialStateProperty.all(
-                      const EdgeInsets.only(left: 10, right: 10),
-                    ),
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return const Color(0xFF1E3A8A);
-                        }
-                        return const Color(0xFF1E3A8A);
-                      },
-                    ),
-                  ),
-                  icon: const Icon(Icons.add),
-                  label: const Text('Ajouter'),
-                  onPressed: () {
-                      context.read<ActivityBloc>().add(CreateParticipates(participants: _selectedParticipants, activityId: widget.activityId));
-                  },
-                ),
+             Container(
+              margin: const EdgeInsets.only(top: 15),
+              child: ParticipantCard(
+                nameColumnWidth: nameColumnWidth,
+                emailColumnWidth: emailColumnWidth,
+                buttonColumnWidth: buttonColumnWidth,
+                tableParticipantsHeight: tableParticipantHeight,
+                title: 'Participant(s) déjà ajouté(s)',
+                icon: Icons.add,
+                participantInActivity: _participantsInActivity,
+                elementId: widget.activityId,
+                onDeleteParticipant: _deleteParticipant,
+                isPublish: false,
               ),
             ),
 
+              const SizedBox(
+                height: 10,
+              ),
+
+
+              buildParticipantAddable(
+                tableHeight: tableHeight,
+                cardWith: cardWith,
+                participantsBase: participantsNotYetInActivity,
+                onParticipantSelected: _selectParticipant,
+              ),
+
+              buildParticipantBeingAdded(
+                tableHeight: tableHeight,
+                cardWith: cardWith,
+                selectedParticipants: _selectedParticipants,
+                onDeselectParticipant: _deselectParticipant,
+              ),
+
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                child: Center(
+                  child: ElevatedButton.icon(
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all(
+                        const EdgeInsets.only(left: 10, right: 10),
+                      ),
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            return const Color(0xFF1E3A8A);
+                          }
+                          return const Color(0xFF1E3A8A);
+                        },
+                      ),
+                    ),
+                    icon: const Icon(Icons.add),
+                    label: const Text('Ajouter'),
+                    onPressed: () {
+                        context.read<ActivityBloc>().add(CreateParticipates(participants: _selectedParticipants, activityId: widget.activityId));
+                    },
+                  ),
+                ),
+              ),
           ],
         ),
       ),

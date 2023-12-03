@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/exceptions/signlar_exception.dart';
 import 'package:holiday_mobile/data/models/message/message.dart';
 import 'package:holiday_mobile/data/providers/signalr/connection_hub.dart';
@@ -57,13 +56,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       }
     });
 
-  on<LeaveRoom>((LeaveRoom event, Emitter<ChatState> emit) async {
-    try{
-      _connectionHub.leaveHolidayRoom(event.holidayId, _repository.userConnected!);
-      emit(state.copyWith(numberMessage: -1));
-    } on SignalRException catch (e) {
-      emit(state.copyWith(status: ChatStateStatus.error, errorMessage: e.toString()));
-    }
-  });
+    on<LeaveRoom>((LeaveRoom event, Emitter<ChatState> emit) async {
+      try{
+        _connectionHub.leaveHolidayRoom(event.holidayId, _repository.userConnected!);
+        emit(state.copyWith(numberMessage: -1));
+      } on SignalRException catch (e) {
+        emit(state.copyWith(status: ChatStateStatus.error, errorMessage: e.toString()));
+      }
+    });
   }
 }

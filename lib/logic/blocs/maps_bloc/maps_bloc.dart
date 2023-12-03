@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
-
 import '../../../data/models/location/location.dart';
 
 
@@ -19,7 +18,7 @@ class MapsBloc extends Bloc<MapsEvent, MapsState> {
         final address = event.address;
         List<geocoding.Location> geocodedLocations = await Location.locationsFromAddress(address);
 
-        emit(state.copyWith(status: MapsStatus.loaded,latitude: geocodedLocations[0].latitude, longitude: geocodedLocations[0].longitude));
+        emit(state.copyWith(status: MapsStatus.loaded, latitude: geocodedLocations[0].latitude, longitude: geocodedLocations[0].longitude));
 
       } on Exception catch (e) {
         emit(state.copyWith(status: MapsStatus.error, errorMessage : e.toString()));

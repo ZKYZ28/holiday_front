@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
@@ -9,9 +8,6 @@ import 'package:holiday_mobile/data/models/login/login.dart';
 import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
 import 'package:holiday_mobile/logic/blocs/login_bloc/validators/password.dart';
 import 'package:holiday_mobile/logic/blocs/login_bloc/validators/email.dart';
-import 'package:meta/meta.dart';
-
-import 'validators/email.dart';
 
 part 'login_event.dart';
 
@@ -31,7 +27,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final email = EmailInput.dirty(value: event.email);
     emit(
       state.copyWith(
-          // status: Formz.validate([email, state.password]) ? FormzSubmissionStatus.success : FormzSubmissionStatus.failure,
           status: FormzSubmissionStatus.inProgress,
           email: email,
           errorMessage: email
@@ -46,9 +41,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(
       state.copyWith(
           status: FormzSubmissionStatus.inProgress,
-          // status: Formz.validate([state.email, password]) ? FormzSubmissionStatus.success : FormzSubmissionStatus.failure,
           password: password,
-          // errorMessage: password.isNotValid ? password.error.toString() : null
           errorMessage: password.error?.message),
     );
   }
@@ -60,7 +53,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     // Normalement, les deux champs seront valides
     if (state.email.isValid && state.password.isValid) {
       try {
-        // String token = await authRepository.logInRequest(Login(email: state.email.value, password: state.password.value));
         await authRepository.logInRequest(
             Login(email: state.email.value, password: state.password.value));
         emit(state.copyWith(status: FormzSubmissionStatus.success));
@@ -108,7 +100,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(state.copyWith(
             status: FormzSubmissionStatus.failure,
             errorMessage:
-                "Il a été impossible de vous authentifier avec Google. Merci de réessayer plus tard"));
+                "Il a été impossible de vous authentifier avec Google. Merci de réessayer plus tard."));
         return;
       }
 

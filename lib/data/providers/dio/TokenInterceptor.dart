@@ -7,7 +7,6 @@ class TokenInterceptor extends Interceptor {
   int? tokenExpiration;
   String? lastToken;
 
-  // TODO : passer en paramètre ?
   final AuthService _authService = AuthService();
 
   TokenInterceptor({required this.notAuthorizedCallback});
@@ -32,8 +31,6 @@ class TokenInterceptor extends Interceptor {
         notAuthorizedCallback(); // Fonction pour déconnecter l'utilisateur
       }
     }
-    handler.next(
-        options); // Continuer de transmettre la requête bien qu'on ait effectué un traiment dessus ou non
-
+    handler.next(options); // Continuer de transmettre la requête bien qu'on ait effectué un traiment dessus ou non
   }
 }

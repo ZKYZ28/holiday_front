@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +6,6 @@ import 'package:holiday_mobile/data/models/invitation/invitation.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/invitation_bloc/invitation_bloc.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
-
 import '../../../data/models/holiday/holiday.dart';
 import '../../../routes/app_router.gr.dart';
 import '../../widgets/common/progress_loading_widget.dart';
@@ -189,7 +187,7 @@ class _HolidaysScreenState extends State<HolidaysScreen> {
               onChanged: toggleSwitch,
               activeColor: const Color(0xFF1E3A8A),
             ),
-            const Text('Vacances publiées/personnels'),
+            const Text('Vacances publiées/personnelles'),
           ],
         ),
         Expanded(

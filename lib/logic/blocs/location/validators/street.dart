@@ -8,7 +8,7 @@ extension StreetInputErrorExtension on StreetInputError {
       case StreetInputError.invalid:
         return 'Champ faculatif. Si vous choisissez de le remplir, veuillez saisir une adresse de rue valide contenant entre 3 et 100 caractères. Seules les lettres, chiffres, espaces, apostrophes, points, virgules et tirets sont autorisés.';
       default:
-        return 'Erreur inconnue. Veuillez contacter un administrateur';
+        return 'Erreur inconnue. Veuillez contacter un administrateur.';
     }
   }
 }

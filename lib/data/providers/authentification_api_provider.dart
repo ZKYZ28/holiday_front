@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:dio/dio.dart';
 import 'package:holiday_mobile/data/exceptions/api_exception.dart';
 import 'package:holiday_mobile/data/exceptions/holiday_auth_exception.dart';
@@ -17,7 +16,6 @@ class AuthAPiProvider {
   late final Dio _dio;
   var logger = Logger();
 
-  // TODO : passer dans le constructeur
   final AuthService _authService = AuthService();
   final _controller = StreamController<AuthStatus>();
   UserAuthentificated? _userAuthentificated;
@@ -54,7 +52,7 @@ class AuthAPiProvider {
       logger.e("Erreur lors de l'authentification.");
       throw ApiException(e.message, null);
     } on HolidayStorageException catch (e) {
-      logger.e("Erreur lors de l'authentification.");
+      logger.e("Erreur lors de la récupération du token dans le stockage sécurisé.");
       throw ApiException(e.message, null);
     }
     (e, stacktrace) {
@@ -79,7 +77,7 @@ class AuthAPiProvider {
       logger.e("Erreur lors de l'authentification avec Google.");
       throw ApiException(e.message, null);
     } on HolidayStorageException catch (e) {
-      logger.e("Erreur lors de l'authentification avec Google.");
+      logger.e("Erreur lors de la récupération du token dans le stockage sécurisé lors de l'authentification Google.");
       throw ApiException(e.message, null);
     }
     (e, stacktrace) {
@@ -131,6 +129,7 @@ class AuthAPiProvider {
     } catch (e) {
       // Pas besoin d'informer l'utilisateur. Pourquoi ? Le pire des cas est que le token
       // reste dans le cache dès qu'il va se login, ça le remplacera de toute manière
+      logger.e("Le token n'a pas pu être supprimé du stockage sécurisé lors de la procédure de déconnexion.");
     } finally {
       _emitAuthStatus(AuthStatus.disconnected);
     }

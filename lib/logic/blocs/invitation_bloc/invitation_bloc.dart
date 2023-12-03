@@ -11,10 +11,8 @@ part 'invitation_state.dart';
 
 class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
   final InvitationApiRepository invitationApiRepository = InvitationApiRepository();
-  late AuthRepository _repository;
 
-    InvitationBloc({ required AuthRepository repository}) : super(const InvitationState()) {
-  _repository = repository;
+    InvitationBloc() : super(const InvitationState()) {
 
     on<CreateInvitations>((CreateInvitations event, Emitter<InvitationState> emit) async {
       try {
@@ -33,15 +31,6 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
       try {
         emit(state.copyWith(status: InvitationStateStatus.loading));
 
-        // // TODO : tester si ça survient à nouveau
-        // final participantId = _repository.userConnected?.id ?? 'UNKNOW';
-        // if (participantId == 'UNKNOW') {
-        //   emit(state.copyWith(
-        //       status: InvitationStateStatus.error,
-        //       errorMessage:
-        //           "Utilisateur non authentifié. Merci de vous reconnecter ! "));
-        //   return;
-        // }
         final invitationsList = await invitationApiRepository
             .getAllInvitationsByParticipant();
 

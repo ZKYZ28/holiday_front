@@ -7,9 +7,8 @@ import 'package:holiday_mobile/data/models/activity/activity.dart';
 import 'package:holiday_mobile/data/providers/authentification_api_provider.dart';
 import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
 import 'package:holiday_mobile/logic/blocs/activity_add_edit_bloc/activity_add_edit_bloc.dart';
-import 'package:holiday_mobile/logic/blocs/common/class_form/holiday_and_activity_class_state.dart';
-import 'package:holiday_mobile/logic/blocs/holiday_bloc/holiday_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/location/location_bloc.dart';
+import 'package:holiday_mobile/logic/common/class_form/holiday_and_activity_class_state.dart';
 import 'package:holiday_mobile/presentation/widgets/common/GenericInputField.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
 import 'package:holiday_mobile/presentation/widgets/common/image_picker.dart';
@@ -244,7 +243,7 @@ class _EncodeActivityScreenState extends State<EncodeActivityScreen> {
                               CustomStatus.invalid && state.end.customStatus == CustomStatus.invalid) &&
                               state.errorMessage!.isNotEmpty) {
                             return Container(
-                              margin: EdgeInsets.only(bottom: 10.0),
+                              margin: const EdgeInsets.only(bottom: 10.0),
                               child: Text(
                                 state.errorMessage ?? '',
                                 style: const TextStyle(color: Colors.red),
@@ -263,7 +262,7 @@ class _EncodeActivityScreenState extends State<EncodeActivityScreen> {
                           initialValue: widget.activity != null
                               ? widget.activity!.description
                               : '',
-                          labelText: 'Description ',
+                          labelText: 'Description',
                           hintText: 'Le lundi au soleil',
                           onChanged: (description) => context
                               .read<ActivityAddEditBloc>()
@@ -281,7 +280,6 @@ class _EncodeActivityScreenState extends State<EncodeActivityScreen> {
                           onPressed: () {
                             if(widget.activity != null) {
                               context.read<ActivityAddEditBloc>().add(ActivityEditSubmit(holidayId: widget.holidayId, activityId: widget.activity!.id!, activityPath: widget.activity!.activityPath, locationId: widget.activity!.location.id!));
-                            //  context.read<HolidayBloc>().add(GetHoliday(holidayId: widget.holidayId));
                             } else {
                               context.read<ActivityAddEditBloc>().add(ActivitySumbit(holidayId: widget.holidayId));
                             }

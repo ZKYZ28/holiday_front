@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
@@ -14,11 +13,9 @@ import 'package:holiday_mobile/data/services/picture/picture_service.dart';
 import 'package:holiday_mobile/logic/blocs/activity_add_edit_bloc/validators/activity_add_edit_description.dart';
 import 'package:holiday_mobile/logic/blocs/activity_add_edit_bloc/validators/activity_add_edit_name.dart';
 import 'package:holiday_mobile/logic/blocs/activity_add_edit_bloc/validators/activity_add_edit_price.dart';
-import 'package:holiday_mobile/logic/blocs/common/class_form/holiday_and_activity_class_state.dart';
-import 'package:holiday_mobile/logic/blocs/holiday_add_bloc/holiday_add_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/location/location_bloc.dart';
+import 'package:holiday_mobile/logic/common/class_form/holiday_and_activity_class_state.dart';
 import 'package:holiday_mobile/main.dart';
-import 'package:meta/meta.dart';
 import 'package:timezone/timezone.dart';
 
 part 'activity_add_edit_event.dart';
@@ -120,8 +117,6 @@ class ActivityAddEditBloc extends Bloc<ActivityAddEditEvent, ActivityAddEditStat
     ));
   }
 
-
-
   void _onFileChanged(ActivityFileChanged event, Emitter<ActivityAddEditState> emit) {
     File? file = event.file;
     if (file == null) {
@@ -144,7 +139,7 @@ class ActivityAddEditBloc extends Bloc<ActivityAddEditEvent, ActivityAddEditStat
         state.copyWith(
             activityAddEditStatus: FormzSubmissionStatus.inProgress,
             fileWithStatus: FileWithStatus(file: file, customStatus: CustomStatus.invalid, deleteImage: event.deleteFile),
-            errorMessage: "La taille du fichier dépasse la limite de 5 Mo");
+            errorMessage: "La taille du fichier dépasse la limite de 5 Mo.");
         return;
       }
       emit(state.copyWith(
@@ -154,7 +149,7 @@ class ActivityAddEditBloc extends Bloc<ActivityAddEditEvent, ActivityAddEditStat
     } catch (e) {
       state.copyWith(activityAddEditStatus: FormzSubmissionStatus.inProgress,
           fileWithStatus: FileWithStatus(file: file, customStatus: CustomStatus.invalid, deleteImage: event.deleteFile),
-          errorMessage: "Un problème est survenu avec la gestion des images");
+          errorMessage: "Un problème est survenu avec la gestion des images.");
     }
   }
 

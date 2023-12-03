@@ -6,14 +6,13 @@ import 'package:formz/formz.dart';
 import 'package:holiday_mobile/data/models/holiday/holiday.dart';
 import 'package:holiday_mobile/data/providers/authentification_api_provider.dart';
 import 'package:holiday_mobile/data/repositories/authentification_api_repository.dart';
-import 'package:holiday_mobile/logic/blocs/common/class_form/holiday_and_activity_class_state.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_add_bloc/holiday_add_bloc.dart';
 import 'package:holiday_mobile/logic/blocs/location/location_bloc.dart';
+import 'package:holiday_mobile/logic/common/class_form/holiday_and_activity_class_state.dart';
 import 'package:holiday_mobile/presentation/widgets/common/GenericInputField.dart';
 import 'package:holiday_mobile/presentation/widgets/common/custom_message.dart';
 import 'package:holiday_mobile/presentation/widgets/common/image_picker.dart';
 import 'package:holiday_mobile/presentation/widgets/location/location_form.dart';
-import 'dart:io';
 import 'package:auto_route/annotations.dart';
 import 'package:intl/intl.dart';
 
@@ -200,7 +199,7 @@ class _EncodeHolidayState extends State<EncodeHoliday> {
                       initialValue: widget.holiday != null ? widget.holiday!.description : '',
                       labelText: 'Description',
                       hintText:
-                          'Notre voyage dans une belle ville remplie de montres de luxe',
+                          'Notre voyage dans une belle ville remplie de montres de luxe.',
                       onChanged: (description) => context
                           .read<HolidayAddBloc>()
                           .add(HolidayAddDescriptionChanged(

@@ -39,7 +39,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF1E3A8A),
-        title: const Text('Invitation(s)'),
+        title: const Text('Invitations'),
       ),
       body: _buildListInvitations()
     );

@@ -28,8 +28,8 @@ class ActivityState extends Equatable {
         status : status ?? this.status,
         activity: activity ?? activity,
         errorMessage : errorMessage ?? this.errorMessage,
-        participantsInActivity: participantsInActivity ?? participantsInActivity,
-        participantsNotYetInActivity: participantsNotYetInActivity ?? participantsNotYetInActivity
+        participantsInActivity: participantsInActivity ?? this.participantsInActivity,
+        participantsNotYetInActivity: participantsNotYetInActivity ?? this.participantsNotYetInActivity
     );
   }
 

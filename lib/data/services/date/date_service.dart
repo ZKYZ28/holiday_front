@@ -1,5 +1,4 @@
 import 'package:holiday_mobile/main.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 class DateService {
 
@@ -53,7 +52,4 @@ class DateService {
     }
     return DateTime(tzDateTime.year, tzDateTime.month, tzDateTime.day);
   }
-
-
-
 }

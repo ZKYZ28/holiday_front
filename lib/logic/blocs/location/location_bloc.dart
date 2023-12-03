@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
@@ -9,7 +7,6 @@ import 'package:holiday_mobile/logic/blocs/location/validators/locality.dart';
 import 'package:holiday_mobile/logic/blocs/location/validators/numberBox.dart';
 import 'package:holiday_mobile/logic/blocs/location/validators/postalCode.dart';
 import 'package:holiday_mobile/logic/blocs/location/validators/street.dart';
-import 'package:meta/meta.dart';
 
 part 'location_event.dart';
 part 'location_state.dart';
@@ -25,7 +22,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
   }
 
   void _onCountryChanged(LocationCountryChanged event, Emitter<LocationState> emit) {
-    final country = CountryInput.dirty(value : event.coutry);
+    final country = CountryInput.dirty(value : event.country);
     emit(state.copyWith(
       locationStatus: FormzSubmissionStatus.inProgress,
       country: country,

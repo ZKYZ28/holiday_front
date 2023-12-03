@@ -14,7 +14,7 @@ class SecureStorage {
     try {
       await storage.write(key: key, value: value);
     } on PlatformException {
-      throw HolidayStorageException("Plateforme de stockage non supporté. Merci d'utilisateur un appareil Android");
+      throw HolidayStorageException("Plateforme de stockage non supporté. Merci d'utiliser un appareil Android.");
     }
   }
 
@@ -25,7 +25,7 @@ class SecureStorage {
     try {
       return await storage.read(key: key);
     } on PlatformException {
-      throw HolidayStorageException("Plateforme de stockage non supporté. Merci d'utilisateur un appareil Android");
+      throw HolidayStorageException("Plateforme de stockage non supporté. Merci d'utiliser un appareil Android.");
     }
   }
   /// Supprimer l'entrée correspondante à la clé dans le Secure Storage si la clé existe. Sinon, ne fait rien
@@ -35,11 +35,7 @@ class SecureStorage {
     try {
       return await storage.delete(key: key);
     } on PlatformException {
-      throw HolidayStorageException("Plateforme de stockage non supporté. Merci d'utilisateur un appareil Android");
+      throw HolidayStorageException("Plateforme de stockage non supporté. Merci d'utiliser un appareil Android.");
     }
   }
-
-
-
-
 }

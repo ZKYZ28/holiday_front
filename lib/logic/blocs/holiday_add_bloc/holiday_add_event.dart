@@ -22,7 +22,7 @@ class HolidayAddDateStartChanged extends HolidayAddEvent {
   const HolidayAddDateStartChanged({required this.start, this.isEditMode = false});
 
   @override
-  List<Object> get props => [start ?? DateTime.now()];
+  List<Object> get props => [start];
 }
 
 class HolidayAddDateEndChanged extends HolidayAddEvent {
@@ -30,7 +30,7 @@ class HolidayAddDateEndChanged extends HolidayAddEvent {
   const HolidayAddDateEndChanged({required this.end});
 
   @override
-  List<Object> get props => [end ?? DateTime.now()];
+  List<Object> get props => [end];
 }
 
 class HolidayAddDescriptionChanged extends HolidayAddEvent {

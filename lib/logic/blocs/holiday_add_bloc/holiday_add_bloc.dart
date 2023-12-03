@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
@@ -11,12 +10,11 @@ import 'package:holiday_mobile/data/repositories/authentification_api_repository
 import 'package:holiday_mobile/data/repositories/holiday_api_repository.dart';
 import 'package:holiday_mobile/data/services/date/date_service.dart';
 import 'package:holiday_mobile/data/services/picture/picture_service.dart';
-import 'package:holiday_mobile/logic/blocs/common/class_form/holiday_and_activity_class_state.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_add_bloc/validators/holiday_add_description.dart';
 import 'package:holiday_mobile/logic/blocs/holiday_add_bloc/validators/holiday_add_name.dart';
 import 'package:holiday_mobile/logic/blocs/location/location_bloc.dart';
+import 'package:holiday_mobile/logic/common/class_form/holiday_and_activity_class_state.dart';
 import 'package:holiday_mobile/main.dart';
-import 'package:meta/meta.dart';
 import 'package:timezone/timezone.dart';
 
 part 'holiday_add_event.dart';
