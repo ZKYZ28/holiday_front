@@ -7,15 +7,13 @@ class LoginState extends Equatable {
   final EmailInput email;
   final PasswordInput password;
   final String? errorMessage;
-  final bool isConnectionInProgress;
 
   // Valeurs initiales à la création
   const LoginState({
     this.status = FormzSubmissionStatus.initial,
     this.email = const EmailInput.pure(),
     this.password = const PasswordInput.pure(),
-    this.errorMessage = "",
-    this.isConnectionInProgress = false
+    this.errorMessage = ""
   });
 
   // Copier en conservant les anciennes valeurs non spécifiées en paramètres
@@ -23,15 +21,13 @@ class LoginState extends Equatable {
     FormzSubmissionStatus? status,
     EmailInput? email,
     PasswordInput? password,
-    String? errorMessage,
-    bool? isConnectionInProgress,
+    String? errorMessage
   }) {
     return LoginState(
       status : status ?? this.status,
       email: email ?? this.email,
       password : password ?? this.password,
-      errorMessage : errorMessage ?? this.errorMessage,
-      isConnectionInProgress: isConnectionInProgress ?? this.isConnectionInProgress
+      errorMessage : errorMessage ?? this.errorMessage
     );
   }
 

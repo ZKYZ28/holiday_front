@@ -56,30 +56,28 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future<void> _onSubmitLogin(
       LoginSubmit event, Emitter<LoginState> emit) async {
     // Réinitialiser l'état avant de valider les champs
-    emit(state.copyWith(status: FormzSubmissionStatus.inProgress, isConnectionInProgress: true));
+    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     // Normalement, les deux champs seront valides
     if (state.email.isValid && state.password.isValid) {
       try {
         // String token = await authRepository.logInRequest(Login(email: state.email.value, password: state.password.value));
         await authRepository.logInRequest(
             Login(email: state.email.value, password: state.password.value));
-        // Remettre à false pour les prochaines fois
-        emit(state.copyWith(status: FormzSubmissionStatus.success, isConnectionInProgress: false));
+        emit(state.copyWith(status: FormzSubmissionStatus.success));
       } catch (e) {
         emit(state.copyWith(
-            status: FormzSubmissionStatus.failure, errorMessage: e.toString(), isConnectionInProgress: false));
+            status: FormzSubmissionStatus.failure, errorMessage: e.toString()));
       }
     } else {
       emit(state.copyWith(
           status: FormzSubmissionStatus.failure,
-          isConnectionInProgress: false,
           errorMessage: "Les champs ne sont pas valides !"));
     }
   }
 
   void _onGoogleSubmit(
       GoogleLoginSubmit event, Emitter<LoginState> emit) async {
-    emit(state.copyWith(status: FormzSubmissionStatus.inProgress, isConnectionInProgress: true));
+    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
       GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: <String>[
@@ -98,10 +96,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       GoogleSignInAccount? account = await googleSignIn.signIn();
 
       // Si l'utilisateur nie la pop-up (clique à côte pour l'enlever)
-      if (account == null) {
-        emit(state.copyWith(isConnectionInProgress: false));
-        return;
-      }
+      if (account == null) return;
 
       // Récupérer les informations de l'authentfiication
       final GoogleSignInAuthentication googleAuth =
@@ -112,7 +107,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (tokenId == Configuration.googleInvalidKey) {
         emit(state.copyWith(
             status: FormzSubmissionStatus.failure,
-            isConnectionInProgress: false,
             errorMessage:
                 "Il a été impossible de vous authentifier avec Google. Merci de réessayer plus tard"));
         return;
@@ -120,10 +114,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       // Call API
       await authRepository.logInGoogle(tokenId);
-      emit(state.copyWith(status: FormzSubmissionStatus.success, isConnectionInProgress: false));
+      emit(state.copyWith(status: FormzSubmissionStatus.success));
     } catch (e) {
       emit(state.copyWith(
-          status: FormzSubmissionStatus.failure, errorMessage: e.toString(), isConnectionInProgress: false));
+          status: FormzSubmissionStatus.failure, errorMessage: e.toString()));
     }
   }
 }

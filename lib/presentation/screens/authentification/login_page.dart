@@ -150,7 +150,7 @@ class LoginButton extends StatelessWidget {
           margin: const EdgeInsets.only(top: 20),
           // child: state.status.isInProgress ?
           // const CircularProgressIndicator() :
-          child: state.isConnectionInProgress ? const CircularProgressIndicator() : ElevatedButton(
+          child: ElevatedButton(
             onPressed: () {
               context.read<LoginBloc>().add(const LoginSubmit());
             },
@@ -176,7 +176,7 @@ class GoogleButton extends StatelessWidget {
             margin: const EdgeInsets.only(top: 20),
             // child: state.status.isInProgress ?
             // const CircularProgressIndicator() :
-            child: state.isConnectionInProgress ? const CircularProgressIndicator() : SignInButton(
+            child: SignInButton(
                 Buttons.googleDark,
                 text: 'Se connecter avec Google',
                 onPressed: () => context.read<LoginBloc>().add(GoogleLoginSubmit())));
